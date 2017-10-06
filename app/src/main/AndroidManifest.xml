@@ -28,6 +28,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cmput301f17t26.smores.all_activities.MainActivity"/>
         </activity>
+        <activity
+            android:name=".all_activities.HabitEventDetailsActivity"
+            android:label="@string/title_activity_habit_event_details"
+            android:parentActivityName=".all_activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="cmput301f17t26.smores.all_activities.MainActivity"/>
+        </activity>
     </application>
 
 </manifest>
