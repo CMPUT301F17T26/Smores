@@ -38,14 +38,7 @@ public class AddDialogFragment extends DialogFragment {
                 dismiss();
             }
         });
-
-
-
-
         setCancelable(false);
-
-
-
         return view;
     }
 
