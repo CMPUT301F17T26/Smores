@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.RequestAdapter;
-import cmput301f17t26.smores.all_activities.dummy.DummyContent;
-import cmput301f17t26.smores.all_activities.dummy.DummyContent.DummyItem;
+import cmput301f17t26.smores.dummy.DummyContent;
+import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 /**
  * A fragment representing a list of Items.

@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_fragments.RequestFragment.OnListFragmentInteractionListener;
-import cmput301f17t26.smores.all_activities.dummy.DummyContent.DummyItem;
+import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
