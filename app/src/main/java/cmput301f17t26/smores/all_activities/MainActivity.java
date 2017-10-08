@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -17,6 +18,7 @@ import android.view.View;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
+import cmput301f17t26.smores.all_fragments.AddDialogFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -149,11 +151,14 @@ public class MainActivity extends AppCompatActivity {
                     case 4: //REQUESTS
                         mAddFloatingActionButton.show();
                         mAddFloatingActionButton.setVisibility(View.VISIBLE);
+
+
                         mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(view, "Add request to be implemented", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
+                                FragmentManager manager = MainActivity.this.getSupportFragmentManager();
+                                AddDialogFragment addDialogFragment = new AddDialogFragment();
+                                addDialogFragment.show(manager, "AddDialog");
                             }
                         });
                         return;
