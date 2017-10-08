@@ -1,12 +1,281 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cmput301f17t26.smores.all_activities.HabitDetailsActivity"
     tools:showIn="@layout/activity_habit_details">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Habit Name:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+
+        <EditText
+            android:id="@+id/Habit_hName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Enter Habit Name"
+            android:textAlignment="center"
+            android:layout_weight="2"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reason:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+
+        <EditText
+            android:id="@+id/Habit_hReason"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Reason for habit"
+            android:inputType="textMultiLine"
+            android:lines="10"
+            android:minLines="5"
+            android:layout_weight="3"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Date:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/Habit_dateBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="Press to Select Date" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequency:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <CheckBox
+            android:id="@+id/Habit_sun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sun"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_mon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mon"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_tue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tue"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_wed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wed"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_thu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thu"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_fri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Fri"
+            android:textSize="12dp"
+            />
+
+        <CheckBox
+            android:id="@+id/Habit_sat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sat"
+            android:textSize="12dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stats:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Days Missed:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+
+        <TextView
+            android:id="@+id/Habit_daysMissed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Missed Days"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Days Completed:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/Habit_daysCompleted"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Completed Days"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Percentage Followed:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/Habit_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="100%"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Most Frequent Day:"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"
+            />
+        <TextView
+            android:id="@+id/Habit_favouriteDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Favourite Day"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.Medium"
+            android:layout_weight="1"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="right|bottom">
+
+        <ImageButton
+            android:id="@+id/Habit_saveBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/save"
+
+            android:src="@drawable/save" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="    "/>
+
+        <ImageButton
+            android:id="@+id/Habit_deleteBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/delete"
+            android:src="@drawable/delete" />
+
+    </LinearLayout>
+
+
+</LinearLayout>
