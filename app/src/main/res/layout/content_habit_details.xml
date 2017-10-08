@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Habit Name:"
             android:textColor="@android:color/black"
@@ -25,10 +25,9 @@
 
         <EditText
             android:id="@+id/Habit_hName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Enter Habit Name"
-            android:textAlignment="center"
             android:layout_weight="2"
             />
     </LinearLayout>
@@ -37,7 +36,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Reason:"
             android:textColor="@android:color/black"
@@ -47,13 +46,13 @@
 
         <EditText
             android:id="@+id/Habit_hReason"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Reason for habit"
             android:inputType="textMultiLine"
             android:lines="10"
             android:minLines="5"
-            android:layout_weight="3"
+            android:layout_weight="2"
             />
     </LinearLayout>
 
@@ -169,7 +168,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Total Days Missed:"
             android:textColor="@android:color/black"
@@ -179,7 +178,7 @@
 
         <TextView
             android:id="@+id/Habit_daysMissed"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Missed Days"
             android:textColor="@android:color/black"
@@ -191,7 +190,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Total Days Completed:"
             android:textColor="@android:color/black"
@@ -200,7 +199,7 @@
             />
         <TextView
             android:id="@+id/Habit_daysCompleted"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Completed Days"
             android:textColor="@android:color/black"
@@ -212,7 +211,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Percentage Followed:"
             android:textColor="@android:color/black"
@@ -221,7 +220,7 @@
             />
         <TextView
             android:id="@+id/Habit_percentage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="100%"
             android:textColor="@android:color/black"
@@ -233,7 +232,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="Most Frequent Day:"
             android:textColor="@android:color/black"
@@ -242,7 +241,7 @@
             />
         <TextView
             android:id="@+id/Habit_favouriteDay"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:hint="Favourite Day"
             android:textColor="@android:color/black"
