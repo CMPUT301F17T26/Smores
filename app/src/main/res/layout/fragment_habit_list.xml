@@ -14,7 +14,7 @@
     android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="cmput301f17t26.smores.all_fragments.HabitFragment"
-    tools:listitem="@layout/fragment_item_element"/>
+    tools:listitem="@layout/fragment_habit_element"/>
 
 </android.support.design.widget.CoordinatorLayout>
 

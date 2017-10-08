@@ -1,24 +1,19 @@
 package cmput301f17t26.smores.all_activities;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
@@ -35,11 +30,9 @@ public class MainActivity extends AppCompatActivity {
      */
     private TabAdapter mTabAdapter;
 
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     private ViewPager mViewPager;
-    private FloatingActionButton mFloatingActionButton;
+    private FloatingActionButton mAddFloatingActionButton;
+    private FloatingActionButton mMapsFloatingActionButton;
     private TabLayout mTabLayout;
 
     @Override
@@ -47,9 +40,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFloatingActionButton = (FloatingActionButton) findViewById(R.id.fab);
+        mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
+        mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
 
-        mFloatingActionButton.hide();
+        mMapsFloatingActionButton.hide();
+        mAddFloatingActionButton.hide();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -65,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         setupTabLayoutListener();
-
     }
 
 
@@ -96,35 +90,66 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 switch(tab.getPosition()) {
-                    case 0:
-                        mFloatingActionButton.hide();
+                    case 0: //TODAY
+                        mAddFloatingActionButton.setVisibility(View.GONE);
+                        mAddFloatingActionButton.hide();
+
+                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.hide();
                         return;
-                    case 1:
-                        mFloatingActionButton.show();
-                        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    case 1: //HABIT
+                        mAddFloatingActionButton.show();
+                        mAddFloatingActionButton.setVisibility(View.VISIBLE);
+                        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(view, "Add habit to be implemented", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
+                                Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
+                                MainActivity.this.startActivity(intent);
+                            }
+                        });
+
+                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.hide();
+                        return;
+                    case 2: //HABIT HISTORY
+                        mAddFloatingActionButton.show();
+                        mAddFloatingActionButton.setVisibility(View.VISIBLE);
+                        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(MainActivity.this, HabitEventDetailsActivity.class);
+                                MainActivity.this.startActivity(intent);
+                            }
+                        });
+
+                        mMapsFloatingActionButton.show();
+                        mMapsFloatingActionButton.setVisibility(View.VISIBLE);
+                        mMapsFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                MainActivity.this.startActivity(intent);
                             }
                         });
                         return;
-                    case 2:
-                        mFloatingActionButton.show();
-                        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    case 3: //SOCIAL
+                        mAddFloatingActionButton.hide();
+                        mAddFloatingActionButton.setVisibility(View.GONE);
+
+                        mMapsFloatingActionButton.show();
+                        mMapsFloatingActionButton.setVisibility(View.VISIBLE);
+                        mMapsFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                Snackbar.make(view, "Add habit history to be implemented", Snackbar.LENGTH_LONG)
-                                        .setAction("Action", null).show();
+                                Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                MainActivity.this.startActivity(intent);
                             }
                         });
                         return;
-                    case 3:
-                        mFloatingActionButton.hide();
-                        return;
-                    case 4:
-                        mFloatingActionButton.show();
-                        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+                    case 4: //REQUESTS
+                        mAddFloatingActionButton.show();
+                        mAddFloatingActionButton.setVisibility(View.VISIBLE);
+                        mAddFloatingActionButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 Snackbar.make(view, "Add request to be implemented", Snackbar.LENGTH_LONG)
