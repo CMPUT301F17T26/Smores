@@ -1,5 +1,6 @@
 package cmput301f17t26.smores.all_models;
 
+import java.security.cert.CertPathValidatorException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -38,9 +39,21 @@ public class Habit {
 
     private String mUserID;
 
-    public Habit(String userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) {
+    public Habit(String userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) throws  TitleTooLongException, ReasonTooLongException {
         mUserID = userID;
-        mTitle = title;
+
+        try {
+            this.setTitle(title);
+        } catch (TitleTooLongException e) {
+            throw new TitleTooLongException();
+        }
+
+        try {
+            this.setReason(reason);
+        } catch (ReasonTooLongException e) {
+            throw new ReasonTooLongException();
+        }
+
         mStartDate = startDate;
         mDaysOfWeek = daysOfWeek;
 
