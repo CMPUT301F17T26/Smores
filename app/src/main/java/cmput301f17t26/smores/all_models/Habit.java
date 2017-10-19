@@ -1,6 +1,7 @@
 package cmput301f17t26.smores.all_models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -14,15 +15,16 @@ import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
 
 public class Habit {
 
-    public static final Integer SUNDAY = 0;
-    public static final Integer MONDAY = 1;
-    public static final Integer TUESDAY = 2;
-    public static final Integer WEDNESDAY = 3;
-    public static final Integer THURSDAY = 4;
-    public static final Integer FRIDAY = 5;
-    public static final Integer SATURDAY = 6;
+    public static final int SUNDAY = 0;
+    public static final int MONDAY = 1;
+    public static final int TUESDAY = 2;
+    public static final int WEDNESDAY = 3;
+    public static final int THURSDAY = 4;
+    public static final int FRIDAY = 5;
+    public static final int SATURDAY = 6;
 
-    public static final Integer[] DAYS_OF_WEEK = {SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY};
+    //JestID to be added
+    private String mID;
 
     private String mTitle;
     private String mReason;
@@ -34,27 +36,24 @@ public class Habit {
     private Double mPercentageFollowed;
     private String mMostFrequentDay;
 
-    //JestID to be added
-    private String mID;
-
     private String mUserID;
 
     public Habit(String userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) {
-        this.mUserID = userID;
-        this.mTitle = title;
-        this.mStartDate = startDate;
-        this.mDaysOfWeek = daysOfWeek;
+        mUserID = userID;
+        mTitle = title;
+        mStartDate = startDate;
+        mDaysOfWeek = daysOfWeek;
 
-        this.mDaysMissed = 0;
-        this.mDaysCompleted = 0;
-        this.mPercentageFollowed = 0.0;
+        mDaysMissed = 0;
+        mDaysCompleted = 0;
+        mPercentageFollowed = 0.0;
     }
 
     public void setTitle(String title) throws TitleTooLongException {
         if (title.length() > 20) {
             throw new TitleTooLongException();
         } else {
-            this.mTitle = title;
+            mTitle = title;
         }
     }
 
@@ -62,29 +61,84 @@ public class Habit {
         if (reason.length() > 30) {
             throw new ReasonTooLongException();
         } else {
-            this.mReason = reason;
+            mReason = reason;
         }
     }
     public void setStartDate(Date date) {
-        this.mStartDate = date;
+        mStartDate = date;
     }
 
     public void setDaysOfWeek(HashMap<Integer, Boolean> daysOfWeek) {
-        this.mDaysOfWeek = daysOfWeek;
+        mDaysOfWeek = daysOfWeek;
     }
 
     public void setDaysMissed(Integer daysMissed) {
-        this.mDaysMissed = daysMissed;
+        mDaysMissed = daysMissed;
     }
 
     public void setPercentageFollowed(Double percentageFollowed) {
-        this.mPercentageFollowed = percentageFollowed;
+        mPercentageFollowed = percentageFollowed;
     }
 
     public void setMostFrequentDay(Integer dayOfWeek) throws NotDayOfWeekException {
-       
-
+       switch (dayOfWeek) {
+           case SUNDAY:
+               mMostFrequentDay = "Sunday";
+               break;
+           case MONDAY:
+               mMostFrequentDay = "Monday";
+               break;
+           case TUESDAY:
+               mMostFrequentDay = "Tuesday";
+               break;
+           case WEDNESDAY:
+               mMostFrequentDay = "Wednesday";
+               break;
+           case THURSDAY:
+               mMostFrequentDay = "Thursday";
+               break;
+           case FRIDAY:
+               mMostFrequentDay = "Friday";
+               break;
+           case SATURDAY:
+               mMostFrequentDay = "Saturday";
+               break;
+           default:
+               throw new NotDayOfWeekException();
+       }
     }
+
+    public String getTitle() {
+        return mTitle;
+    }
+    public String getReason() {
+        return mReason;
+    }
+    public Date getStartDate() {
+        return mStartDate;
+    }
+
+    public HashMap<Integer, Boolean> getDaysofWeek() {
+        return mDaysOfWeek;
+    }
+
+    public int getDaysMissed() {
+        return mDaysMissed;
+    }
+
+    public int getDaysCompleted() {
+        return mDaysCompleted;
+    }
+
+    public double getPercentageFollowed() {
+        return mPercentageFollowed;
+    }
+
+    public String getMostFrequenyDay() {
+        return mMostFrequentDay;
+    }
+
+
 
 
 

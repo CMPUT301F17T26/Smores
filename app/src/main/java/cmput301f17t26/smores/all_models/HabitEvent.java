@@ -5,4 +5,6 @@ package cmput301f17t26.smores.all_models;
  */
 
 public class HabitEvent {
+
+
 }
