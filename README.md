@@ -1,3 +1,3 @@
 # Smores
-![Smores-icon.png](/doc/Smores-icon)
+[[/doc/Smores-icon.png|Smore!]])
 An android app to help users build and track habits.
