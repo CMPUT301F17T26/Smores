@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * Created by Rohan on 10/19/2017.
@@ -12,45 +13,46 @@ import java.util.ArrayList;
 
 public class User {
 
-    private static final String SAVED_ID_KEY = "useridkey";
+    private UUID mID;
+    private ArrayList<UUID> requests;
+    private ArrayList<UUID> following;
 
-    //JestID to be added
-    private static String mID;
-
-    private static ArrayList<String> requests;
-    private static ArrayList<String> following;
-
-    public static User mUser = null;
-
-    public static User getUserSession(Context context) {
-        if (mUser == null) {
-            mUser = new User(context);
-        } else {
-            return mUser;
-        }
+    public User () {
+        mID = UUID.randomUUID();
+        requests = new ArrayList<>();
+        following = new ArrayList<>();
     }
 
-    private User(Context context) {
-        SharedPreferences userIDData = PreferenceManager.getDefaultSharedPreferences(context.getApplicationContext());
-        mID = userIDData.getString(SAVED_ID_KEY, "");
-        if (mID.equals("")) {
-            mID = "TEST-ID";
-
-            //assuming network call succeeds
-            SharedPreferences.Editor prefsEditor = userIDData.edit();
-            prefsEditor.putString(SAVED_ID_KEY, mID);
-            prefsEditor.apply();
-        }
+    public UUID getUserID () {
+        return mID;
     }
 
-
-
-    public static String getUserID (Context context) {
-
+    public void addRequests (UUID friend) {
+        requests.add(friend);
     }
 
-    public static ArrayList<String> getRequestsList () {
+    public void addFollowing (UUID friend) {
+        following.add(friend);
+    }
+
+    public void removeRequests (UUID friend) {
+        requests.remove(friend);
+    }
+
+    public ArrayList<UUID> getRequestsList () {
         return requests;
+    }
+
+    public ArrayList<UUID> getFollowingList() {
+        return following;
+    }
+
+    public UUID getRequest(int index) {
+        return requests.get(index);
+    }
+
+    public UUID getFollower(int index) {
+        return following.get(index);
     }
 
 
