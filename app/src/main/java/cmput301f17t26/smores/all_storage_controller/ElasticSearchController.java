@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_models.HabitEvent;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Delete;
 import io.searchbox.core.Doc;
@@ -32,7 +33,7 @@ public class ElasticSearchController {
     private static JestDroidClient client;
     private static Gson gson;
 
-    public static class GetHabitsTask extends AsyncTask<String, Void, ArrayList<Habit>> {
+    public static class GetHabitTask extends AsyncTask<String, Void, ArrayList<Habit>> {
         @Override
         protected ArrayList<Habit> doInBackground(String... params) {
             verifySettings();
@@ -120,8 +121,28 @@ public class ElasticSearchController {
             }
             return null;
         }
+    }
+
+
+    public static class UpdateHabitTask extends AsyncTask<Habit, Void, Void> {
+        @Override
+        protected Void doInBackground(Habit... params) {
+            verifySettings();
+
+            try {
+                JestResult result = client.execute(new Index.Builder(params[0])
+                        .index("cmput301f17t26")
+                        .type("session")
+                        .id(params[0].getID().toString())
+                        .build());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
     }
+
 
     //taken from elastic search lab.
     public static void verifySettings() {
