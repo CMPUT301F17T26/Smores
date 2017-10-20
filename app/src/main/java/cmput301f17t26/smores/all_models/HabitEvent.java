@@ -29,10 +29,10 @@ public class HabitEvent {
     private Bitmap mImage;
     private Location mLocation;
 
-    private String mUserID;
-    private String mHabitID;
+    private UUID mUserID;
+    private UUID mHabitID;
 
-    public HabitEvent(String userID, String habitID)  {
+    public HabitEvent(UUID userID, UUID habitID)  {
         mID = UUID.randomUUID();
 
         mUserID = userID;
@@ -104,11 +104,11 @@ public class HabitEvent {
         }
     }
 
-    public String getHabitID() {
+    public UUID getHabitID() {
         return mHabitID;
     }
 
-    public String getUserID() {
+    public UUID getUserID() {
         return mUserID;
     }
 
