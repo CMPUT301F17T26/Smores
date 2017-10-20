@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 import cmput301f17t26.smores.all_exceptions.NotDayOfWeekException;
 import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
@@ -25,7 +26,7 @@ public class Habit {
     public static final int SATURDAY = 6;
 
     //JestID to be added
-    private String mID;
+    private UUID mID;
 
     private String mTitle;
     private String mReason;
@@ -40,19 +41,12 @@ public class Habit {
     private String mUserID;
 
     public Habit(String userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) throws  TitleTooLongException, ReasonTooLongException {
+        mID = UUID.randomUUID();
+
         mUserID = userID;
 
-        try {
-            this.setTitle(title);
-        } catch (TitleTooLongException e) {
-            throw new TitleTooLongException();
-        }
-
-        try {
-            this.setReason(reason);
-        } catch (ReasonTooLongException e) {
-            throw new ReasonTooLongException();
-        }
+        setTitle(title);
+        setReason(reason);
 
         mStartDate = startDate;
         mDaysOfWeek = daysOfWeek;
@@ -151,6 +145,13 @@ public class Habit {
         return mMostFrequentDay;
     }
 
+    public UUID getID() {
+        return mID;
+    }
+
+    public String getUserID() {
+        return mUserID;
+    }
 
 
 
