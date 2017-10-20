@@ -14,17 +14,23 @@ import java.util.UUID;
 public class User {
 
     private UUID mID;
+    private String username;
     private ArrayList<UUID> requests;
     private ArrayList<UUID> following;
 
-    public User () {
+    public User (String username) {
         mID = UUID.randomUUID();
         requests = new ArrayList<>();
         following = new ArrayList<>();
+        this.username = username;
     }
 
     public UUID getUserID () {
         return mID;
+    }
+
+    public String getUsername () {
+        return username;
     }
 
     public void addRequests (UUID friend) {
