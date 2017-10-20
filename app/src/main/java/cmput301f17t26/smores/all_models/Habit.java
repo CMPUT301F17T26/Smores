@@ -38,9 +38,9 @@ public class Habit {
     private Double mPercentageFollowed;
     private String mMostFrequentDay;
 
-    private String mUserID;
+    private UUID mUserID;
 
-    public Habit(String userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) throws  TitleTooLongException, ReasonTooLongException {
+    public Habit(UUID userID, String title, String reason, Date startDate, HashMap<Integer, Boolean> daysOfWeek) throws  TitleTooLongException, ReasonTooLongException {
         mID = UUID.randomUUID();
 
         mUserID = userID;
@@ -149,7 +149,7 @@ public class Habit {
         return mID;
     }
 
-    public String getUserID() {
+    public UUID getUserID() {
         return mUserID;
     }
 
