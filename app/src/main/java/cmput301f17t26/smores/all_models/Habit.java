@@ -125,7 +125,7 @@ public class Habit {
         return mStartDate;
     }
 
-    public HashMap<Integer, Boolean> getDaysofWeek() {
+    public HashMap<Integer, Boolean> getDaysOfWeek() {
         return mDaysOfWeek;
     }
 

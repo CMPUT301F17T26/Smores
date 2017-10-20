@@ -132,7 +132,7 @@ public class ElasticSearchController {
             try {
                 JestResult result = client.execute(new Index.Builder(params[0])
                         .index("cmput301f17t26")
-                        .type("session")
+                        .type("habit")
                         .id(params[0].getID().toString())
                         .build());
             } catch (IOException e) {
