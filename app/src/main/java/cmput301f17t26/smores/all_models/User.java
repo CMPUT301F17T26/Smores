@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_exceptions.InvalidUUIDException;
+
 /**
  * Created by Rohan on 10/19/2017.
  */
@@ -33,15 +35,16 @@ public class User {
         return username;
     }
 
-    public void addRequests (UUID friend) {
+    public void addRequest (UUID friend) throws InvalidUUIDException {
         requests.add(friend);
+
     }
 
-    public void addFollowing (UUID friend) {
+    public void addFollowing (UUID friend) throws InvalidUUIDException {
         following.add(friend);
     }
 
-    public void removeRequests (UUID friend) {
+    public void removeRequest (UUID friend) {
         requests.remove(friend);
     }
 
@@ -57,7 +60,7 @@ public class User {
         return requests.get(index);
     }
 
-    public UUID getFollower(int index) {
+    public UUID getFollowing(int index) {
         return following.get(index);
     }
 
