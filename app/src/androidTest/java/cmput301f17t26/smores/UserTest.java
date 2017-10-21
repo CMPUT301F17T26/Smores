@@ -16,19 +16,21 @@ import cmput301f17t26.smores.all_models.User;
  *
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
-public class UserTest extends ActivityInstrumentationTestCase2{
+public class UserTest extends ActivityInstrumentationTestCase2 {
 
     public UserTest() {
         super(cmput301f17t26.smores.all_models.User.class);
     }
 
     public void testUser() {
+        //Includes coverage of getUsername()
         String username = "Steve";
         User user = new User(username);
         assertEquals(user.getUsername(), username);
     }
 
     public void testUserRandomUUID() {
+        //Includes coverage of getUserID()
         User user1 = new User("myfirstuser");
         User user2 = new User("myseconduser");
         User user3 = new User("Steve");
@@ -36,12 +38,6 @@ public class UserTest extends ActivityInstrumentationTestCase2{
         assertTrue(user1.getUserID() != user2.getUserID());
         assertTrue(user1.getUserID() != user3.getUserID());
         assertTrue(user2.getUserID() != user3.getUserID());
-    }
-
-    public void testGetUsername() {
-        String username = "Steve";
-        User user = new User(username);
-        assertEquals(user.getUsername(), username);
     }
 
     public void testAddRequest() {
