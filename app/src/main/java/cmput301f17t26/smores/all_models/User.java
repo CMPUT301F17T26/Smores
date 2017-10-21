@@ -37,7 +37,6 @@ public class User {
 
     public void addRequest (UUID friend) throws InvalidUUIDException {
         requests.add(friend);
-
     }
 
     public void addFollowing (UUID friend) throws InvalidUUIDException {
