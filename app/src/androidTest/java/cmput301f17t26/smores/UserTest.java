@@ -73,10 +73,10 @@ public class UserTest extends ActivityInstrumentationTestCase2{
 
         try {
             user1.addFollowing(user2.getUserID());
-            assertEquals(user1.getFollowing(0), user2.getUserID());
         } catch (InvalidUUIDException e) {
             e.printStackTrace();
         }
+        assertEquals(user1.getFollowing(0), user2.getUserID());
     }
 
     public void testAddFollowingSelf() {
@@ -132,5 +132,83 @@ public class UserTest extends ActivityInstrumentationTestCase2{
 
         ArrayList<UUID> user1RequestList = user1.getRequestsList();
         assertEquals(user2.getUserID(), user1RequestList.get(0));
+    }
+
+    public void testGetFollowingList() {
+        User user1 = new User("bob");
+        User user2 = new User("Steve");
+
+        try {
+            user1.addFollowing(user2.getUserID());
+        } catch (InvalidUUIDException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<UUID> user1FollowingList = user1.getFollowingList();
+        assertEquals(user2.getUserID(), user1FollowingList.get(0));
+    }
+
+    public void testGetRequest() {
+        User user1 = new User("bob");
+        User user2 = new User("Steve");
+
+        try {
+            user1.addRequest(user2.getUserID());
+        } catch (InvalidUUIDException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(user2.getUserID(), user1.getRequest(0));
+    }
+
+    public void testGetRequestOutOfBounds() {
+        User user1 = new User("bob");
+        User user2 = new User("Steve");
+
+        try {
+            user1.addRequest(user2.getUserID());
+        } catch (InvalidUUIDException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            user1.getRequest(30);
+            Assert.fail("Should have thrown IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException e){
+            //success
+        }
+    }
+
+    public void testGetFollowing() {
+        User user1 = new User("bob");
+        User user2 = new User("Steve");
+
+        try {
+            user1.addFollowing(user2.getUserID());
+        } catch (InvalidUUIDException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(user2.getUserID(), user1.getFollowing(0));
+    }
+
+    public void testGetFollowingOutOfBounds() {
+        User user1 = new User("bob");
+        User user2 = new User("Steve");
+
+        try {
+            user1.addFollowing(user2.getUserID());
+        } catch (InvalidUUIDException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            user1.getFollowing(30);
+            Assert.fail("Should have thrown IndexOutOfBoundsException");
+        }
+        catch (IndexOutOfBoundsException e){
+            //success
+        }
     }
 }
