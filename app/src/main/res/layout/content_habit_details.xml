@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:hint="Enter Habit Name"
             android:layout_weight="2"
+            android:maxLength="5"
             />
     </LinearLayout>
 

@@ -161,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
                                 addDialogFragment.show(manager, "AddDialog");
                             }
                         });
+
+                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.hide();
                         return;
                 }
 
