@@ -125,13 +125,13 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     public void testSetDaysOfWeek() {
         //Includes coverage of getDaysOfWeek
         HashMap<Integer, Boolean> testdays = new HashMap<Integer, Boolean>() {{
-            put(Habit.SUNDAY, Boolean.TRUE);
-            put(Habit.MONDAY, Boolean.FALSE);
-            put(Habit.TUESDAY, Boolean.FALSE);
-            put(Habit.WEDNESDAY, Boolean.FALSE);
-            put(Habit.THURSDAY, Boolean.FALSE);
-            put(Habit.FRIDAY, Boolean.FALSE);
-            put(Habit.SATURDAY, Boolean.FALSE);
+            put(Habit.SUNDAY, Boolean.FALSE);
+            put(Habit.MONDAY, Boolean.TRUE);
+            put(Habit.TUESDAY, Boolean.TRUE);
+            put(Habit.WEDNESDAY, Boolean.TRUE);
+            put(Habit.THURSDAY, Boolean.TRUE);
+            put(Habit.FRIDAY, Boolean.TRUE);
+            put(Habit.SATURDAY, Boolean.TRUE);
         }};
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
