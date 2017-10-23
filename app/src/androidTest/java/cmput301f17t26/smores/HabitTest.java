@@ -55,6 +55,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetTitle() {
+        //Includes coverage of getTitle
         String testtitle = "testtitle";
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -81,6 +82,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetReason() {
+        //Includes coverage of getReason
         String testreason = "testtitle";
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -107,6 +109,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetStartDate() {
+        //Includes coverage of getStartDate
         Date testdate = new Date();
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -120,6 +123,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetDaysOfWeek() {
+        //Includes coverage of getDaysOfWeek
         HashMap<Integer, Boolean> testdays = new HashMap<Integer, Boolean>() {{
             put(Habit.SUNDAY, Boolean.TRUE);
             put(Habit.MONDAY, Boolean.FALSE);
@@ -141,6 +145,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetDaysMissed() {
+        //Includes coverage of getDaysMissed
         Integer daysmissed = 2;
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -154,6 +159,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetPercentageFollowed() {
+        //Includes coverage of getPercentageFollowed
         Double testpercentage = 42.0;
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -167,6 +173,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetMostFrequentDay() {
+        //Includes coverage of getMostFrequentDay
         Integer testfrequentday = Habit.MONDAY;
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
@@ -182,6 +189,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
     }
 
     public void testSetDaysCompleted() {
+        //Includes coverage of getDaysCompleted
         Integer testdayscompleted = 4;
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
