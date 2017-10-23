@@ -83,6 +83,10 @@ public class Habit {
         mDaysMissed = daysMissed;
     }
 
+    public void setDaysCompleted(Integer daysCompleted) {
+        mDaysCompleted = daysCompleted;
+    }
+
     public void setPercentageFollowed(Double percentageFollowed) {
         mPercentageFollowed = percentageFollowed;
     }
@@ -129,11 +133,11 @@ public class Habit {
         return mDaysOfWeek;
     }
 
-    public int getDaysMissed() {
+    public Integer getDaysMissed() {
         return mDaysMissed;
     }
 
-    public int getDaysCompleted() {
+    public Integer getDaysCompleted() {
         return mDaysCompleted;
     }
 
@@ -141,7 +145,7 @@ public class Habit {
         return mPercentageFollowed;
     }
 
-    public String getMostFrequenyDay() {
+    public String getMostFrequentDay() {
         return mMostFrequentDay;
     }
 
