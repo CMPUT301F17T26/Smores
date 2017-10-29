@@ -1,3 +1,15 @@
+/*
+ * HabitEvent
+ *
+ * Version 1.0
+ *
+ * October 28, 2016
+ *
+ * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
+ * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
+ * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
+ */
+
 package cmput301f17t26.smores.all_models;
 
 import android.graphics.Bitmap;
@@ -16,9 +28,12 @@ import cmput301f17t26.smores.all_exceptions.ImageTooBigException;
 import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 
 /**
- * Created by Rohan on 10/19/2017.
+ * Represents a Habit Event
+ *
+ * @author rohan
+ * @version 1.0
+ * @since 1.0
  */
-
 public class HabitEvent {
 
     private UUID mID;
@@ -32,6 +47,12 @@ public class HabitEvent {
     private UUID mUserID;
     private UUID mHabitID;
 
+    /**
+     * Constructs a habit event object.
+     *
+     * @param userID
+     * @param habitID
+     */
     public HabitEvent(UUID userID, UUID habitID)  {
         mID = UUID.randomUUID();
 
@@ -40,6 +61,12 @@ public class HabitEvent {
         mDateCompleted = new Date();
     }
 
+    /**
+     * Sets the habit comment.
+     *
+     * @param comment
+     * @throws CommentTooLongException
+     */
     public void setComment(String comment) throws CommentTooLongException {
         if (comment.length() > 20) {
             throw new CommentTooLongException();
@@ -48,10 +75,21 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Sets the habit event location.
+     *
+     * @param location
+     */
     public void setLocation(Location location) {
         mLocation = location;
     }
 
+    /**
+     * Sets the habit event image.
+     *
+     * @param image
+     * @throws ImageTooBigException
+     */
     public void setImage(Bitmap image) throws ImageTooBigException {
         if (image.getByteCount() >= 65536) {
             throw new ImageTooBigException();
@@ -60,18 +98,33 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Removes habit event location
+     */
     public void removeLocation() {
         mLocation = null;
     }
 
+    /**
+     * Removes habit event image
+     */
     public void removeImage() {
         mImage = null;
     }
 
+    /**
+     * Removes habit event comment
+     */
     public void removeComment() {
         mComment = null;
     }
 
+    /**
+     * Returns habit event location
+     *
+     * @return Location mLocation
+     * @throws LocationNotSetException
+     */
     public Location getLocation() throws LocationNotSetException {
         if (mLocation == null) {
             throw new LocationNotSetException();
@@ -80,6 +133,12 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Returns habit event location has a lat/long
+     *
+     * @return LatLng new LatLng(...)
+     * @throws LocationNotSetException
+     */
     public LatLng getLatLng() throws LocationNotSetException {
         if (mLocation == null) {
             throw new LocationNotSetException();
@@ -88,6 +147,12 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Returns habit event bitmap
+     *
+     * @return Bitmap mImage
+     * @throws ImageNotSetException
+     */
     public Bitmap getImage() throws ImageNotSetException {
         if (mImage == null) {
             throw new ImageNotSetException();
@@ -96,6 +161,12 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Returns habit event comment
+     *
+     * @return String mComment
+     * @throws CommentNotSetException
+     */
     public String getComment() throws CommentNotSetException {
         if (mComment == null) {
             throw new CommentNotSetException();
@@ -104,14 +175,29 @@ public class HabitEvent {
         }
     }
 
+    /**
+     * Returns habit ID associated with habit event
+     *
+     * @return UUID mHabitID
+     */
     public UUID getHabitID() {
         return mHabitID;
     }
 
+    /**
+     * Returns user ID associated with habit event
+     *
+     * @return UUID mUserID
+     */
     public UUID getUserID() {
         return mUserID;
     }
 
+    /**
+     * Returns habit event ID
+     *
+     * @return UUID mID
+     */
     public UUID getID() {
         return mID;
     }
