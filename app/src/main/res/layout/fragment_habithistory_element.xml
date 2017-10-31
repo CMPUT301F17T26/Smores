@@ -5,16 +5,20 @@
               android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/id"
+        android:id="@+id/Event_Element_hTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"/>
+        android:text="Title"
+        android:textAppearance="?attr/textAppearanceListItem"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/content"
+        android:id="@+id/Event_Element_hDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem"/>
+        android:text="19/1/17"
+        android:textAppearance="?attr/textAppearanceListItem" />
 </LinearLayout>

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment.OnListFragmentInteractionListener;
+import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
@@ -23,14 +24,14 @@ import java.util.List;
  */
 public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapter.ViewHolder> {
 
-    private List<DummyItem> mValues, mFilterValues;
+    private List<HabitEvent> mValues, mFilterValues;
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
 
-    public HabitHistoryAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener, Context context) {
+    public HabitHistoryAdapter(List<HabitEvent> items, OnListFragmentInteractionListener listener, Context context) {
         mValues = items;
         mListener = listener;
-        mFilterValues = new ArrayList<DummyItem>();
+        mFilterValues = new ArrayList<HabitEvent>();
         mFilterValues.addAll(mValues);
         mContext = context;
 
@@ -47,7 +48,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
         holder.mItem = mFilterValues.get(position);
-        holder.mIdView.setText(mFilterValues.get(position).id);
+        holder.mTitleView.setText(mFilterValues.get(position).);
         holder.mContentView.setText("Habit History " + mFilterValues.get(position).content);
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -69,20 +70,21 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mTitleView;
+        public final TextView mDateView;
+        public HabitEvent mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTitleView = (TextView) view.findViewById(R.id.Event_Element_hTitle);
+            mDateView = (TextView) view.findViewById(R.id.Event_Element_hDate);
+
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitleView.getText() + "'";
         }
     }
 
@@ -102,11 +104,11 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 
                 } else {
                     // Iterate in the original List and add it to filter list...
-                    for (DummyItem item : mValues) {
-                        if (item.content.toLowerCase().contains(text.toLowerCase())) {
-                            // Adding Matched items
+                    for (HabitEvent item : mValues) {
+//                        if (item.getComment().toLowerCase().contains(text.toLowerCase())) { // not implemented getTitle()
+//                            // Adding Matched items
                             mFilterValues.add(item);
-                        }
+//                        }
                     }
                 }
 
