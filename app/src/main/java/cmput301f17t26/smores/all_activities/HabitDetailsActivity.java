@@ -81,6 +81,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         mMonth = today.get(Calendar.MONTH);
         mDay = today.get(Calendar.DATE);
 
+        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth, mDay));
     }
 
     @Override
@@ -93,6 +94,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
+                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth, mDay));
                 }
             }, mYear, mMonth, mDay);
         }
