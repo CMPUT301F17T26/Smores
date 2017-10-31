@@ -17,8 +17,15 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
+import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
+import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
 
@@ -87,7 +94,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_ID) {
-            Calendar today = Calendar.getInstance();
             return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
@@ -119,8 +125,44 @@ public class HabitDetailsActivity extends AppCompatActivity {
 
         //Save and return
         if (valid) {
+            //if editing
+            //saveEdited(index);
+            //else
             Log.d("Habit", "Everything is awesome!");
+            saveNew();
         }
+    }
+
+    private void saveNew() {
+        Date date = new Date();
+        date.setYear(mYear);
+        date.setMonth(mMonth);
+        date.setDate(mDay);
+
+        HashMap<Integer, Boolean> days = new HashMap<Integer, Boolean>() {{
+            put(Habit.SUNDAY, mSunBox.isChecked());
+            put(Habit.MONDAY, mMonBox.isChecked());
+            put(Habit.TUESDAY, mTueBox.isChecked());
+            put(Habit.WEDNESDAY, mWedBox.isChecked());
+            put(Habit.THURSDAY, mThuBox.isChecked());
+            put(Habit.FRIDAY, mFriBox.isChecked());
+            put(Habit.SATURDAY, mSatBox.isChecked());
+        }};
+
+        //get user controller
+
+        try {
+            Habit habit = new Habit(UUID.randomUUID(),
+                    mNameText.getText().toString(),
+                    mReasonText.getText().toString(),
+                    new Date(),
+                    days
+                    );
+            HabitController.getHabitController(this).addHabit(this, habit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        finish();
     }
 
     private boolean checkDaysValid() {
