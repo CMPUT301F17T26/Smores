@@ -85,7 +85,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         //else
         Calendar today = Calendar.getInstance();
         mYear = today.get(Calendar.YEAR);
-        mMonth = today.get(Calendar.MONTH);
+        mMonth = today.get(Calendar.MONTH) + 1;
         mDay = today.get(Calendar.DATE);
 
         mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth, mDay));
