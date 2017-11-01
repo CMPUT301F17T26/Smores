@@ -28,12 +28,12 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
     private final OnListFragmentInteractionListener mListener;
     private Context mContext;
 
-    public HabitHistoryAdapter(List<HabitEvent> items, OnListFragmentInteractionListener listener, Context context) {
+    public HabitHistoryAdapter(List<HabitEvent> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         mFilterValues = new ArrayList<HabitEvent>();
         mFilterValues.addAll(mValues);
-        mContext = context;
+        mContext = (Context) listener;
 
     }
 
@@ -45,11 +45,12 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.mItem = mFilterValues.get(position);
-        holder.mTitleView.setText(mFilterValues.get(position).);
-        holder.mContentView.setText("Habit History " + mFilterValues.get(position).content);
+        //holder.mTitleView.setText(mFilterValues.get(position).getTitle()); // HabitEvent.getTitle() not implemented
+        holder.mTitleView.setText("Dummy Title");
+        holder.mDateView.setText(mFilterValues.get(position).getDate().toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +58,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(position);
                 }
             }
         });
@@ -105,7 +106,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                 } else {
                     // Iterate in the original List and add it to filter list...
                     for (HabitEvent item : mValues) {
-//                        if (item.getComment().toLowerCase().contains(text.toLowerCase())) { // not implemented getTitle()
+//                        if (item.content.toLowerCase().contains(text.toLowerCase())) { // not implemented getTitle()
 //                            // Adding Matched items
                             mFilterValues.add(item);
 //                        }

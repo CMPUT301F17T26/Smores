@@ -202,5 +202,7 @@ public class HabitEvent {
         return mID;
     }
 
-    public Date
+    public Date getDate() {
+        return mDateCompleted;
+    }
 }

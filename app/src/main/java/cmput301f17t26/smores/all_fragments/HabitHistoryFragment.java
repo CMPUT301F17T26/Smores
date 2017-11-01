@@ -18,6 +18,7 @@ import android.widget.EditText;
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.HabitHistoryAdapter;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
@@ -72,7 +73,7 @@ public class HabitHistoryFragment extends Fragment {
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mHabitHistoryAdapter = new HabitHistoryAdapter(DummyContent.ITEMS, mListener, getActivity());
+        mHabitHistoryAdapter = new HabitHistoryAdapter(HabitEventController.getHabitEventController(this.getContext()).getHabitEvents(), mListener);
         recyclerView.setAdapter(mHabitHistoryAdapter);
 
 
@@ -130,6 +131,6 @@ public class HabitHistoryFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(int index);
     }
 }
