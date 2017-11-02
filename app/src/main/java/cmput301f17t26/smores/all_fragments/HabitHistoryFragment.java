@@ -41,8 +41,7 @@ public class HabitHistoryFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public HabitHistoryFragment() {
-    }
+    public HabitHistoryFragment() {}
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")

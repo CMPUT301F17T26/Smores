@@ -65,7 +65,6 @@ public class HabitEventController {
     }
 
     public HabitEvent getHabitEvent(int index) {
-        mHabitEvents.add(new HabitEvent(UUID.randomUUID(), UUID.randomUUID()));
         return mHabitEvents.get(index);
     }
 
