@@ -26,6 +26,7 @@ import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
 import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
 
@@ -152,10 +153,10 @@ public class HabitDetailsActivity extends AppCompatActivity {
         //get user controller
 
         try {
-            Habit habit = new Habit(UUID.randomUUID(),
+            Habit habit = new Habit(UserController.getUserController(this).getUser().getUserID(),
                     mNameText.getText().toString(),
                     mReasonText.getText().toString(),
-                    new Date(),
+                    date,
                     days
                     );
             HabitController.getHabitController(this).addHabit(this, habit);

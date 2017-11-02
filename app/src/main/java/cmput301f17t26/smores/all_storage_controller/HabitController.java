@@ -9,6 +9,7 @@ package cmput301f17t26.smores.all_storage_controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -49,6 +50,9 @@ public class HabitController {
         }
         else {
             mHabitList = gson.fromJson(JSONHabits,new TypeToken<ArrayList<Habit>>(){}.getType());
+            for (Habit h: mHabitList) {
+                Log.d("CONTROLLER", h.getTitle());
+            }
         }
     }
 
@@ -67,5 +71,21 @@ public class HabitController {
     public void addHabit(Context context, Habit habit) {
         mHabitList.add(habit);
         saveHabits(context);
+        addHabitToServer(habit);
+        Log.d("HABIT CONTROLLER", "ADDED HABIT");
+    }
+    public ArrayList<Habit> getHabitList() {
+        return mHabitList;
+    }
+
+    private void addHabitToServer(Habit habit) {
+        ElasticSearchController.AddHabitTask addHabitTask
+                = new ElasticSearchController.AddHabitTask();
+        //if internet {
+        addHabitTask.execute(habit);
+        //}
+        //else {
+        //listOfCommandsToDo.add(new Pair(habit, addHabitTask));
+        //}
     }
 }

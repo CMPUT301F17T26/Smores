@@ -21,9 +21,10 @@ import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
 import cmput301f17t26.smores.all_fragments.AddDialogFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
+import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mUserController = UserController.getUserController(this);
+        getUser();
 
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
@@ -59,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         // primary sections of the activity.
         mTabAdapter = new TabAdapter(getSupportFragmentManager());
 
-        getUser();
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -200,7 +202,11 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 Log.d("Tag", mUserController.getUser().getUsername());
             }
-
         }
+    }
+
+    @Override
+    public void onHabitListInteraction(int position) { //open new activity
+
     }
 }

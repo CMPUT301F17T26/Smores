@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_models.User;
@@ -28,8 +29,15 @@ public class AddUserFragment extends DialogFragment {
         mCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                UserController.getUserController(getActivity()).saveUser(getActivity(), new User(mUserName.getText().toString()));
-                dismiss();
+
+                UserController userController = UserController.getUserController(getActivity());
+
+                if (userController.addUser(getActivity(), new User(mUserName.getText().toString()))) { //we were able to add a user
+                    Toast.makeText(getActivity(), "Added!", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), "Another user already has your username! Please try again", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
