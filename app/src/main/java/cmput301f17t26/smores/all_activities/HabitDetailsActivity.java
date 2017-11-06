@@ -103,7 +103,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mDay = day;
                     mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth, mDay));
                 }
-            }, mYear, mMonth, mDay);
+            }, mYear, mMonth - 1, mDay);
         }
         return null;
     }
