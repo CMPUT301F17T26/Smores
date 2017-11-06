@@ -74,6 +74,16 @@ public class HabitController {
         addHabitToServer(habit);
         Log.d("HABIT CONTROLLER", "ADDED HABIT");
     }
+
+    public Habit getHabit(int i) {
+        return mHabitList.get(i);
+    }
+
+    public void deleteHabit(Context context, int i) {
+        //delete a habit based on the index
+        mHabitList.remove(i);
+        saveHabits(context);
+    }
     public ArrayList<Habit> getHabitList() {
         return mHabitList;
     }
