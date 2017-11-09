@@ -5,6 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -19,8 +20,11 @@ import android.view.View;
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
 import cmput301f17t26.smores.all_fragments.AddDialogFragment;
+import cmput301f17t26.smores.all_fragments.AddUserFragment;
+import cmput301f17t26.smores.all_fragments.HabitFragment;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -36,11 +40,16 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton mAddFloatingActionButton;
     private FloatingActionButton mMapsFloatingActionButton;
     private TabLayout mTabLayout;
+    private UserController mUserController;
+    public static final int NEW_HABIT = 0;
+    public static final int EDIT_HABIT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mUserController = UserController.getUserController(this);
+        getUser();
 
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
@@ -53,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mTabAdapter = new TabAdapter(getSupportFragmentManager());
+
+
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -106,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
-                                MainActivity.this.startActivity(intent);
+                                MainActivity.this.startActivityForResult(intent, NEW_HABIT);
                             }
                         });
 
@@ -180,5 +191,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void getUser () {
+        if (!mUserController.isUserSet()) {
+            FragmentManager manager = MainActivity.this.getSupportFragmentManager();
+            AddUserFragment addUserFragment = new AddUserFragment();
+            addUserFragment.show(manager, "AddUser");
+        } else {
+            if (mUserController.getUser() == null) {
+                Log.d("Tag", "Null!");
+            } else {
+                Log.d("Tag", mUserController.getUser().getUsername());
+            }
+        }
+    }
+
+    @Override
+    public void onHabitListInteraction(int position) { //open new activity
+        Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
+        intent.putExtra("habitPosition", position);
+        MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
     }
 }

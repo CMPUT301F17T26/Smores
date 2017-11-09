@@ -11,10 +11,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.RequestAdapter;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
@@ -31,6 +35,7 @@ public class RequestFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private TextView username;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -67,6 +72,8 @@ public class RequestFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(new RequestAdapter(DummyContent.ITEMS, mListener));
 
+        username = (TextView) view.findViewById(R.id.request_username);
+        username.setText(UserController.getUserController(getActivity()).getUser().getUsername());
 
         return view;
     }

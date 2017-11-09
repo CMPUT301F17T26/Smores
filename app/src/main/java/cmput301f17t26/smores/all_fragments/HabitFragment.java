@@ -20,7 +20,7 @@ import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link HabitFragmentListener}
  * interface.
  */
 public class HabitFragment extends Fragment {
@@ -29,7 +29,8 @@ public class HabitFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private HabitFragmentListener mListener;
+    private HabitAdapter mHabitAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -62,9 +63,12 @@ public class HabitFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         Context context = view.getContext();
+        mHabitAdapter = new HabitAdapter(mListener);
+
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new HabitAdapter(DummyContent.ITEMS, mListener));
+
+        recyclerView.setAdapter(mHabitAdapter);
 
 
         return view;
@@ -74,8 +78,8 @@ public class HabitFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof HabitFragmentListener) {
+            mListener = (HabitFragmentListener) context;
         } else {
             /*throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");*/
@@ -98,8 +102,16 @@ public class HabitFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface HabitFragmentListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onHabitListInteraction(int position);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mHabitAdapter != null) {
+            mHabitAdapter.notifyDataSetChanged();
+        }
     }
 }

@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:text="4455179c-ac72-11e7-abc4-cec278b6b50a"
-            android:id="@+id/Event_hDate"
+            android:id="@+id/request_username"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
     </LinearLayout>
     <android.support.v7.widget.RecyclerView
