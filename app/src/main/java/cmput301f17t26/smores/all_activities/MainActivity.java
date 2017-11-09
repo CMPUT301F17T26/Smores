@@ -216,7 +216,9 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     }
 
     @Override
-    public void onHabitEventListInteraction(int index) {
-
+    public void onHabitEventListInteraction(int position) {
+        Intent intent = new Intent (MainActivity.this, HabitEventDetailsActivity.class);
+        intent.putExtra("habitEventPosition", position);
+        MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
     }
 }
