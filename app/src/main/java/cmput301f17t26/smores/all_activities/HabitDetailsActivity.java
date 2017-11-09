@@ -83,11 +83,21 @@ public class HabitDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null && bundle.get("habitPosition") != null) {
             mHabitPosition = (int) bundle.get("habitPosition");
         }
+
+        ImageButton deleteButton = (ImageButton) findViewById(R.id.Habit_deleteBtn);
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            //@Override
+            public void onClick(View view) {
+                deleteButtonHandler();
+            }
+        });
 
         Calendar today = Calendar.getInstance();
         mYear = today.get(Calendar.YEAR);
@@ -162,6 +172,17 @@ public class HabitDetailsActivity extends AppCompatActivity {
                 Log.d("Habit", "Everything is awesome!");
                 saveNew();
             }
+        }
+    }
+    private void deleteButtonHandler() {
+        boolean valid = true;
+        if (mHabitPosition == -1) {
+            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            //Habit habit = HabitController.getHabitController(this).getHabit(mHabitPosition);
+            HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
+            finish();
         }
     }
     private void saveEdited() {
