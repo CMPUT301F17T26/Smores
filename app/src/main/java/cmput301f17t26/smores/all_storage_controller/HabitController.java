@@ -84,6 +84,7 @@ public class HabitController {
         mHabitList.remove(i);
         saveHabits(context);
     }
+
     public ArrayList<Habit> getHabitList() {
         return mHabitList;
     }

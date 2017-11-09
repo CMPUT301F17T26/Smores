@@ -2,6 +2,7 @@ package cmput301f17t26.smores.all_activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -43,7 +44,10 @@ public class HabitDetailsActivity extends AppCompatActivity {
     private int mYear;
     private int mMonth;
     private int mDay;
+    int mHabitPosition = -1;
+    Habit mHabit;
     private static final int DIALOG_ID = 0;
+    public static final int HABIT_SAVED = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,17 +83,42 @@ public class HabitDetailsActivity extends AppCompatActivity {
             }
         });
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null && bundle.get("habitPosition") != null) {
+            mHabitPosition = (int) bundle.get("habitPosition");
+        }
 
-        //Get index
-        //if index exists, get current date
-
-        //else
         Calendar today = Calendar.getInstance();
         mYear = today.get(Calendar.YEAR);
         mMonth = today.get(Calendar.MONTH) + 1;
         mDay = today.get(Calendar.DATE);
 
         mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth, mDay));
+
+        if (mHabitPosition != -1) {
+            // Fills in fields if user is editing a habit.
+            mHabit = HabitController.getHabitController(this).getHabit(mHabitPosition);
+            mNameText.setText(mHabit.getTitle());
+            mReasonText.setText(mHabit.getReason());
+
+            mYear = mHabit.getStartDate().getYear();
+            mMonth = mHabit.getStartDate().getMonth();
+            mDay = mHabit.getStartDate().getDate();
+
+            HashMap<Integer, Boolean> days = mHabit.getDaysOfWeek();
+            mSunBox.setChecked(days.get(Habit.SUNDAY));
+            mMonBox.setChecked(days.get(Habit.MONDAY));
+            mTueBox.setChecked(days.get(Habit.TUESDAY));
+            mWedBox.setChecked(days.get(Habit.WEDNESDAY));
+            mThuBox.setChecked(days.get(Habit.THURSDAY));
+            mFriBox.setChecked(days.get(Habit.FRIDAY));
+            mSatBox.setChecked(days.get(Habit.SATURDAY));
+
+            mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
+
+
+        }
     }
 
     @Override
@@ -101,9 +130,9 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
-                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth, mDay));
+                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth - 1, mDay));
                 }
-            }, mYear, mMonth - 1, mDay);
+            }, mYear, mMonth, mDay);
         }
         return null;
     }
@@ -126,14 +155,45 @@ public class HabitDetailsActivity extends AppCompatActivity {
 
         //Save and return
         if (valid) {
-            //if editing
-            //saveEdited(index);
-            //else
-            Log.d("Habit", "Everything is awesome!");
-            saveNew();
+            if (mHabitPosition != -1) {
+                saveEdited();
+            }
+            else {
+                Log.d("Habit", "Everything is awesome!");
+                saveNew();
+            }
         }
     }
+    private void saveEdited() {
+        Date date = mHabit.getStartDate();
+        date.setYear(mYear);
+        date.setMonth(mMonth);
+        date.setDate(mDay);
 
+        HashMap<Integer, Boolean> days = new HashMap<Integer, Boolean>() {{
+            put(Habit.SUNDAY, mSunBox.isChecked());
+            put(Habit.MONDAY, mMonBox.isChecked());
+            put(Habit.TUESDAY, mTueBox.isChecked());
+            put(Habit.WEDNESDAY, mWedBox.isChecked());
+            put(Habit.THURSDAY, mThuBox.isChecked());
+            put(Habit.FRIDAY, mFriBox.isChecked());
+            put(Habit.SATURDAY, mSatBox.isChecked());
+        }};
+
+        try {
+            Habit habit = HabitController.getHabitController(this).getHabit(mHabitPosition);
+            habit.setReason(mReasonText.getText().toString());
+            habit.setTitle(mNameText.getText().toString());
+            habit.setStartDate(date);
+            habit.setDaysOfWeek(days);
+
+           // HabitController.getHabitController(this).saveHabits(this, habit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setResult(HABIT_SAVED);
+        finish();
+    }
     private void saveNew() {
         Date date = new Date();
         date.setYear(mYear);
@@ -163,6 +223,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        setResult(HABIT_SAVED);
         finish();
     }
 

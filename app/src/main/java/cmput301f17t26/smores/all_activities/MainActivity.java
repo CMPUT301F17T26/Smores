@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     private FloatingActionButton mMapsFloatingActionButton;
     private TabLayout mTabLayout;
     private UserController mUserController;
+    public static final int NEW_HABIT = 0;
+    public static final int EDIT_HABIT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
-                                MainActivity.this.startActivity(intent);
+                                MainActivity.this.startActivityForResult(intent, NEW_HABIT);
                             }
                         });
 
@@ -207,6 +209,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
 
     @Override
     public void onHabitListInteraction(int position) { //open new activity
-
+        Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
+        intent.putExtra("habitPosition", position);
+        MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
     }
 }
