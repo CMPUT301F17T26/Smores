@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -27,8 +28,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.ArrayList;
+
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 0;
@@ -43,6 +48,9 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ImageButton mSave;
     private ImageButton mDelete;
     private FusedLocationProviderClient mFusedLocationClient;
+
+    private ArrayList<Habit> mHabitList;
+    private ArrayAdapter<String> spinnerDataAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
+        mHabitList = HabitController.getHabitController(this).getHabitList();
+        loadSpinner();
 
         Log.d("HABIT EVENT", "Prior to fused location");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -89,12 +99,21 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
 
                 }
-
-
-
-
             }
         });
+    }
+
+    public void loadSpinner() {
+        ArrayList<Habit> availableHabits = new ArrayList<>();
+        availableHabits.addAll(mHabitList);
+        ArrayList<String> stringAvailableHabits = new ArrayList<>();
+        for (Habit habit: availableHabits) {
+            stringAvailableHabits.add(habit.getTitle());
+        }
+        spinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableHabits);
+        spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mHabitType.setAdapter(spinnerDataAdapter);
+
     }
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
