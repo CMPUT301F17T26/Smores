@@ -13,11 +13,14 @@
 package cmput301f17t26.smores.all_models;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.support.v4.app.LoaderManager;
+import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.UUID;
 
@@ -204,5 +207,14 @@ public class HabitEvent {
 
     public Date getDate() {
         return mDateCompleted;
+    }
+
+    public static Bitmap compressBitmap(Bitmap bitmap) {
+        return Bitmap.createScaledBitmap(bitmap, 128, 128, true);
+
+    }
+
+    public static Bitmap decompressBitmap(Bitmap scaledBitmap) {
+        return Bitmap.createScaledBitmap(scaledBitmap, 256, 256, true);
     }
 }

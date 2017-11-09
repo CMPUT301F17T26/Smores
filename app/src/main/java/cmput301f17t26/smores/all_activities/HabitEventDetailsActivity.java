@@ -11,6 +11,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_models.HabitEvent;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int REQUEST_CODE = 0;
@@ -33,7 +35,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ImageView mImageView;
     private ImageButton mSave;
     private ImageButton mDelete;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
+           // mImageView.setImageBitmap(imageBitmap);
+            Log.d("Habit Event Details;", "Bitmap size: " + Integer.toString(imageBitmap.getByteCount()));
+            Bitmap scaledBitmap = HabitEvent.compressBitmap(imageBitmap);
+            Log.d("Habit Event Details;", "Scaled Bitmap size: " + Integer.toString(scaledBitmap.getByteCount()));
+            //mImageView.setImageBitmap(scaledBitmap);
+            Bitmap newScaled = HabitEvent.decompressBitmap(scaledBitmap);
+            mImageView.setImageBitmap(newScaled);
+            Log.d("Habit Event Details;", "Scaled Bitmap size: " + Integer.toString(newScaled.getByteCount()));
+
         }
     }
 
