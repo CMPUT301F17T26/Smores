@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,11 +23,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_models.HabitEvent;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
-    public static final int REQUEST_CODE = 0;
+    public static final int CAMERA_REQUEST_CODE = 0;
+    public static final int LOCATION_REQUEST_CODE = 2;
     public static final int CAMERA_REQUEST = 1;
     private Spinner mHabitType;
     private EditText mComment;
@@ -35,6 +42,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ImageView mImageView;
     private ImageButton mSave;
     private ImageButton mDelete;
+    private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +59,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,7 +68,27 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     invokeCamera();
                 } else {
                     String[] permissionRequested = {Manifest.permission.CAMERA};
-                    requestPermissions(permissionRequested, REQUEST_CODE);
+                    requestPermissions(permissionRequested, CAMERA_REQUEST_CODE);
+                }
+            }
+        });
+
+        mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                try {
+                    if (isChecked) {
+                        mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                Log.d("Habit Event", "Lat: " + Double.toString(location.getLatitude()) + ", Long: " + Double.toString(location.getLongitude()));
+                            }
+                        });
+                    }
+                }
+                catch(SecurityException e) {
+                    String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
+                    requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
                 }
             }
         });
@@ -67,11 +96,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
     public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 invokeCamera();
             } else {
                 Toast.makeText(this, "Unable to request camera", Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == LOCATION_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Request for location granted", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "Unable to request location services", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -97,5 +132,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         }
     }
+
+
 
 }
