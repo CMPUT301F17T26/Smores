@@ -59,7 +59,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
+
+        Log.d("HABIT EVENT", "Prior to fused location");
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        Log.d("HABIT EVENT", "After to fused location");
 
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,24 +75,24 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
+        Log.d("HABIT EVENT", "Before toggle listener");
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                try {
+
+                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (isChecked) {
-                        mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                Log.d("Habit Event", "Lat: " + Double.toString(location.getLatitude()) + ", Long: " + Double.toString(location.getLongitude()));
-                            }
-                        });
+                        getLocation();
                     }
-                }
-                catch(SecurityException e) {
+                } else {
                     String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
                     requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
+
                 }
+
+
+
+
             }
         });
     }
@@ -105,6 +108,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         } else if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Request for location granted", Toast.LENGTH_LONG).show();
+                getLocation();
             } else {
                 Toast.makeText(this, "Unable to request location services", Toast.LENGTH_LONG).show();
             }
@@ -130,6 +134,20 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             mImageView.setImageBitmap(newScaled);
             Log.d("Habit Event Details;", "Scaled Bitmap size: " + Integer.toString(newScaled.getByteCount()));
 
+        }
+    }
+
+    private void getLocation() {
+        try {
+            mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    Log.d("Habit Event", "Lat: " + Double.toString(location.getLatitude()) + ", Long: " + Double.toString(location.getLongitude()));
+                }
+            });
+        } catch (SecurityException e) {
+            String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
+            requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
     }
 
