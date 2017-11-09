@@ -25,7 +25,7 @@ import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link HabitHistoryFragmentListener}
  * interface.
  */
 public class HabitHistoryFragment extends Fragment {
@@ -34,7 +34,7 @@ public class HabitHistoryFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
+    private HabitHistoryFragmentListener mListener;
     private EditText mEditText;
     private HabitHistoryAdapter mHabitHistoryAdapter;
     /**
@@ -72,7 +72,7 @@ public class HabitHistoryFragment extends Fragment {
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mHabitHistoryAdapter = new HabitHistoryAdapter(HabitEventController.getHabitEventController(this.getContext()).getHabitEvents(), mListener);
+        mHabitHistoryAdapter = new HabitHistoryAdapter(mListener);
         recyclerView.setAdapter(mHabitHistoryAdapter);
 
 
@@ -102,8 +102,8 @@ public class HabitHistoryFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
+        if (context instanceof HabitHistoryFragmentListener) {
+            mListener = (HabitHistoryFragmentListener) context;
         } else {
             /*throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");*/
@@ -128,9 +128,9 @@ public class HabitHistoryFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnListFragmentInteractionListener {
+    public interface HabitHistoryFragmentListener {
         // TODO: Update argument type and name
-        void onListFragmentInteraction(int index);
+        void onHabitEventListInteraction(int index);
     }
 
 }

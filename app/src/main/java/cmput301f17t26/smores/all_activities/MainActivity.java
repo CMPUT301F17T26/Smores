@@ -22,9 +22,10 @@ import cmput301f17t26.smores.all_adapters.TabAdapter;
 import cmput301f17t26.smores.all_fragments.AddDialogFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
+import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
-public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -212,5 +213,10 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         Intent intent = new Intent(MainActivity.this, HabitDetailsActivity.class);
         intent.putExtra("habitPosition", position);
         MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
+    }
+
+    @Override
+    public void onHabitEventListInteraction(int index) {
+
     }
 }
