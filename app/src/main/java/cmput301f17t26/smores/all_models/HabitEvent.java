@@ -210,7 +210,7 @@ public class HabitEvent {
     }
 
     public static Bitmap compressBitmap(Bitmap bitmap) {
-        return Bitmap.createScaledBitmap(bitmap, 128, 128, true);
+        return Bitmap.createScaledBitmap(bitmap, 127, 127, true);
 
     }
 

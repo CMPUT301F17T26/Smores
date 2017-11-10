@@ -68,6 +68,14 @@ public class HabitEventController {
         return mHabitEvents.get(index);
     }
 
+    public HabitEvent getHabitEvent(UUID id) {
+        for (HabitEvent event : mHabitEvents) {
+            if (event.getID().equals(id))
+                return event;
+        }
+        return null;
+    }
+
     public void retrieveHabitEvents(Context context) {
         SharedPreferences habitEventData = PreferenceManager.getDefaultSharedPreferences(context);
         Gson gson = new Gson();

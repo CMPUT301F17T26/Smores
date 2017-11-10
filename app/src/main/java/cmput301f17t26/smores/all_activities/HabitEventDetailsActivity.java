@@ -29,17 +29,26 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
+import cmput301f17t26.smores.all_exceptions.CommentTooLongException;
+import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
+import cmput301f17t26.smores.all_exceptions.ImageTooBigException;
+import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 0;
     public static final int LOCATION_REQUEST_CODE = 2;
     public static final int CAMERA_REQUEST = 1;
     private Spinner mHabitType;
+    private TextView mHabitType_Fixed;
     private EditText mComment;
     private TextView mDateCompleted;
     private ToggleButton mToggleLocation;
@@ -48,6 +57,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ImageButton mSave;
     private ImageButton mDelete;
     private FusedLocationProviderClient mFusedLocationClient;
+    private UUID mHabitEventPosition;
+    private HabitEvent mHabitEvent;
+    private Location mLocation;
+    private Bitmap mImage;
 
     private ArrayList<Habit> mHabitList;
     private ArrayAdapter<String> spinnerDataAdapter;
@@ -60,6 +73,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mHabitType = (Spinner) findViewById(R.id.Event_hType);
+        mHabitType_Fixed = (TextView) findViewById(R.id.Event_hTypeFixed);
         mComment = (EditText) findViewById(R.id.Event_hComment);
         mDateCompleted = (TextView) findViewById(R.id.Event_hDate);
         mToggleLocation = (ToggleButton) findViewById(R.id.Event_hToggleButton);
@@ -68,11 +82,55 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
         mHabitList = HabitController.getHabitController(this).getHabitList();
-        loadSpinner();
+        //loadSpinner();
+        mHabitType.setVisibility(View.GONE);
+        mHabitType_Fixed.setVisibility(View.GONE);
 
-        Log.d("HABIT EVENT", "Prior to fused location");
+
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        Log.d("HABIT EVENT", "After to fused location");
+
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveButtonHandler();
+            }
+        });
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null && bundle.get("habitEventPosition") != null) {
+            mHabitEventPosition = (UUID) bundle.get("habitEventPosition");
+        }
+
+        mDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteButtonHandler();
+            }
+        });
+
+        if (mHabitEventPosition != null) {
+            mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventPosition);
+            mHabitType_Fixed.setVisibility(View.VISIBLE);
+            mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
+            mDateCompleted.setText(String.format("%d - %d - %d", mHabitEvent.getDate().getYear(), mHabitEvent.getDate().getMonth() + 1, mHabitEvent.getDate().getDay()));
+            try {
+                mComment.setText(mHabitEvent.getComment());
+            } catch (CommentNotSetException e) {
+            }
+            try {
+                mHabitEvent.getLocation();
+                mToggleLocation.setChecked(true);
+            } catch (LocationNotSetException e) {
+            }
+            try {
+                mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
+            } catch (ImageNotSetException e) {}
+
+        } else {
+
+        }
+
 
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,7 +143,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-        Log.d("HABIT EVENT", "Before toggle listener");
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -102,6 +159,48 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void deleteButtonHandler() {
+    }
+
+    private void saveButtonHandler() {
+        if (mHabitEventPosition == null) {
+            String title = mHabitType.getSelectedItem().toString();
+            HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
+                    HabitController.getHabitController(this).getHabitIDByTitle(title));
+            if (!mComment.getText().toString().equals("")) {
+                try {
+                    habitEvent.setComment(mComment.getText().toString());
+                } catch (CommentTooLongException e) {}
+            }
+            if (mToggleLocation.isChecked())
+                habitEvent.setLocation(mLocation);
+            if (mImageView.getDrawable() != null) {
+                try {
+                    habitEvent.setImage(mImage);
+                } catch (ImageTooBigException e) {}
+            }
+            HabitEventController.getHabitEventController(this).addHabitEvent(this, mHabitEvent);
+
+            finish();
+        } else {
+            if (!mComment.getText().toString().equals("")) {
+                try {
+                    mHabitEvent.setComment(mComment.getText().toString());
+                } catch (CommentTooLongException e) {}
+            }
+            if (mToggleLocation.isChecked())
+                mHabitEvent.setLocation(mLocation);
+            else
+                mHabitEvent.setLocation(null);
+            if (mImageView.getDrawable() != null) {
+                try {
+                    mHabitEvent.setImage(mImage);
+                } catch (ImageTooBigException e) {}
+            }
+            finish();
+        }
+}
 
     public void loadSpinner() {
         ArrayList<Habit> availableHabits = new ArrayList<>();
@@ -144,15 +243,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-           // mImageView.setImageBitmap(imageBitmap);
-            Log.d("Habit Event Details;", "Bitmap size: " + Integer.toString(imageBitmap.getByteCount()));
-            Bitmap scaledBitmap = HabitEvent.compressBitmap(imageBitmap);
-            Log.d("Habit Event Details;", "Scaled Bitmap size: " + Integer.toString(scaledBitmap.getByteCount()));
-            //mImageView.setImageBitmap(scaledBitmap);
-            Bitmap newScaled = HabitEvent.decompressBitmap(scaledBitmap);
-            mImageView.setImageBitmap(newScaled);
-            Log.d("Habit Event Details;", "Scaled Bitmap size: " + Integer.toString(newScaled.getByteCount()));
-
+            mImageView.setImageBitmap(imageBitmap);
+            mImage = HabitEvent.compressBitmap(imageBitmap);
         }
     }
 
@@ -161,7 +253,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    Log.d("Habit Event", "Lat: " + Double.toString(location.getLatitude()) + ", Long: " + Double.toString(location.getLongitude()));
+                    mLocation = location;
                 }
             });
         } catch (SecurityException e) {

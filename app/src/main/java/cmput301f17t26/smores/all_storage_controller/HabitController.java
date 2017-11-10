@@ -16,6 +16,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Habit;
 
@@ -98,5 +99,22 @@ public class HabitController {
         //else {
         //listOfCommandsToDo.add(new Pair(habit, addHabitTask));
         //}
+    }
+
+    public Habit getHabit(UUID habitID) {
+        for (Habit habit : mHabitList) {
+            if (habit.getID().equals(habitID))
+                return habit;
+        }
+        return null;
+    }
+
+    public UUID getHabitIDByTitle(String title) {
+        for (Habit habit : mHabitList) {
+            if (habit.getTitle().equals(title)) {
+                return habit.getID();
+            }
+        }
+        return null;
     }
 }
