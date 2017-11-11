@@ -115,8 +115,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
                     mSearch.setEnabled(true);
+
+
                 } else {
                     mSearch.setEnabled(false);
+                    if (mMyself.isChecked()) {
+                        loadMyMarkers();
+                    }
+                    if (mFriendsCheckbox.isChecked()) {
+                        loadFriendMarkers();
+                    }
+
+
                 }
             }
 
