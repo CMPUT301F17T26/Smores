@@ -26,11 +26,12 @@ import cmput301f17t26.smores.all_models.HabitEvent;
 
 public class HabitEventController {
     private static HabitEventController habitEventController = null;
-    private ArrayList<HabitEvent> mHabitEvents;
+    private ArrayList<HabitEvent> mHabitEvents, mFilteredHabitEvents;
     private static final String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitEventController";
 
     private HabitEventController(Context context) {
         initHabitEvents(context);
+        mFilteredHabitEvents = new ArrayList<>();
     }
 
     private void initHabitEvents(Context context) {
@@ -70,6 +71,10 @@ public class HabitEventController {
 
     public ArrayList<HabitEvent> getHabitEvents() {
         return mHabitEvents;
+    }
+
+    public ArrayList<HabitEvent> getFilteredHabitEvents() {
+        return mFilteredHabitEvents;
     }
 
     public HabitEvent getHabitEvent(int index) {

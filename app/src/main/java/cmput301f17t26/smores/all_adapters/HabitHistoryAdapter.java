@@ -27,17 +27,18 @@ import java.util.UUID;
  */
 public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapter.ViewHolder> {
 
-    private List<HabitEvent> mValues, mFilterValues;
+    private List<HabitEvent> mValues, mFilterValues, mControllerFilterValue;
     private final HabitHistoryFragment.HabitHistoryFragmentListener mListener;
     private Context mContext;
 
     public HabitHistoryAdapter(HabitHistoryFragment.HabitHistoryFragmentListener listener) {
         mValues = HabitEventController.getHabitEventController((Context) listener).getHabitEvents();
+        mControllerFilterValue = HabitEventController.getHabitEventController((Context) listener).getFilteredHabitEvents();
         mListener = listener;
         mFilterValues = new ArrayList<HabitEvent>();
         mFilterValues.addAll(mValues);
+        mControllerFilterValue.addAll(mValues);
         mContext = (Context) listener;
-
     }
 
     @Override
@@ -105,11 +106,14 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 
                 // Clear the filter list
                 mFilterValues.clear();
+                mControllerFilterValue.clear();
 
                 // If there is no search value, then add all original list items to filter list
                 if (TextUtils.isEmpty(text)) {
 
                     mFilterValues.addAll(mValues);
+                    mControllerFilterValue.addAll(mValues);
+
 
                 } else {
                     // Iterate in the original List and add it to filter list...
@@ -117,6 +121,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 //                        if (item.content.toLowerCase().contains(text.toLowerCase())) { // not implemented getTitle()
 //                            // Adding Matched items
                             mFilterValues.add(item);
+                            mControllerFilterValue.add(item);
 //                        }
                     }
                 }
