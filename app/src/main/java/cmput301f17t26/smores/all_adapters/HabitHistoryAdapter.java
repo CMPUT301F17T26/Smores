@@ -13,6 +13,7 @@ import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
 import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
@@ -118,25 +119,21 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                 } else {
                     // Iterate in the original List and add it to filter list...
                     for (HabitEvent item : mValues) {
-//                        if (item.content.toLowerCase().contains(text.toLowerCase())) { // not implemented getTitle()
-//                            // Adding Matched items
+                        if (HabitController.getHabitController(mContext).getHabitTitleByHabitID(item.getID()).toLowerCase().contains(text.toLowerCase())) {
+                            // Adding Matched items
                             mFilterValues.add(item);
                             mControllerFilterValue.add(item);
-//                        }
+                        }
                     }
                 }
-
                 // Set on UI Thread
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         // Notify the List that the DataSet has changed...
-
-
                         notifyDataSetChanged();
                     }
                 });
-
             }
         }).start();
     }

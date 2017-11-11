@@ -263,6 +263,13 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(imageBitmap);
             mImage = HabitEvent.compressBitmap(imageBitmap);
+
+            if (mHabitEventUUID != null) {
+                try {
+                    mHabitEvent.getLocation();
+                    mToggleLocation.setChecked(true);
+                } catch (LocationNotSetException e) {}
+            }
         }
     }
 
