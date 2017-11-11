@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
@@ -17,6 +18,7 @@ import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -49,17 +51,22 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.mItem = mFilterValues.get(position);
-        //holder.mTitleView.setText(mFilterValues.get(position).getTitle()); // HabitEvent.getTitle() not implemented
-        holder.mTitleView.setText("Dummy Title");
-        holder.mDateView.setText(mFilterValues.get(position).getDate().toString());
+        try {
+            holder.mTitleView.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
+        } catch (CommentNotSetException e) {
+            holder.mTitleView.setText("No comment"); // HabitEvent.getTitle() not implemented
+        }
 
+       // holder.mTitleView.setText("Dummy Title");
+        holder.mDateView.setText(mFilterValues.get(position).getDate().toString());
+        final UUID uuid = mFilterValues.get(position).getID();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onHabitEventListInteraction(position);
+                    mListener.onHabitEventListInteraction(uuid);
                 }
             }
         });

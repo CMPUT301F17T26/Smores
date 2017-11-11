@@ -44,7 +44,8 @@ public class HabitEvent {
     private Date mDateCompleted;
 
     private String mComment;
-    private Bitmap mImage;
+    private transient Bitmap mImage;
+    private String thumbnailBase64;
     private Location mLocation;
 
     private UUID mUserID;
@@ -94,10 +95,25 @@ public class HabitEvent {
      * @throws ImageTooBigException
      */
     public void setImage(Bitmap image) throws ImageTooBigException {
+        if (image == null) {
+            mImage = null;
+            thumbnailBase64 = null;
+        }
         if (image.getByteCount() >= 65536) {
             throw new ImageTooBigException();
         } else {
-            mImage = image;
+
+            if (image != null) {
+                mImage = image;
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+                byte[] b = byteArrayOutputStream.toByteArray();
+                thumbnailBase64 = Base64.encodeToString(b, Base64.DEFAULT);
+            }
+
+
+            //mImage = image;
         }
     }
 
@@ -157,9 +173,13 @@ public class HabitEvent {
      * @throws ImageNotSetException
      */
     public Bitmap getImage() throws ImageNotSetException {
-        if (mImage == null) {
+        if (mImage == null && thumbnailBase64 == null) {
             throw new ImageNotSetException();
         } else {
+            if (thumbnailBase64 != null) {
+                byte[] decodeString = Base64.decode(thumbnailBase64, Base64.DEFAULT);
+                mImage = BitmapFactory.decodeByteArray(decodeString, 0, decodeString.length);
+            }
             return mImage;
         }
     }

@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.HabitAdapter;
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 

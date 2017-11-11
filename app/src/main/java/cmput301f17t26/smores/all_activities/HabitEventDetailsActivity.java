@@ -5,14 +5,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
-import android.media.Image;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -82,7 +78,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
         mHabitList = HabitController.getHabitController(this).getHabitList();
-        //loadSpinner();
+
         mHabitType.setVisibility(View.GONE);
         mHabitType_Fixed.setVisibility(View.GONE);
 
@@ -98,7 +94,9 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
+
         if (bundle != null && bundle.get("habitEventPosition") != null) {
+
             mHabitEventPosition = (UUID) bundle.get("habitEventPosition");
         }
 
@@ -111,9 +109,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         if (mHabitEventPosition != null) {
             mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventPosition);
+
             mHabitType_Fixed.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
-            mDateCompleted.setText(String.format("%d - %d - %d", mHabitEvent.getDate().getYear(), mHabitEvent.getDate().getMonth() + 1, mHabitEvent.getDate().getDay()));
+            mDateCompleted.setText(String.format("%d - %d - %d", mHabitEvent.getDate().getYear() + 1900, mHabitEvent.getDate().getMonth() + 1, mHabitEvent.getDate().getDay()));
             try {
                 mComment.setText(mHabitEvent.getComment());
             } catch (CommentNotSetException e) {
@@ -125,10 +124,13 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
             try {
                 mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
-            } catch (ImageNotSetException e) {}
+                mImage = mHabitEvent.getImage();
+            } catch (ImageNotSetException e) {
+            }
 
         } else {
-
+            mHabitType.setVisibility(View.VISIBLE);
+            loadSpinner();
         }
 
 
@@ -180,7 +182,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     habitEvent.setImage(mImage);
                 } catch (ImageTooBigException e) {}
             }
-            HabitEventController.getHabitEventController(this).addHabitEvent(this, mHabitEvent);
+            HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
 
             finish();
         } else {

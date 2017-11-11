@@ -51,9 +51,6 @@ public class HabitController {
         }
         else {
             mHabitList = gson.fromJson(JSONHabits,new TypeToken<ArrayList<Habit>>(){}.getType());
-            for (Habit h: mHabitList) {
-                Log.d("CONTROLLER", h.getTitle());
-            }
         }
     }
 
@@ -73,7 +70,6 @@ public class HabitController {
         mHabitList.add(habit);
         saveHabits(context);
         addHabitToServer(habit);
-        Log.d("HABIT CONTROLLER", "ADDED HABIT");
     }
 
     public Habit getHabit(int i) {
@@ -82,8 +78,15 @@ public class HabitController {
 
     public void deleteHabit(Context context, int i) {
         //delete a habit based on the index
+        deleteHabitFromServer(mHabitList.get(i));
         mHabitList.remove(i);
         saveHabits(context);
+    }
+
+    public void deleteHabitFromServer(Habit habit) {
+        ElasticSearchController.RemoveHabitTask removeHabitTask
+                = new ElasticSearchController.RemoveHabitTask();
+        removeHabitTask.execute(habit.getID());
     }
 
     public ArrayList<Habit> getHabitList() {

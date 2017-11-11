@@ -9,6 +9,7 @@ package cmput301f17t26.smores.all_storage_controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -16,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.HabitEvent;
 
 /**
@@ -81,10 +83,14 @@ public class HabitEventController {
         Gson gson = new Gson();
         String JSONHabitEvent = habitEventData.getString(SAVED_DATA_KEY, "");
 
-        if (!JSONHabitEvent.equals(""))
+        if (!JSONHabitEvent.equals("")) {
             mHabitEvents = gson.fromJson(JSONHabitEvent, new TypeToken<ArrayList<HabitEvent>>(){}.getType());
-        else
+        } else {
             mHabitEvents = new ArrayList<HabitEvent>();
+        }
+
+
+
     }
 
     public void saveHabitEvents(Context context) {

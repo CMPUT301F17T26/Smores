@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.UUID;
+
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.HabitHistoryAdapter;
@@ -37,6 +39,7 @@ public class HabitHistoryFragment extends Fragment {
     private HabitHistoryFragmentListener mListener;
     private EditText mEditText;
     private HabitHistoryAdapter mHabitHistoryAdapter;
+    private RecyclerView recyclerView;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -68,7 +71,7 @@ public class HabitHistoryFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_habithistory_list, container, false);
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
 
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
@@ -118,6 +121,15 @@ public class HabitHistoryFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mHabitHistoryAdapter != null) {
+            mHabitHistoryAdapter = new HabitHistoryAdapter(mListener);
+            recyclerView.setAdapter(mHabitHistoryAdapter);
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -130,7 +142,7 @@ public class HabitHistoryFragment extends Fragment {
      */
     public interface HabitHistoryFragmentListener {
         // TODO: Update argument type and name
-        void onHabitEventListInteraction(int index);
+        void onHabitEventListInteraction(UUID id);
     }
 
 }

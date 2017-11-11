@@ -17,6 +17,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.UUID;
+
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
 import cmput301f17t26.smores.all_fragments.AddDialogFragment;
@@ -216,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     }
 
     @Override
-    public void onHabitEventListInteraction(int position) {
+    public void onHabitEventListInteraction(UUID position) {
         Intent intent = new Intent (MainActivity.this, HabitEventDetailsActivity.class);
         intent.putExtra("habitEventPosition", position);
         MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
