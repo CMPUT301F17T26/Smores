@@ -98,22 +98,17 @@ public class HabitEvent {
         if (image == null) {
             mImage = null;
             thumbnailBase64 = null;
+            return;
         }
         if (image.getByteCount() >= 65536) {
             throw new ImageTooBigException();
         } else {
+            mImage = image;
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
 
-            if (image != null) {
-                mImage = image;
-                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-
-                byte[] b = byteArrayOutputStream.toByteArray();
-                thumbnailBase64 = Base64.encodeToString(b, Base64.DEFAULT);
-            }
-
-
-            //mImage = image;
+            byte[] b = byteArrayOutputStream.toByteArray();
+            thumbnailBase64 = Base64.encodeToString(b, Base64.DEFAULT);
         }
     }
 

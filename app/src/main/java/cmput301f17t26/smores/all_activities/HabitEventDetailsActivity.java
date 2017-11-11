@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -145,6 +146,24 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mImageButton.setOnTouchListener(new TextView.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mImageButtonOnTouch(event);
+            }
+        });
+
+
+//        mImageButton.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                mImageView.setImageBitmap(null);
+//                mImage = null;
+//                return true;
+//            }
+//        });
+
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -159,7 +178,19 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
     }
-
+    long time = 0;
+    private boolean mImageButtonOnTouch(MotionEvent event) {
+        if(event.getAction() == MotionEvent.ACTION_DOWN){
+            time = (Long) System.currentTimeMillis();
+        } else if (event.getAction() == MotionEvent.ACTION_UP) {
+            if(((Long) System.currentTimeMillis() - time) > 2000){
+                mImageView.setImageBitmap(null);
+                mImage = null;
+                return true;
+            }
+        }
+        return false;
+    }
     private void deleteButtonHandler() {
         if (mHabitEventUUID == null) {
             Toast.makeText(HabitEventDetailsActivity.this, "You cannot delete a habit event before it has been created!", Toast.LENGTH_SHORT).show();
@@ -179,11 +210,9 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 Toast.makeText(HabitEventDetailsActivity.this, "Please select a Habit Type!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            Log.d("Testing1", "Here I am!");
             HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
                     HabitController.getHabitController(this).getHabitIDByTitle(title));
 
-            Log.d("Testing3", "Here I am!");
             if (!mComment.getText().toString().equals("")) {
                 try {
                     habitEvent.setComment(mComment.getText().toString());
@@ -191,11 +220,11 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
             if (mToggleLocation.isChecked())
                 habitEvent.setLocation(mLocation);
-            if (mImageView.getDrawable() != null) {
-                try {
-                    habitEvent.setImage(mImage);
-                } catch (ImageTooBigException e) {}
-            }
+
+            try {
+                habitEvent.setImage(mImage);
+            } catch (ImageTooBigException e) {}
+
 
             HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
             finish();
@@ -209,11 +238,11 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 mHabitEvent.setLocation(mLocation);
             else
                 mHabitEvent.setLocation(null);
-            if (mImageView.getDrawable() != null) {
-                try {
-                    mHabitEvent.setImage(mImage);
-                } catch (ImageTooBigException e) {}
-            }
+
+            try {
+                mHabitEvent.setImage(mImage);
+            } catch (ImageTooBigException e) {}
+
             finish();
         }
 }
