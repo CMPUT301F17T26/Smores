@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
 import cmput301f17t26.smores.all_models.Habit;
 
 /**
@@ -128,5 +129,16 @@ public class HabitController {
             }
         }
         return null;
+    }
+
+    public boolean isHabitTitleUnique(String title, int habitPosition) {
+        for (Habit habit : mHabitList) {
+            if (title.equals(habit.getTitle())
+                    && (HabitDetailsActivity.HABIT_POSITION_NONE == habitPosition
+                    || habit != mHabitList.get(habitPosition))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

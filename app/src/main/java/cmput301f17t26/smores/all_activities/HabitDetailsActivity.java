@@ -30,10 +30,10 @@ import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
+    public static final int HABIT_POSITION_NONE = -1;
     public static final int HABIT_SAVED = 1;
     public static final int HABIT_DELETED = 2;
 
-    private static final int HABIT_POSITION_NONE = -1;
     private static final int DIALOG_ID = 0;
 
     private Button mDateSelect;
@@ -145,36 +145,32 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
 
     private void saveButtonHandler() {
-        boolean valid = true;
         //Validate inputs
-        if (mNameText.getText().toString().equals("")) {
-            Log.d("Habit", "No title");
-            valid = false;
+        if (mNameText.getText().toString().trim().equals("")) {
+            Toast.makeText(HabitDetailsActivity.this, "Please enter a Habit name.", Toast.LENGTH_SHORT).show();
         }
-        if (mReasonText.getText().toString().equals("")) {
-            Log.d("Habit", "No reason");
-            valid = false;
+        else if (!HabitController.getHabitController(this).isHabitTitleUnique(
+                    mNameText.getText().toString(),
+                    mHabitPosition)) {
+            Toast.makeText(HabitDetailsActivity.this, "Habit name already in use.", Toast.LENGTH_SHORT).show();
         }
-        if (!checkDaysValid()) {
-            Log.d("Habit", "No days");
-            valid = false;
+        else if (mReasonText.getText().toString().equals("")) {
+            Toast.makeText(HabitDetailsActivity.this, "Please enter a reason", Toast.LENGTH_SHORT).show();
         }
-
+        else if (!checkDaysValid()) {
+            Toast.makeText(HabitDetailsActivity.this, "Please select at least 1 day.", Toast.LENGTH_SHORT).show();
+        }
         //Save and return
-        if (valid) {
+        else {
             if (mHabitPosition != HABIT_POSITION_NONE) {
                 saveEdited();
             }
             else {
-                Log.d("Habit", "Everything is awesome!");
                 saveNew();
             }
         }
-        else {
-            Toast.makeText(HabitDetailsActivity.this, "Please fill all fields and select at least one day.",
-                    Toast.LENGTH_SHORT).show();
-        }
     }
+
     private void deleteButtonHandler() {
         boolean valid = true;
         if (mHabitPosition == HABIT_POSITION_NONE) {
