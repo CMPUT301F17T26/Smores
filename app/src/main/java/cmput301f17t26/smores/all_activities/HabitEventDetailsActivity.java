@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -171,9 +172,18 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
     private void saveButtonHandler() {
         if (mHabitEventUUID == null) {
-            String title = mHabitType.getSelectedItem().toString();
+            String title = null;
+            try {
+                title = mHabitType.getSelectedItem().toString();
+            } catch (NullPointerException e) {
+                Toast.makeText(HabitEventDetailsActivity.this, "Please select a Habit Type!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Log.d("Testing1", "Here I am!");
             HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
                     HabitController.getHabitController(this).getHabitIDByTitle(title));
+
+            Log.d("Testing3", "Here I am!");
             if (!mComment.getText().toString().equals("")) {
                 try {
                     habitEvent.setComment(mComment.getText().toString());
@@ -186,8 +196,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     habitEvent.setImage(mImage);
                 } catch (ImageTooBigException e) {}
             }
-            HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
 
+            HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
             finish();
         } else {
             if (!mComment.getText().toString().equals("")) {
@@ -204,7 +214,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     mHabitEvent.setImage(mImage);
                 } catch (ImageTooBigException e) {}
             }
-            HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
             finish();
         }
 }
@@ -214,7 +223,9 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         availableHabits.addAll(mHabitList);
         ArrayList<String> stringAvailableHabits = new ArrayList<>();
         for (Habit habit: availableHabits) {
-            stringAvailableHabits.add(habit.getTitle());
+            if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)){
+                stringAvailableHabits.add(habit.getTitle());
+            }
         }
         spinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableHabits);
         spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

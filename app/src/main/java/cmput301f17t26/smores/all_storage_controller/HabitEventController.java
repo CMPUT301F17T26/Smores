@@ -9,15 +9,18 @@ package cmput301f17t26.smores.all_storage_controller;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
+import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 
 /**
@@ -79,6 +82,30 @@ public class HabitEventController {
 
     public HabitEvent getHabitEvent(int index) {
         return mHabitEvents.get(index);
+    }
+
+    public Boolean doesHabitEventExist (Habit habit) {
+        ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
+        Date date = new Date();
+        for (HabitEvent habitEvent: habitEvents) {
+            if (habitEvent.getDate().getYear() == date.getYear() &&
+                    habitEvent.getDate().getMonth() == date.getMonth() &&
+                    habitEvent.getDate().getDay() == date.getDay()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @NonNull
+    private ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
+        ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+        for (HabitEvent habitEvent: mHabitEvents) {
+            if (habitEvent.getHabitID().equals(habit.getID())) {
+                habitEvents.add(habitEvent);
+            }
+        }
+        return habitEvents;
     }
 
     public HabitEvent getHabitEvent(UUID id) {
