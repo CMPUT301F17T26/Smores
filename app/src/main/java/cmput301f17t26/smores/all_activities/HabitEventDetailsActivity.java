@@ -204,6 +204,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     mHabitEvent.setImage(mImage);
                 } catch (ImageTooBigException e) {}
             }
+            HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
             finish();
         }
 }
