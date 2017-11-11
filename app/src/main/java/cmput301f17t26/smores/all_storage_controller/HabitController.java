@@ -120,4 +120,13 @@ public class HabitController {
         }
         return null;
     }
+
+    public String getHabitTitleByHabitID(UUID uuid) {
+        for (Habit habit : mHabitList) {
+            if (habit.getID().equals(uuid)) {
+                return habit.getTitle();
+            }
+        }
+        return null;
+    }
 }

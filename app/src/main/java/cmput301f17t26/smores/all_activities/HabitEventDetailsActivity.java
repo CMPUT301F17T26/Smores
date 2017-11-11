@@ -53,7 +53,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ImageButton mSave;
     private ImageButton mDelete;
     private FusedLocationProviderClient mFusedLocationClient;
-    private UUID mHabitEventPosition;
+    private UUID mHabitEventUUID;
     private HabitEvent mHabitEvent;
     private Location mLocation;
     private Bitmap mImage;
@@ -97,7 +97,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         if (bundle != null && bundle.get("habitEventPosition") != null) {
 
-            mHabitEventPosition = (UUID) bundle.get("habitEventPosition");
+            mHabitEventUUID = (UUID) bundle.get("habitEventPosition");
         }
 
         mDelete.setOnClickListener(new View.OnClickListener() {
@@ -107,8 +107,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        if (mHabitEventPosition != null) {
-            mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventPosition);
+        if (mHabitEventUUID != null) {
+            mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventUUID);
 
             mHabitType_Fixed.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
@@ -133,7 +133,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             loadSpinner();
         }
 
-
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -148,7 +147,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (isChecked) {
                         getLocation();
@@ -156,17 +154,23 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 } else {
                     String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
                     requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
-
                 }
             }
         });
     }
 
     private void deleteButtonHandler() {
+        if (mHabitEventUUID == null) {
+            Toast.makeText(HabitEventDetailsActivity.this, "You cannot delete a habit event before it has been created!", Toast.LENGTH_SHORT).show();
+        }
+        else{
+            HabitEventController.getHabitEventController(this).deleteHabitEvent(this, mHabitEventUUID);
+            finish();
+        }
     }
 
     private void saveButtonHandler() {
-        if (mHabitEventPosition == null) {
+        if (mHabitEventUUID == null) {
             String title = mHabitType.getSelectedItem().toString();
             HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
                     HabitController.getHabitController(this).getHabitIDByTitle(title));

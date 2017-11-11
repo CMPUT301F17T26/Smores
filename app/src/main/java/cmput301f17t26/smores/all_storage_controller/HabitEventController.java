@@ -57,10 +57,16 @@ public class HabitEventController {
         saveHabitEvents(context);
     }
 
-    public void deleteHabitEvent(Context context, HabitEvent habitEvent) {
-        mHabitEvents.remove(habitEvent);
+    public void deleteHabitEvent(Context context, UUID uuid) {
+        for (HabitEvent habitEvent: mHabitEvents) {
+            if (habitEvent.getID().equals(uuid)) {
+                mHabitEvents.remove(habitEvent);
+                break;
+            }
+        }
         saveHabitEvents(context);
     }
+
 
     public ArrayList<HabitEvent> getHabitEvents() {
         return mHabitEvents;
@@ -88,9 +94,6 @@ public class HabitEventController {
         } else {
             mHabitEvents = new ArrayList<HabitEvent>();
         }
-
-
-
     }
 
     public void saveHabitEvents(Context context) {

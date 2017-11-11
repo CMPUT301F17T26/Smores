@@ -201,6 +201,115 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
 
     }
 
+    public static class GetHabitEventTask extends AsyncTask<String, Void, ArrayList<HabitEvent>> {
+        @Override
+        protected ArrayList<HabitEvent> doInBackground(String... params) {
+            verifySettings();
+
+            ArrayList<HabitEvent> newHabitEvents = new ArrayList<HabitEvent>();
+
+            String query; //params[0] = field to match on, params[1] = actual field. E.g. params[0] = "mID" and params[1] = "habitEvent.getmID()"
+            query =  "{\"from\":0,\"size\":100000,\"query\":{\"match\":{\"" + params[0] + "\":\"" + params[1] + "\"}}}";
+
+            //alternate query if params[0] == "",  "{\"from\" : 0, \"size\" : 10000}" aka Return 100000 of all habits found
+
+            Search search = new Search.Builder(query)
+                    .addIndex(ELASTIC_SEARCH_INDEX)
+                    .addType("habitevent")
+                    .build();
+            try {
+                SearchResult execute = client.execute(search);
+                if (execute.isSucceeded()) {
+                    List<HabitEvent> foundHabitEvents = execute.getSourceAsObjectList(HabitEvent.class);
+                    newHabitEvents.addAll(foundHabitEvents);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return newHabitEvents;
+        }
+    }
+
+
+    public static class AddHabitEventTask extends AsyncTask<HabitEvent, Void, Void> {
+
+        @Override
+        protected Void doInBackground(HabitEvent... params) {
+            verifySettings();
+
+            for (HabitEvent habitEvent : params) {
+                Index index = new Index.Builder(habitEvent)
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("habitevent")
+                        .id(habitEvent.getID().toString())
+                        .build();
+                try {
+                    DocumentResult execute = client.execute(index);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
+    public static class RemoveHabitEventTask extends AsyncTask<UUID, Void, Void> {
+
+        @Override
+        protected Void doInBackground(UUID... params) {
+            verifySettings();
+            ArrayList<HabitEvent> habitEventsToDelete = new ArrayList<HabitEvent>();
+            List<SearchResult.Hit<Map,Void>> hitList = null;
+
+            String query = "{\"query\":{ \"match\" :{\"mID\":\"" + params[0] + "\"}}}";
+            Search search = new Search.Builder(query)
+                    .addIndex(ELASTIC_SEARCH_INDEX)
+                    .addType("habitevent")
+                    .build();
+
+            try {
+                SearchResult execute = client.execute(search);
+                if (execute.isSucceeded()) {
+                    List<HabitEvent> foundHabitEvents = execute.getSourceAsObjectList(HabitEvent.class);
+                    hitList = execute.getHits(Map.class);
+                    habitEventsToDelete.addAll(foundHabitEvents);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+
+            Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
+                    .index(ELASTIC_SEARCH_INDEX)
+                    .type("habitevent")
+                    .build();
+
+            try {
+                DocumentResult execute = client.execute(delete);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+    }
+
+    public static class UpdateHabitEventTask extends AsyncTask<HabitEvent, Void, Void> {
+        @Override
+        protected Void doInBackground(HabitEvent... params) {
+            verifySettings();
+
+            try {
+                JestResult result = client.execute(new Index.Builder(params[0])
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("habitevent")
+                        .id(params[0].getID().toString())
+                        .build());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+    }
 
     //taken from elastic search lab.
     public static void verifySettings() {
