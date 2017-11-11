@@ -33,6 +33,7 @@ public class HabitFragment extends Fragment {
     private int mColumnCount = 1;
     private HabitFragmentListener mListener;
     private HabitAdapter mHabitAdapter;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,7 +68,7 @@ public class HabitFragment extends Fragment {
         Context context = view.getContext();
         mHabitAdapter = new HabitAdapter(mListener);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         recyclerView.setAdapter(mHabitAdapter);
@@ -113,7 +114,8 @@ public class HabitFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (mHabitAdapter != null) {
-            mHabitAdapter.notifyDataSetChanged();
+            mHabitAdapter = new HabitAdapter(mListener);
+            recyclerView.setAdapter(mHabitAdapter);
         }
     }
 }
