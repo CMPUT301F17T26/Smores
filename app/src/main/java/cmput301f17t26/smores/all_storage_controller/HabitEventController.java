@@ -49,14 +49,17 @@ public class HabitEventController {
 
     public void addHabitEvent(Context context, HabitEvent habitEvent) {
         mHabitEvents.add(habitEvent);
+        addHabitEventToServer(habitEvent);
         saveHabitEvents(context);
     }
 
     public void updateHabitEvent(Context context, HabitEvent habitEvent) {
+        updateHabitEventOnServer(habitEvent);
         saveHabitEvents(context);
     }
 
     public void deleteHabitEvent(Context context, int index) {
+        deleteHabitEventFromServer(mHabitEvents.get(index));
         mHabitEvents.remove(index);
         saveHabitEvents(context);
     }
@@ -64,6 +67,7 @@ public class HabitEventController {
     public void deleteHabitEvent(Context context, UUID uuid) {
         for (HabitEvent habitEvent: mHabitEvents) {
             if (habitEvent.getID().equals(uuid)) {
+                deleteHabitEventFromServer(habitEvent);
                 mHabitEvents.remove(habitEvent);
                 break;
             }
@@ -138,5 +142,28 @@ public class HabitEventController {
         prefsEditor.apply();
 
         retrieveHabitEvents(context);
+    }
+
+    public void deleteHabitEventFromServer(HabitEvent habitEvent) {
+        ElasticSearchController.RemoveHabitEventTask removeHabitEventTask
+                = new ElasticSearchController.RemoveHabitEventTask();
+        removeHabitEventTask.execute(habitEvent.getID());
+    }
+
+    public void addHabitEventToServer(HabitEvent habitEvent) {
+        ElasticSearchController.AddHabitEventTask addHabitEventTask
+                = new ElasticSearchController.AddHabitEventTask();
+        //if internet {
+        addHabitEventTask.execute(habitEvent);
+        //}
+        //else {
+        //listOfCommandsToDo.add(new Pair(habit, addHabitTask));
+        //}
+    }
+
+    public void updateHabitEventOnServer(HabitEvent habitEvent) {
+        ElasticSearchController.UpdateHabitEventTask updateHabitEventTask
+                = new ElasticSearchController.UpdateHabitEventTask();
+        updateHabitEventTask.execute(habitEvent);
     }
 }
