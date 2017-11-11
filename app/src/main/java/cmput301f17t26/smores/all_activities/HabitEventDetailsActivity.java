@@ -245,14 +245,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     mHabitEvent.setLocation(mLocation);
             } else {
                 mHabitEvent.setLocation(null);
-                try {
-                    mHabitEvent.setImage(mImage);
-                } catch (ImageTooBigException e) {
-                }
+            }
+            try {
+                mHabitEvent.setImage(mImage);
+            } catch (ImageTooBigException e) {
             }
             HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
             finish();
         }
+
     }
 
     public void loadSpinner() {
