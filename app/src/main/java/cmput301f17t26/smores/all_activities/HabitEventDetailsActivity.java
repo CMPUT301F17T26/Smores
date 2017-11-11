@@ -271,7 +271,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
     }
 
-    public void onRequestPermissionResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -283,6 +283,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Toast.makeText(this, "Request for location granted", Toast.LENGTH_LONG).show();
                 getLocation();
+
             } else {
                 Toast.makeText(this, "Unable to request location services", Toast.LENGTH_LONG).show();
             }
