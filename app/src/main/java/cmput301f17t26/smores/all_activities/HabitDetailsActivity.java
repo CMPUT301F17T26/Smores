@@ -31,6 +31,7 @@ import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
     public static final int HABIT_SAVED = 1;
+    public static final int HABIT_DELETED = 2;
 
     private static final int HABIT_POSITION_NONE = -1;
     private static final int DIALOG_ID = 0;
@@ -50,8 +51,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
     private int mDay;
     private int mHabitPosition = HABIT_POSITION_NONE;
     private Habit mHabit;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -171,15 +170,21 @@ public class HabitDetailsActivity extends AppCompatActivity {
                 saveNew();
             }
         }
+        else {
+            Toast.makeText(HabitDetailsActivity.this, "Please fill all fields and select at least one day.",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
     private void deleteButtonHandler() {
         boolean valid = true;
         if (mHabitPosition == HABIT_POSITION_NONE) {
-            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
+                    Toast.LENGTH_SHORT).show();
         }
         else{
-            //Habit habit = HabitController.getHabitController(this).getHabit(mHabitPosition);
             HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
+            Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
+            setResult(HABIT_DELETED);
             finish();
         }
     }
@@ -204,9 +209,12 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mHabit.setTitle(mNameText.getText().toString());
             mHabit.setStartDate(date);
             mHabit.setDaysOfWeek(days);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        HabitController.getHabitController(this).saveHabits(this);
+        Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();
     }
@@ -238,6 +246,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();
     }
