@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
 
 import java.util.UUID;
 
@@ -38,6 +39,8 @@ public class HabitHistoryFragment extends Fragment {
     private int mColumnCount = 1;
     private HabitHistoryFragmentListener mListener;
     private EditText mEditText;
+    private RadioButton mFilterHabit, mFilterComment;
+
     private HabitHistoryAdapter mHabitHistoryAdapter;
     private RecyclerView recyclerView;
     /**
@@ -80,6 +83,8 @@ public class HabitHistoryFragment extends Fragment {
 
 
         mEditText = (EditText) view.findViewById(R.id.search);
+        mFilterHabit= (RadioButton)  view.findViewById(R.id.FilterHabitButton);
+        mFilterComment = (RadioButton)  view.findViewById(R.id.FilterCommentButton);
 
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -89,7 +94,7 @@ public class HabitHistoryFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                    mHabitHistoryAdapter.filter(charSequence.toString());
+                mHabitHistoryAdapter.filter(charSequence.toString(), mFilterHabit.isChecked());
             }
 
             @Override

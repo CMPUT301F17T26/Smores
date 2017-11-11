@@ -27,16 +27,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:checkedButton="@+id/HabitButton">
+            android:checkedButton="@+id/FilterHabitButton">
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/HabitButton"
+                android:id="@+id/FilterHabitButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Habit" />
 
             <android.support.v7.widget.AppCompatRadioButton
-                android:id="@+id/CommentButton"
+                android:id="@+id/FilterCommentButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Comment" />

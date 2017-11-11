@@ -167,8 +167,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private void deleteButtonHandler() {
         if (mHabitEventUUID == null) {
             Toast.makeText(HabitEventDetailsActivity.this, "You cannot delete a habit event before it has been created!", Toast.LENGTH_SHORT).show();
-        }
-        else{
+        } else {
             HabitEventController.getHabitEventController(this).deleteHabitEvent(this, mHabitEventUUID);
             finish();
         }
@@ -191,14 +190,16 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             if (!mComment.getText().toString().equals("")) {
                 try {
                     habitEvent.setComment(mComment.getText().toString());
-                } catch (CommentTooLongException e) {}
+                } catch (CommentTooLongException e) {
+                }
             }
             if (mToggleLocation.isChecked())
                 habitEvent.setLocation(mLocation);
             if (mImageView.getDrawable() != null) {
                 try {
                     habitEvent.setImage(mImage);
-                } catch (ImageTooBigException e) {}
+                } catch (ImageTooBigException e) {
+                }
             }
 
             HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
@@ -207,29 +208,33 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             if (!mComment.getText().toString().equals("")) {
                 try {
                     mHabitEvent.setComment(mComment.getText().toString());
-                } catch (CommentTooLongException e) {}
+                } catch (CommentTooLongException e) {
+                }
             }
-            if (mToggleLocation.isChecked())
-                mHabitEvent.setLocation(mLocation);
-            else
+            if (mToggleLocation.isChecked()) {
+                if (mLocation != null)
+                    mHabitEvent.setLocation(mLocation);
+            } else {
                 mHabitEvent.setLocation(null);
+            }
             if (mImageView.getDrawable() != null) {
                 try {
                     mHabitEvent.setImage(mImage);
-                } catch (ImageTooBigException e) {}
+                } catch (ImageTooBigException e) {
+                }
             }
 
             HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
             finish();
         }
-}
+    }
 
     public void loadSpinner() {
         ArrayList<Habit> availableHabits = new ArrayList<>();
         availableHabits.addAll(mHabitList);
         ArrayList<String> stringAvailableHabits = new ArrayList<>();
-        for (Habit habit: availableHabits) {
-            if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)){
+        for (Habit habit : availableHabits) {
+            if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)) {
                 stringAvailableHabits.add(habit.getTitle());
             }
         }
@@ -274,7 +279,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 try {
                     mHabitEvent.getLocation();
                     mToggleLocation.setChecked(true);
-                } catch (LocationNotSetException e) {}
+                } catch (LocationNotSetException e) {
+                }
             }
         }
     }
@@ -292,7 +298,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
     }
-
 
 
 }

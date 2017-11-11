@@ -59,7 +59,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
             holder.mTitleView.setText("No comment"); // HabitEvent.getTitle() not implemented
         }
 
-       // holder.mTitleView.setText("Dummy Title");
+        // holder.mTitleView.setText("Dummy Title");
         holder.mDateView.setText(mFilterValues.get(position).getDate().toString());
         final UUID uuid = mFilterValues.get(position).getID();
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +99,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
         }
     }
 
-    public void filter(final String text) {
+    public void filter(final String text, final boolean byHabitType) {
         // Searching could be complex..so we will dispatch it to a different thread...
         new Thread(new Runnable() {
             @Override
@@ -119,10 +119,20 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                 } else {
                     // Iterate in the original List and add it to filter list...
                     for (HabitEvent item : mValues) {
-                        if (HabitController.getHabitController(mContext).getHabitTitleByHabitID(item.getHabitID()).toLowerCase().contains(text.toLowerCase())) {
-                            // Adding Matched items
-                            mFilterValues.add(item);
-                            mControllerFilterValue.add(item);
+                        if (byHabitType) {
+                            if (HabitController.getHabitController(mContext).getHabitTitleByHabitID(item.getHabitID()).toLowerCase().contains(text.toLowerCase())) {
+                                // Adding Matched items
+                                mFilterValues.add(item);
+                                mControllerFilterValue.add(item);
+                            }
+                        } else { // by comment
+                            try {
+                                if (item.getComment().toLowerCase().contains(text.toLowerCase())) {
+                                    // Adding Matched items
+                                    mFilterValues.add(item);
+                                    mControllerFilterValue.add(item);
+                                }
+                            } catch (CommentNotSetException e) {}
                         }
                     }
                 }
