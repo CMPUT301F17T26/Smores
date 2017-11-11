@@ -27,6 +27,7 @@ import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
 import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
@@ -178,6 +179,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
         else{
+            HabitEventController.getHabitEventController(this).deleteHabitEventsFromHabit(mHabit.getID());
             HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
             Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
             setResult(HABIT_DELETED);

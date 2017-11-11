@@ -107,4 +107,8 @@ public class HabitEventController {
 
         retrieveHabitEvents(context);
     }
+
+    public void deleteHabitEventsFromHabit(UUID habitID) {
+        //Not Yet Implemented;
+    }
 }
