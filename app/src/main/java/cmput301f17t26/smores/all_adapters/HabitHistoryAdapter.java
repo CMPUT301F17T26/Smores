@@ -119,7 +119,7 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                 } else {
                     // Iterate in the original List and add it to filter list...
                     for (HabitEvent item : mValues) {
-                        if (HabitController.getHabitController(mContext).getHabitTitleByHabitID(item.getID()).toLowerCase().contains(text.toLowerCase())) {
+                        if (HabitController.getHabitController(mContext).getHabitTitleByHabitID(item.getHabitID()).toLowerCase().contains(text.toLowerCase())) {
                             // Adding Matched items
                             mFilterValues.add(item);
                             mControllerFilterValue.add(item);

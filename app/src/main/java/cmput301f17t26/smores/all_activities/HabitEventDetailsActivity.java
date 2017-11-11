@@ -120,8 +120,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
             try {
                 mHabitEvent.getLocation();
+                Log.d("Details act", "Location is set!!");
                 mToggleLocation.setChecked(true);
             } catch (LocationNotSetException e) {
+                Log.d("Details act", "Location is not set!!");
             }
             try {
                 mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
@@ -151,6 +153,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (isChecked) {
                         getLocation();
+                    } else {
+                        mLocation = null;
                     }
                 } else {
                     String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -214,6 +218,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     mHabitEvent.setImage(mImage);
                 } catch (ImageTooBigException e) {}
             }
+
+            HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
             finish();
         }
 }

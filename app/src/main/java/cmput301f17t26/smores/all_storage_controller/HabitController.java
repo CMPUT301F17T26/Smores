@@ -127,6 +127,7 @@ public class HabitController {
                 return habit.getTitle();
             }
         }
+        Log.d("habit controller", "not found");
         return null;
     }
 }
