@@ -1,5 +1,6 @@
 package cmput301f17t26.smores.all_activities;
 
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -7,14 +8,22 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
+
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
+import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
+import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private ArrayList<HabitEvent> userHabitEvents;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,17 +48,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        userHabitEvents = HabitEventController.getHabitEventController(this).getFilteredHabitEvents();
+        for (HabitEvent habitEvent: userHabitEvents) {
+            try {
+
+                //mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(habitEvent.getDate().toString()));
+                mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(habitEvent.getDate().toString()).icon(BitmapDescriptorFactory.fromBitmap((habitEvent.getImage()))));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(habitEvent.getLatLng()));
+            } catch (LocationNotSetException e) {
+                continue;
+            } catch (ImageNotSetException e) {
+                continue;
+            }
+        }
 
         // Add a marker in Sydney and move the camera
         // Added a few more markers to see how this works...
-        LatLng sydney = new LatLng(-34, 151);
-        LatLng sydneyTwo = new LatLng(-34, 152);
+        /*LatLng sydney = new LatLng(-34, 151);
+        //LatLng sydneyTwo = new LatLng(-34, 152);
         LatLng sydneyThree = new LatLng(-31, 155);
         LatLng sydneyFour = new LatLng(-32, 154);
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.addMarker(new MarkerOptions().position(sydneyTwo).title("Marker in Sydney two"));
         mMap.addMarker(new MarkerOptions().position(sydneyThree).title("Marker in Sydney three"));
         mMap.addMarker(new MarkerOptions().position(sydneyFour).title("Marker in Sydney four"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 }
