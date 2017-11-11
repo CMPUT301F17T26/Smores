@@ -83,8 +83,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null && bundle.get("habitPosition") != null) {
@@ -101,10 +99,8 @@ public class HabitDetailsActivity extends AppCompatActivity {
 
         Calendar today = Calendar.getInstance();
         mYear = today.get(Calendar.YEAR);
-        mMonth = today.get(Calendar.MONTH) + 1;
+        mMonth = today.get(Calendar.MONTH);
         mDay = today.get(Calendar.DATE);
-
-        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth, mDay));
 
         if (mHabitPosition != -1) {
             // Fills in fields if user is editing a habit.
@@ -124,11 +120,9 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mThuBox.setChecked(days.get(Habit.THURSDAY));
             mFriBox.setChecked(days.get(Habit.FRIDAY));
             mSatBox.setChecked(days.get(Habit.SATURDAY));
-
-            mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
-
-
         }
+
+        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
     }
 
     @Override
@@ -140,7 +134,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
-                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth - 1, mDay));
+                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth + 1, mDay));
                 }
             }, mYear, mMonth, mDay);
         }
@@ -208,7 +202,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
             habit.setStartDate(date);
             habit.setDaysOfWeek(days);
 
-           // HabitController.getHabitController(this).saveHabits(this, habit);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -230,8 +223,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
             put(Habit.FRIDAY, mFriBox.isChecked());
             put(Habit.SATURDAY, mSatBox.isChecked());
         }};
-
-        //get user controller
 
         try {
             Habit habit = new Habit(UserController.getUserController(this).getUser().getUserID(),
