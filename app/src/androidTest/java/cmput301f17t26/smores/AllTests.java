@@ -9,6 +9,8 @@ package cmput301f17t26.smores;
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
+import com.robotium.solo.Solo;
+
 import junit.framework.TestSuite;
 
 import cmput301f17t26.smores.all_activities.MainActivity;
@@ -18,8 +20,13 @@ import cmput301f17t26.smores.all_activities.MainActivity;
  */
 
 public class AllTests extends ActivityInstrumentationTestCase2<Activity> {
+
     public AllTests(Class<Activity> activityClass) {
         super(activityClass);
+    }
+
+    public void setUp() throws Exception {
+
     }
 
     public static TestSuite suite() {
@@ -32,10 +39,6 @@ public class AllTests extends ActivityInstrumentationTestCase2<Activity> {
         return t;
     }
 
-    @Override
-    public void setUp() throws Exception {
-
-    }
 
     @Override
     public void tearDown() throws Exception {

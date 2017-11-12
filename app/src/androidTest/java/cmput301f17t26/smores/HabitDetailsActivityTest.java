@@ -8,10 +8,17 @@ package cmput301f17t26.smores;
 
 import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
 
+import java.util.regex.Pattern;
+
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
+import cmput301f17t26.smores.all_activities.HabitEventDetailsActivity;
 import cmput301f17t26.smores.all_activities.MainActivity;
 
 /**
@@ -31,6 +38,36 @@ public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<M
      */
     public void setUp() throws Exception{
         solo = new Solo(getInstrumentation(), getActivity());
+    }
+
+    public void testAddHabit() {
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnText("HABIT");
+        View fab = getActivity().findViewById(R.id.addFab);
+        solo.clickOnView(fab);
+        solo.enterText((EditText) solo.getView(R.id.Habit_hName), "Test Namev2!");
+        solo.enterText((EditText) solo.getView(R.id.Habit_hReason), "Test Reasonv2!");
+        solo.clickOnCheckBox(0);
+        ImageButton save = (ImageButton) solo.getView(R.id.Habit_saveBtn);
+        solo.clickOnView(save);
+    }
+    public void testAddDeleteHabit() {
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnText("HABIT");
+        View fab = getActivity().findViewById(R.id.addFab);
+        solo.clickOnView(fab);
+        solo.enterText((EditText) solo.getView(R.id.Habit_hName), "Test Name!");
+        solo.enterText((EditText) solo.getView(R.id.Habit_hReason), "Test Reason!");
+        solo.clickOnCheckBox(0);
+        ImageButton save = (ImageButton) solo.getView(R.id.Habit_saveBtn);
+        solo.clickOnView(save);
+        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
+        assertTrue(solo.waitForText("Test Name!"));
+        assertTrue(solo.waitForText("Test Reason!"));
+        solo.clickOnText("Test Name!");
+        ImageButton delete = (ImageButton) solo.getView(R.id.Habit_deleteBtn);
+        solo.clickOnView(delete);
+        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
     }
 
     public void testStart() throws Exception {

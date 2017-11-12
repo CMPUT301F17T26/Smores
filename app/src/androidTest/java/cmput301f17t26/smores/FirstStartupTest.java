@@ -6,17 +6,28 @@
 
 package cmput301f17t26.smores;
 
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.test.ActivityInstrumentationTestCase2;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
 
+import junit.framework.Assert;
+
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
+import cmput301f17t26.smores.all_activities.HabitEventDetailsActivity;
 import cmput301f17t26.smores.all_activities.MainActivity;
+import cmput301f17t26.smores.all_models.HabitEvent;
 
 /**
  * Created by farhadmakiabady on 2017-11-11.
@@ -40,9 +51,63 @@ public class FirstStartupTest extends ActivityInstrumentationTestCase2<MainActiv
             solo.clickOnButton("Check and Add");
             solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         } else {
-            //do nothing...
+            solo.clickOnText("REQUESTS");
+            if (!solo.searchText("Your username: ")) {
+                Assert.fail();
+            }
+
         }
     }
+
+    public void testAllowLocation() {
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnText("HABIT HISTORY");
+        View fab = getActivity().findViewById(R.id.addFab);
+        solo.clickOnView(fab);
+        solo.assertCurrentActivity("Wrong Activity", HabitEventDetailsActivity.class);
+        solo.clickOnToggleButton("OFF");
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        UiObject allowPermissions = mDevice.findObject(new UiSelector().text("ALLOW"));
+        if (allowPermissions.exists()) {
+            try {
+                allowPermissions.click();
+            } catch (UiObjectNotFoundException e) {
+                //fails
+            }
+        } else{
+            solo.goBack();
+            solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+            solo.clickOnText("REQUESTS");
+            if (!solo.searchText("Your username: ")) {
+                Assert.fail();
+            }
+        }
+    }
+
+//    public void testAllowCamera() {
+//        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+//        solo.clickOnText("HABIT HISTORY");
+//        View fab = getActivity().findViewById(R.id.addFab);
+//        solo.clickOnView(fab);
+//        solo.assertCurrentActivity("Wrong Activity", HabitEventDetailsActivity.class);
+//        ImageButton camera = (ImageButton) solo.getView(R.id.Event_hImagebtn);
+//        solo.clickOnView(camera);
+//        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+//        UiObject allowPermissions = mDevice.findObject(new UiSelector().text("ALLOW"));
+//        if (allowPermissions.exists()) {
+//            try {
+//                allowPermissions.click();
+//            } catch (UiObjectNotFoundException e) {
+//                //fails
+//            }
+//        } else {
+//            if (solo.getCurrentActivity().getLocalClassName().equals("HabitEventDetailsActivity")) {
+//                Assert.fail();
+//            } else{
+//                solo.goBack();
+//            }
+//        }
+//    }
 
     public void testCase() throws Exception {
 

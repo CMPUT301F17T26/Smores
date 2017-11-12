@@ -72,6 +72,15 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         solo.clickOnView(fab);
         solo.assertCurrentActivity("Wrong Acitity", MapsActivity.class);
     }
+
+    public void testAddRequestActivity() {
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        solo.clickOnText("REQUESTS");
+        View fab = getActivity().findViewById(R.id.addFab);
+        solo.clickOnView(fab);
+        solo.clickOnButton("Cancel");
+        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
+    }
     /**
      * Runs at the end of the tests
      * @throws Exception
