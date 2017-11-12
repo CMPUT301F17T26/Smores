@@ -18,4 +18,21 @@ import cmput301f17t26.smores.all_activities.HabitEventDetailsActivity;
 
 public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCase2<HabitEventDetailsActivity> {
     private Solo solo;
+
+    public HabitEventDetailsActivityTest() {
+        super(HabitEventDetailsActivity.class);
+    }
+
+    public void setUp() throws Exception {
+        solo = new Solo(getInstrumentation(), getActivity());
+    }
+
+    public void testCase() throws Exception {
+
+    }
+
+    public void tearDown() throws Exception {
+        solo.finishOpenedActivities();
+    }
+
 }
