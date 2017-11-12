@@ -3,7 +3,6 @@ package cmput301f17t26.smores.all_fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +11,6 @@ import android.view.ViewGroup;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
-import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 /**
@@ -28,6 +26,8 @@ public class TodayFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private TodayAdapter mTodayAdapter;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -61,10 +61,11 @@ public class TodayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_today_list, container, false);
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new TodayAdapter(DummyContent.ITEMS, mListener));
-
+        mTodayAdapter = new TodayAdapter(getActivity());
+        recyclerView.setAdapter(mTodayAdapter);
+        mTodayAdapter.filterTodayHabits();
         return view;
     }
 
@@ -99,5 +100,15 @@ public class TodayFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mTodayAdapter != null) {
+            mTodayAdapter = new TodayAdapter(getActivity());
+            recyclerView.setAdapter(mTodayAdapter);
+        }
+        mTodayAdapter.filterTodayHabits();
     }
 }

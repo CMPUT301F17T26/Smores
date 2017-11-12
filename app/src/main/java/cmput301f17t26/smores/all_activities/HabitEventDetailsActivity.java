@@ -240,6 +240,11 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 } catch (CommentTooLongException e) {
                 }
             }
+            else {
+                try {
+                    mHabitEvent.setComment(null);
+                } catch (Exception e) {}
+            }
             if (mToggleLocation.isChecked()) {
                 if (mLocation != null)
                     mHabitEvent.setLocation(mLocation);
