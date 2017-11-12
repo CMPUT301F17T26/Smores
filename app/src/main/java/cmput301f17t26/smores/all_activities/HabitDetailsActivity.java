@@ -27,9 +27,15 @@ import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
 import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 public class HabitDetailsActivity extends AppCompatActivity {
+    public static final int HABIT_POSITION_NONE = -1;
+    public static final int HABIT_SAVED = 1;
+    public static final int HABIT_DELETED = 2;
+
+    private static final int DIALOG_ID = 0;
 
     private Button mDateSelect;
     private EditText mNameText;
@@ -44,10 +50,8 @@ public class HabitDetailsActivity extends AppCompatActivity {
     private int mYear;
     private int mMonth;
     private int mDay;
-    int mHabitPosition = -1;
-    Habit mHabit;
-    private static final int DIALOG_ID = 0;
-    public static final int HABIT_SAVED = 1;
+    private int mHabitPosition = HABIT_POSITION_NONE;
+    private Habit mHabit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +87,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
             }
         });
 
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null && bundle.get("habitPosition") != null) {
@@ -101,12 +103,10 @@ public class HabitDetailsActivity extends AppCompatActivity {
 
         Calendar today = Calendar.getInstance();
         mYear = today.get(Calendar.YEAR);
-        mMonth = today.get(Calendar.MONTH) + 1;
+        mMonth = today.get(Calendar.MONTH);
         mDay = today.get(Calendar.DATE);
 
-        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth, mDay));
-
-        if (mHabitPosition != -1) {
+        if (mHabitPosition != HABIT_POSITION_NONE) {
             // Fills in fields if user is editing a habit.
             mHabit = HabitController.getHabitController(this).getHabit(mHabitPosition);
             mNameText.setText(mHabit.getTitle());
@@ -124,11 +124,9 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mThuBox.setChecked(days.get(Habit.THURSDAY));
             mFriBox.setChecked(days.get(Habit.FRIDAY));
             mSatBox.setChecked(days.get(Habit.SATURDAY));
-
-            mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
-
-
         }
+
+        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
     }
 
     @Override
@@ -140,7 +138,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
-                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth - 1, mDay));
+                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth + 1, mDay));
                 }
             }, mYear, mMonth, mDay);
         }
@@ -148,40 +146,43 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
 
     private void saveButtonHandler() {
-        boolean valid = true;
         //Validate inputs
-        if (mNameText.getText().toString().equals("")) {
-            Log.d("Habit", "No title");
-            valid = false;
+        if (mNameText.getText().toString().trim().equals("")) {
+            Toast.makeText(HabitDetailsActivity.this, "Please enter a Habit name.", Toast.LENGTH_SHORT).show();
         }
-        if (mReasonText.getText().toString().equals("")) {
-            Log.d("Habit", "No reason");
-            valid = false;
+        else if (!HabitController.getHabitController(this).isHabitTitleUnique(
+                    mNameText.getText().toString(),
+                    mHabitPosition)) {
+            Toast.makeText(HabitDetailsActivity.this, "Habit name already in use.", Toast.LENGTH_SHORT).show();
         }
-        if (!checkDaysValid()) {
-            Log.d("Habit", "No days");
-            valid = false;
+        else if (mReasonText.getText().toString().equals("")) {
+            Toast.makeText(HabitDetailsActivity.this, "Please enter a reason", Toast.LENGTH_SHORT).show();
         }
-
+        else if (!checkDaysValid()) {
+            Toast.makeText(HabitDetailsActivity.this, "Please select at least 1 day.", Toast.LENGTH_SHORT).show();
+        }
         //Save and return
-        if (valid) {
-            if (mHabitPosition != -1) {
+        else {
+            if (mHabitPosition != HABIT_POSITION_NONE) {
                 saveEdited();
             }
             else {
-                Log.d("Habit", "Everything is awesome!");
                 saveNew();
             }
         }
     }
+
     private void deleteButtonHandler() {
         boolean valid = true;
-        if (mHabitPosition == -1) {
-            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!", Toast.LENGTH_SHORT).show();
+        if (mHabitPosition == HABIT_POSITION_NONE) {
+            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
+                    Toast.LENGTH_SHORT).show();
         }
         else{
-            //Habit habit = HabitController.getHabitController(this).getHabit(mHabitPosition);
+            HabitEventController.getHabitEventController(this).deleteHabitEventsFromHabit(mHabit.getID());
             HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
+            Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
+            setResult(HABIT_DELETED);
             finish();
         }
     }
@@ -202,16 +203,16 @@ public class HabitDetailsActivity extends AppCompatActivity {
         }};
 
         try {
-            Habit habit = HabitController.getHabitController(this).getHabit(mHabitPosition);
-            habit.setReason(mReasonText.getText().toString());
-            habit.setTitle(mNameText.getText().toString());
-            habit.setStartDate(date);
-            habit.setDaysOfWeek(days);
+            mHabit.setReason(mReasonText.getText().toString());
+            mHabit.setTitle(mNameText.getText().toString());
+            mHabit.setStartDate(date);
+            mHabit.setDaysOfWeek(days);
 
-           // HabitController.getHabitController(this).saveHabits(this, habit);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        HabitController.getHabitController(this).saveHabits(this);
+        Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();
     }
@@ -231,10 +232,9 @@ public class HabitDetailsActivity extends AppCompatActivity {
             put(Habit.SATURDAY, mSatBox.isChecked());
         }};
 
-        //get user controller
-
         try {
-            Habit habit = new Habit(UserController.getUserController(this).getUser().getUserID(),
+            Habit habit = new Habit(
+                    UserController.getUserController(this).getUser().getUserID(),
                     mNameText.getText().toString(),
                     mReasonText.getText().toString(),
                     date,
@@ -244,6 +244,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();
     }

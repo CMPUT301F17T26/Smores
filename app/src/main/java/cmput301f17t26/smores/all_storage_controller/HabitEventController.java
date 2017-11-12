@@ -166,4 +166,8 @@ public class HabitEventController {
                 = new ElasticSearchController.UpdateHabitEventTask();
         updateHabitEventTask.execute(habitEvent);
     }
+
+    public void deleteHabitEventsByHabit(UUID habitID) {
+        //Not Yet Implemented;
+    }
 }
