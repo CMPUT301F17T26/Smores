@@ -11,20 +11,24 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.robotium.solo.Solo;
 
 import cmput301f17t26.smores.all_activities.HabitEventDetailsActivity;
+import cmput301f17t26.smores.all_activities.MainActivity;
 
 /**
  * Created by farhadmakiabady on 2017-11-11.
  */
 
-public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCase2<HabitEventDetailsActivity> {
+public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
     private Solo solo;
 
     public HabitEventDetailsActivityTest() {
-        super(HabitEventDetailsActivity.class);
+        super(MainActivity.class);
     }
 
     public void setUp() throws Exception {
         solo = new Solo(getInstrumentation(), getActivity());
+        solo.clickOnText("History");
+        //solo.
+        //solo.getView(R.id.);
     }
 
     public void testCase() throws Exception {

@@ -12,16 +12,17 @@ import android.test.ActivityInstrumentationTestCase2;
 import com.robotium.solo.Solo;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
+import cmput301f17t26.smores.all_activities.MainActivity;
 
 /**
  * Created by farhadmakiabady on 2017-11-11.
  */
 
-public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<HabitDetailsActivity> {
+public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<MainActivity> {
     private Solo solo;
 
     public HabitDetailsActivityTest() {
-        super(HabitDetailsActivity.class);
+        super(MainActivity.class);
     }
 
     /**
