@@ -124,6 +124,7 @@ public class HabitEvent {
      */
     public void removeImage() {
         mImage = null;
+        thumbnailBase64 = null;
     }
 
     /**

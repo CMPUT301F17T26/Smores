@@ -3,11 +3,13 @@ package cmput301f17t26.smores;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.test.ActivityInstrumentationTestCase2;
+import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import junit.framework.Assert;
 
+import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
@@ -100,6 +102,48 @@ public class HabitEventTest extends ActivityInstrumentationTestCase2 {
         }
     }
 
+    public void testSetLatitude() {
+        //Includes coverage of getLocation()
+        UUID userID = UUID.randomUUID();
+        UUID habitID = UUID.randomUUID();
+        HabitEvent habitEvent = new HabitEvent(userID, habitID);
+
+        Location location = new Location("");
+        location.setLatitude(14.852071d);
+        location.setLongitude(-91.530547d);
+
+        habitEvent.setLocation(location);
+        Location gotLocation = new Location("");
+        gotLocation.setLatitude(location.getLatitude());
+        gotLocation.setLongitude(location.getLongitude());
+        try {
+            assertEquals(location.getLatitude(), gotLocation.getLatitude());
+        } catch (NullPointerException e) {
+            Assert.fail("Latitude not set");
+        }
+    }
+
+    public void testSetLongitude() {
+        //Includes coverage of getLocation()
+        UUID userID = UUID.randomUUID();
+        UUID habitID = UUID.randomUUID();
+        HabitEvent habitEvent = new HabitEvent(userID, habitID);
+
+        Location location = new Location("");
+        location.setLatitude(14.852071d);
+        location.setLongitude(-91.530547d);
+
+        habitEvent.setLocation(location);
+        Location gotLocation = new Location("");
+        gotLocation.setLatitude(location.getLatitude());
+        gotLocation.setLongitude(location.getLongitude());
+        try {
+            assertEquals(location.getLongitude(), gotLocation.getLongitude());
+        } catch (NullPointerException e) {
+            Assert.fail("Longitude not set");
+        }
+    }
+
     public void testSetImage() {
         //Includes coverage of getImage()
         UUID userID = UUID.randomUUID();
@@ -108,9 +152,19 @@ public class HabitEventTest extends ActivityInstrumentationTestCase2 {
 
         Bitmap bitmap = Bitmap.createBitmap(5, 5, Bitmap.Config.ARGB_8888);
 
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+        byte[] b = byteArrayOutputStream.toByteArray();
+        String thumbnailBase64 = Base64.encodeToString(b, Base64.DEFAULT);
+
         try {
             habitEvent.setImage(bitmap);
-            assertEquals(bitmap, habitEvent.getImage());
+            Bitmap gotBitmap = habitEvent.getImage();
+            ByteArrayOutputStream gotByteArrayOutputStream = new ByteArrayOutputStream();
+            gotBitmap.compress(Bitmap.CompressFormat.PNG, 100, gotByteArrayOutputStream);
+            String gotThumbnailBase64 = Base64.encodeToString(gotByteArrayOutputStream.toByteArray(), Base64.DEFAULT);
+            assertEquals(thumbnailBase64, gotThumbnailBase64);
         } catch (ImageTooBigException e) {
             Assert.fail("small image was considered too big.");
         } catch (ImageNotSetException e) {
