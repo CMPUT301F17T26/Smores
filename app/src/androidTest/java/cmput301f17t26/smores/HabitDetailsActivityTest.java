@@ -6,6 +6,7 @@
 
 package cmput301f17t26.smores;
 
+import android.app.Activity;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.robotium.solo.Solo;
@@ -18,4 +19,28 @@ import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
 
 public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<HabitDetailsActivity> {
     private Solo solo;
+
+    public HabitDetailsActivityTest() {
+        super(HabitDetailsActivity.class);
+    }
+
+    /**
+     * Runs at the beginning of the tests
+     * @throws Exception
+     */
+    public void setUp() throws Exception{
+        solo = new Solo(getInstrumentation(), getActivity());
+    }
+
+    public void testStart() throws Exception {
+        Activity activity = getActivity();
+    }
+
+    /**
+     * Runs at the end of the tests
+     * @throws Exception
+     */
+    public void tearDown() throws Exception{
+        solo.finishOpenedActivities();
+    }
 }
