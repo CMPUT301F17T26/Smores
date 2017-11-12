@@ -16,6 +16,7 @@ import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -75,11 +76,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public void filterTodayHabits()
     {
         mValues.clear();
-        Date today = new Date();
+        Calendar today = Calendar.getInstance();
         for (Habit habit : HabitController.getHabitController(mContext).getHabitList())
-            if (habit.getDaysOfWeek().get(today.getDay()) == true)
-                if (!HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit))
+            if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1) == true)
+                if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit))
                     mValues.add(habit);
-
+        notifyDataSetChanged();
     }
 }

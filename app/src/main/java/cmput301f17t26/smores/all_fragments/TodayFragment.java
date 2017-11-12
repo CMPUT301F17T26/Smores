@@ -84,7 +84,6 @@ public class TodayFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     /**
@@ -108,6 +107,7 @@ public class TodayFragment extends Fragment {
         if (mTodayAdapter != null) {
             mTodayAdapter = new TodayAdapter(getActivity());
             recyclerView.setAdapter(mTodayAdapter);
+            mTodayAdapter.filterTodayHabits();
         }
         mTodayAdapter.filterTodayHabits();
     }
