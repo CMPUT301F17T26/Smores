@@ -1,5 +1,6 @@
 package cmput301f17t26.smores.all_adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,14 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_fragments.TodayFragment.OnListFragmentInteractionListener;
+import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,37 +26,26 @@ import java.util.List;
  */
 public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private ArrayList<Habit> mValues;
+    private Context mContext;
 
-    public TodayAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public TodayAdapter(Context context) {
+        mContext = context;
+        mValues = new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_today_element, parent, false);
+                .inflate(R.layout.fragment_habit_element, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText("Habit " + mValues.get(position).content);
-
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
-            }
-        });
+        holder.mHabit = mValues.get(position);
+        holder.mTitle.setText(mValues.get(position).getTitle());
+        holder.mStat.setText(mValues.get(position).getReason()); // TODO change to .getStat()
     }
 
     @Override
@@ -59,20 +55,31 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mTitle;
+        public final TextView mStat;
+        public Habit mHabit;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mTitle = (TextView) view.findViewById(R.id.habitTitle);
+            mStat = (TextView) view.findViewById(R.id.habitStat);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mTitle.getText() + "'";
         }
+    }
+
+    public void filterTodayHabits()
+    {
+        mValues.clear();
+        Date today = new Date();
+        for (Habit habit : HabitController.getHabitController(mContext).getHabitList())
+            if (habit.getDaysOfWeek().get(today.getDay()) == true)
+                if (!HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit))
+                    mValues.add(habit);
+
     }
 }
