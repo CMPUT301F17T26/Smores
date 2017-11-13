@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
+ * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
+ * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
+ *
+ * Purpose: View class for adding, editing and deleting Habit Events.
+ * Outstanding issues: Being able to add an habit event for previous day.
+ */
+
 package cmput301f17t26.smores.all_activities;
 
 import android.Manifest;
@@ -239,6 +248,11 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     mHabitEvent.setComment(mComment.getText().toString());
                 } catch (CommentTooLongException e) {
                 }
+            }
+            else {
+                try {
+                    mHabitEvent.setComment(null);
+                } catch (Exception e) {}
             }
             if (mToggleLocation.isChecked()) {
                 if (mLocation != null)
