@@ -42,7 +42,6 @@ public class RequestController {
 
     public boolean AddRequest(Context context, Request request) {
         if (VerifyRequest(context, request)) {
-            mRequests.add(request);
             putRequest(request);
             return true;
         }
@@ -53,7 +52,7 @@ public class RequestController {
         mRequests.clear();
         ElasticSearchController.GetRequestTask getRequestTask
                 = new ElasticSearchController.GetRequestTask();
-        getRequestTask.execute(UserController.getUserController(context).getUser().getUsername());
+        getRequestTask.execute("mID", UserController.getUserController(context).getUser().getUsername());
         try {
             mRequests.addAll(getRequestTask.get());
         } catch (Exception e) {
