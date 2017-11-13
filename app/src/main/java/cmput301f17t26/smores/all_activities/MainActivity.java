@@ -3,8 +3,9 @@
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: View class for showing locations of user and user's friends.
- * Outstanding issues: Show user's friends.
+ * Purpose: View class for hosting fragments for habits to do today, habits, habit events,
+ * social & requests. Also can launch activities for viewing details of habits & habit events & maps.
+ * Outstanding issues: None known at this time
  */
 
 package cmput301f17t26.smores.all_activities;

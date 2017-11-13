@@ -3,7 +3,8 @@
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: 
+ * Purpose: View class for showing locations of user and user's friends.
+ * Outstanding issues: Show user's friends.
  */
 
 package cmput301f17t26.smores.all_activities;
