@@ -195,7 +195,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                     habitsToDelete.addAll(foundHabits);
                 }
             } catch (IOException e) {
-                throw new RuntimeException();
+
             }
 
             Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
@@ -306,7 +306,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                     habitEventsToDelete.addAll(foundHabitEvents);
                 }
             } catch (IOException e) {
-                throw new RuntimeException();
+
             }
 
             Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
@@ -393,10 +393,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                             Log.d("Elasticsearch", request.getID());
                         }
                     }
-
-
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -426,7 +423,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                     requestsToDelete.addAll(foundRequests);
                 }
             } catch (IOException e) {
-                throw new RuntimeException();
+
             }
 
             Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
