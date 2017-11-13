@@ -14,7 +14,7 @@
             android:layout_weight="1"
             android:textColor="@android:color/black"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:text="Your unique UUID: "/>
+            android:text="Your username: "/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"

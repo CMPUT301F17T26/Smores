@@ -33,5 +33,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:11.0.2'
     compile files('src/include/jest-droid-2.0.1-SNAPSHOT.jar')
     compile 'com.google.android.gms:play-services-location:11.0.2'
+    compile 'com.jayway.android.robotium:robotium-solo:5.6.3'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
     testCompile 'junit:junit:4.12'
 }
