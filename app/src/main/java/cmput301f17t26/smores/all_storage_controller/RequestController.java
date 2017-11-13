@@ -78,7 +78,7 @@ public class RequestController {
         User sender;
         ElasticSearchController.CheckUserTask checkUserTask
                 = new ElasticSearchController.CheckUserTask();
-        checkUserTask.execute(request.getFromUser());
+        checkUserTask.execute("username", request.getFromUser());
         try {
             sender = checkUserTask.get().get(0);
             if (!sender.getFollowingList().contains(UserController.getUserController(context).getUser().getUserID()))
