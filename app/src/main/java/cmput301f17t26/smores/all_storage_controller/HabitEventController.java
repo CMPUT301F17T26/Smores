@@ -170,7 +170,11 @@ public class HabitEventController {
         updateHabitEventTask.execute(habitEvent);
     }
 
-    public void deleteHabitEventsByHabit(UUID habitID) {
-        //Not Yet Implemented;
+    public void deleteHabitEventsByHabit(Context context, UUID habitID) {
+        for (HabitEvent event: mHabitEvents) {
+            if (event.getHabitID().equals(habitID)) {
+                deleteHabitEvent(context, event.getID());
+            }
+        }
     }
 }

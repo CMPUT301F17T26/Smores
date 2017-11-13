@@ -188,7 +188,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
         else{
-            HabitEventController.getHabitEventController(this).deleteHabitEventsByHabit(mHabit.getID());
+            HabitEventController.getHabitEventController(this).deleteHabitEventsByHabit(this, mHabit.getID());
             HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
             Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
             setResult(HABIT_DELETED);
