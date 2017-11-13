@@ -188,6 +188,20 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
         }
     }
 
+    public void testPercentageFollowed () {
+        try {
+            Habit habit = new Habit(userID, title, reason, date, days);
+            habit.setDaysCompleted(9);
+            habit.setDaysMissed(1);
+            habit.calculateStats();
+            assertEquals(habit.getPercentageFollowed(), 90.0, 0.001);
+        } catch (TitleTooLongException e) {
+            e.printStackTrace();
+        } catch (ReasonTooLongException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void testSetDaysCompleted() {
         //Includes coverage of getDaysCompleted
         Integer testdayscompleted = 4;

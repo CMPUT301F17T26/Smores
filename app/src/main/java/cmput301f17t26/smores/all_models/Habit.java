@@ -278,8 +278,6 @@ public class Habit {
     }
 
 
-
-
-
-
+    public void calculateStats() {
+    }
 }
