@@ -53,7 +53,7 @@ public class RequestController {
         mRequests.clear();
         ElasticSearchController.GetRequestTask getRequestTask
                 = new ElasticSearchController.GetRequestTask();
-        getRequestTask.execute("mID", UserController.getUserController(context).getUser().getUsername());
+        getRequestTask.execute("mToUser", UserController.getUserController(context).getUser().getUsername());
         try {
             mRequests.addAll(getRequestTask.get());
         } catch (Exception e) {
