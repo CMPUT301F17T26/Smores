@@ -26,6 +26,7 @@ import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_models.Request;
 import cmput301f17t26.smores.all_models.User;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.Delete;
@@ -68,6 +69,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
         }
     }
 
+    // Can be used as a GetUserTask
     public static class CheckUserTask extends  AsyncTask<String, Void, ArrayList<User>> {
 
         @Override
@@ -98,6 +100,25 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
             }
             return newUsers;
         }
+    }
+
+    public static class UpdateUser extends AsyncTask<User, Void, Void> {
+        @Override
+        protected Void doInBackground(User... params) {
+            verifySettings();
+
+            try {
+                JestResult result = client.execute(new Index.Builder(params[0])
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("user")
+                        .id(params[0].getUserID().toString())
+                        .build());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
     }
 
     public static class GetHabitTask extends AsyncTask<String, Void, ArrayList<Habit>> {
@@ -318,6 +339,96 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
             return null;
         }
 
+    }
+
+    public static class AddRequestTask extends  AsyncTask<Request, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Request... params) {
+            verifySettings();
+
+            for (Request request: params) {
+                Index index = new Index.Builder(request)
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("request")
+                        .id(request.getID())
+                        .build();
+                try {
+                    DocumentResult execute = client.execute(index);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+    }
+
+    public static class GetRequestTask extends AsyncTask<String, Void, ArrayList<Request>> {
+        @Override
+        protected ArrayList<Request> doInBackground(String... params) {
+            verifySettings();
+
+            ArrayList<Request> newRequests = new ArrayList<Request>();
+
+            String query; //params[0] = field to match on, params[1] = actual field. E.g. params[0] = "mID" and params[1] = "habitEvent.getmID()"
+            query =  "{\"from\":0,\"size\":100000,\"query\":{\"match\":{\"" + params[0] + "\":\"" + params[1] + "\"}}}";
+
+            //alternate query if params[0] == "",  "{\"from\" : 0, \"size\" : 10000}" aka Return 100000 of all habits found
+
+            Search search = new Search.Builder(query)
+                    .addIndex(ELASTIC_SEARCH_INDEX)
+                    .addType("request")
+                    .build();
+            try {
+                SearchResult execute = client.execute(search);
+                if (execute.isSucceeded()) {
+                    List<Request> foundRequests = execute.getSourceAsObjectList(Request.class);
+                    newRequests.addAll(foundRequests);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return newRequests;
+        }
+    }
+
+    public static class RemoveRequestTask extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... params) {
+            verifySettings();
+            ArrayList<Request> requestsToDelete = new ArrayList<Request>();
+            List<SearchResult.Hit<Map,Void>> hitList = null;
+
+            String query = "{\"query\":{ \"match\" :{\"mID\":\"" + params[0] + "\"}}}";
+            Search search = new Search.Builder(query)
+                    .addIndex(ELASTIC_SEARCH_INDEX)
+                    .addType("request")
+                    .build();
+
+            try {
+                SearchResult execute = client.execute(search);
+                if (execute.isSucceeded()) {
+                    List<Request> foundRequests = execute.getSourceAsObjectList(Request.class);
+                    hitList = execute.getHits(Map.class);
+                    requestsToDelete.addAll(foundRequests);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException();
+            }
+
+            Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
+                    .index(ELASTIC_SEARCH_INDEX)
+                    .type("request")
+                    .build();
+
+            try {
+                DocumentResult execute = client.execute(delete);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     //taken from elastic search lab.

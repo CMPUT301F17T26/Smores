@@ -77,7 +77,7 @@ public class UserController {
         return user != null;
     }
 
-    private boolean checkUsername(String username) {
+    boolean checkUsername(String username) {
         ArrayList<User> foundUsers = new ArrayList<User>();
         ElasticSearchController.CheckUserTask checkUserTask
                 = new ElasticSearchController.CheckUserTask();
@@ -101,4 +101,12 @@ public class UserController {
         }
     }
 
+    public void updateFollowingList() {
+        ElasticSearchController.CheckUserTask checkUserTask = new ElasticSearchController.CheckUserTask();
+        checkUserTask.execute(user.getUsername());
+        try {
+            user.setFollowingList(checkUserTask.get().get(0).getFollowingList());
+        } catch (Exception e) {
+        }
+    }
 }
