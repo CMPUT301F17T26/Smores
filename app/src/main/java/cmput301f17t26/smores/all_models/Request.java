@@ -17,7 +17,7 @@ public class Request {
     private String mFromUser;
     private String mID;
 
-    public Request(String toUser, String fromUser) {
+    public Request(String fromUser, String toUser) {
         mToUser = toUser;
         mFromUser = fromUser;
         mID = mToUser + mFromUser;
