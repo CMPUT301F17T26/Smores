@@ -60,6 +60,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMap != null) {
+            mMap.clear();
+        }
+        if (userHabitEvents != null) {
+            userHabitEvents.clear();
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        // code here to show dialog
+        super.onBackPressed();  // optional depending on your needs
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -67,8 +91,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        userHabitEvents = HabitEventController.getHabitEventController(this).getFilteredHabitEvents();
+        userHabitEvents = new ArrayList<>();
+        userHabitEvents.addAll(HabitEventController.getHabitEventController(this).getFilteredHabitEvents());
         mFriendsCheckbox = (CheckBox) findViewById(R.id.friendsCheckbox);
         mFriendsCheckbox.setChecked(false);
 
@@ -104,14 +128,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
 
         if (mMyself.isChecked()) {
-            for (HabitEvent habitEvent: userHabitEvents) {
-                try {
-                    String fullTitle = getMarkerString(habitEvent);
-                    mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
-                } catch (LocationNotSetException e) {
-                    continue;
-                }
-            }
+            loadMyMarkers();
         }
 
         mRadiusField.addTextChangedListener(new TextWatcher() {
