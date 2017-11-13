@@ -56,6 +56,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 RequestController.getRequestController(mContext).acceptRequest(mContext, holder.mItem);
+                notifyDataSetChanged();
             }
         });
 
@@ -63,6 +64,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 RequestController.getRequestController(mContext).declineRequest(holder.mItem);
+                notifyDataSetChanged();
             }
         });
     }
@@ -71,6 +73,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public int getItemCount() {
         return mValues.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
