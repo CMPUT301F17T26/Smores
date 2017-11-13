@@ -31,7 +31,7 @@ public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCa
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testHabitEvent() {
+    public void testAddDeleteHabitEvent() {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("HABIT HISTORY");
         View fab = getActivity().findViewById(R.id.addFab);
@@ -39,17 +39,15 @@ public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCa
         solo.enterText((EditText) solo.getView(R.id.Event_hComment), "Test Comment!");
         ImageButton save = (ImageButton) solo.getView(R.id.Event_hSave);
         solo.clickOnView(save);
-        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         assertTrue(solo.waitForText("Test Comment!"));
         solo.clickOnText("Test Comment!");
         ImageButton delete = (ImageButton) solo.getView(R.id.Event_hDelete);
         solo.clickOnView(delete);
-        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        assertFalse(solo.waitForText("Test Comment!"));
     }
 
-    public void testCase() throws Exception {
-
-    }
 
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();

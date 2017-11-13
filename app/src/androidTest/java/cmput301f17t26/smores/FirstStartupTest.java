@@ -109,10 +109,6 @@ public class FirstStartupTest extends ActivityInstrumentationTestCase2<MainActiv
 //        }
 //    }
 
-    public void testCase() throws Exception {
-
-    }
-
     public void tearDown() throws Exception {
         solo.finishOpenedActivities();
     }

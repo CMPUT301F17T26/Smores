@@ -34,8 +34,8 @@ public class AllTests extends ActivityInstrumentationTestCase2<Activity> {
         t.addTestSuite(FirstStartupTest.class);
         t.addTestSuite(MainActivityTest.class);
         t.addTestSuite(HabitDetailsActivityTest.class);
+        t.addTestSuite(TodayHabitTest.class);
         t.addTestSuite(HabitEventDetailsActivityTest.class);
-
         return t;
     }
 

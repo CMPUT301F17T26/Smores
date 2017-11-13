@@ -37,10 +37,6 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         solo = new Solo(getInstrumentation(), getActivity());
     }
 
-    public void testStart() throws Exception {
-        Activity activity = getActivity();
-    }
-
     public void testBeginHabitActivity() {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("HABIT");

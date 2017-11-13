@@ -15,6 +15,10 @@ import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
 
+import junit.framework.Assert;
+
+import java.util.ConcurrentModificationException;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
@@ -45,33 +49,32 @@ public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<M
         solo.clickOnText("HABIT");
         View fab = getActivity().findViewById(R.id.addFab);
         solo.clickOnView(fab);
-        solo.enterText((EditText) solo.getView(R.id.Habit_hName), "Test Namev2!");
+        UUID uuid = UUID.randomUUID();
+        solo.enterText((EditText) solo.getView(R.id.Habit_hName), uuid.toString().substring(0,15));
         solo.enterText((EditText) solo.getView(R.id.Habit_hReason), "Test Reasonv2!");
         solo.clickOnCheckBox(0);
         ImageButton save = (ImageButton) solo.getView(R.id.Habit_saveBtn);
         solo.clickOnView(save);
+        assertTrue(solo.waitForText(uuid.toString().substring(0,15)));
     }
     public void testAddDeleteHabit() {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("HABIT");
         View fab = getActivity().findViewById(R.id.addFab);
         solo.clickOnView(fab);
-        solo.enterText((EditText) solo.getView(R.id.Habit_hName), "Test Name!");
+        UUID uuid = UUID.randomUUID();
+        solo.enterText((EditText) solo.getView(R.id.Habit_hName), uuid.toString().substring(0,15));
         solo.enterText((EditText) solo.getView(R.id.Habit_hReason), "Test Reason!");
         solo.clickOnCheckBox(0);
         ImageButton save = (ImageButton) solo.getView(R.id.Habit_saveBtn);
         solo.clickOnView(save);
-        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
-        assertTrue(solo.waitForText("Test Name!"));
-        assertTrue(solo.waitForText("Test Reason!"));
-        solo.clickOnText("Test Name!");
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        assertTrue(solo.waitForText(uuid.toString().substring(0,15)));
+        solo.clickOnText(uuid.toString().substring(0,15));
         ImageButton delete = (ImageButton) solo.getView(R.id.Habit_deleteBtn);
         solo.clickOnView(delete);
-        solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
-    }
-
-    public void testStart() throws Exception {
-        Activity activity = getActivity();
+        solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+        assertFalse(solo.waitForText(uuid.toString().substring(0,15)));
     }
 
     /**
@@ -79,6 +82,11 @@ public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<M
      * @throws Exception
      */
     public void tearDown() throws Exception{
-        solo.finishOpenedActivities();
+        try {
+            solo.finishOpenedActivities();
+        } catch (ConcurrentModificationException e) {
+
+        }
+
     }
 }
