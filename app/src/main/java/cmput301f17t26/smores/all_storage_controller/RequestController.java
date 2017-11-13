@@ -25,7 +25,7 @@ public class RequestController {
         retrieveRequests(context);
     }
 
-    public RequestController getHabitController(Context context) {
+    public static RequestController getRequestController(Context context) {
         if (mRequestController == null)
             mRequestController = new RequestController(context);
         return mRequestController;

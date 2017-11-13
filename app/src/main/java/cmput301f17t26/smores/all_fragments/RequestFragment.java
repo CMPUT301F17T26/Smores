@@ -27,6 +27,7 @@ import org.w3c.dom.Text;
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.RequestAdapter;
+import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
@@ -34,7 +35,6 @@ import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 /**
  * A fragment representing a list of Items.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
 public class RequestFragment extends Fragment {
@@ -43,8 +43,10 @@ public class RequestFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnListFragmentInteractionListener mListener;
     private TextView username;
+    private RecyclerView mRecyclerView;
+    private RequestAdapter mRequestAdapter;
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -77,9 +79,10 @@ public class RequestFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_request_list, container, false);
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new RequestAdapter(DummyContent.ITEMS, mListener));
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mRequestAdapter = new RequestAdapter(context);
+        mRecyclerView.setAdapter(mRequestAdapter);
 
         username = (TextView) view.findViewById(R.id.request_username);
         username.setText(UserController.getUserController(getActivity()).getUser().getUsername());
@@ -91,33 +94,20 @@ public class RequestFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnListFragmentInteractionListener) {
-            mListener = (OnListFragmentInteractionListener) context;
-        } else {
-            /*throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");*/
-        }
-
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mRequestAdapter != null) {
+            mRequestAdapter = new RequestAdapter(getActivity());
+            mRecyclerView.setAdapter(mRequestAdapter);
+        }
     }
+
 }

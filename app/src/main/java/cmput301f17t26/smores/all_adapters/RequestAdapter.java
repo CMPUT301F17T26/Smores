@@ -9,14 +9,18 @@
 
 package cmput301f17t26.smores.all_adapters;
 
+import cmput301f17t26.smores.all_models.*;
+
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
-import cmput301f17t26.smores.all_fragments.RequestFragment.OnListFragmentInteractionListener;
+import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.List;
@@ -28,12 +32,12 @@ import java.util.List;
  */
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<Request> mValues;
+    private Context mContext;
 
-    public RequestAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public RequestAdapter(Context context) {
+        mValues = RequestController.getRequestController(context).getRequests(context);
+        mContext = context;
     }
 
     @Override
@@ -46,17 +50,19 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText("Request " + mValues.get(position).content);
+        holder.mUserName.setText(mValues.get(position).getFromUser());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.mAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+                RequestController.getRequestController(mContext).acceptRequest(mContext, holder.mItem);
+            }
+        });
+
+        holder.mReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestController.getRequestController(mContext).declineRequest(holder.mItem);
             }
         });
     }
@@ -68,20 +74,22 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mUserName;
+        public final Button mAccept;
+        public final Button mReject;
+        public Request mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mUserName = (TextView) view.findViewById(R.id.request_from_username);
+            mAccept = (Button) view.findViewById(R.id.btnAccept);
+            mReject = (Button) view.findViewById(R.id.btnReject);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mUserName.getText() + "'";
         }
     }
 }
