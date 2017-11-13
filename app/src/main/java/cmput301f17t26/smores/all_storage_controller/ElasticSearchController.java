@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_adapters.RequestAdapter;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.Request;
@@ -355,6 +356,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                         .build();
                 try {
                     DocumentResult execute = client.execute(index);
+                    Log.d("Elasticsearch", "Added request");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -384,7 +386,17 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                 if (execute.isSucceeded()) {
                     List<Request> foundRequests = execute.getSourceAsObjectList(Request.class);
                     newRequests.addAll(foundRequests);
+                    if (foundRequests.size() == 0) {
+                        Log.d("Elasticsearch", "Nobody found");
+                    } else {
+                        for (Request request: foundRequests) {
+                            Log.d("Elasticsearch", request.getID());
+                        }
+                    }
+
+
                 }
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

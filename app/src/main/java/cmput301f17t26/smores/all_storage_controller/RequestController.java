@@ -7,6 +7,7 @@
 package cmput301f17t26.smores.all_storage_controller;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -63,6 +64,7 @@ public class RequestController {
         ElasticSearchController.AddRequestTask addRequestTask
                 = new ElasticSearchController.AddRequestTask();
         addRequestTask.execute(request);
+
     }
 
     private void removeRequest(Request request) {
