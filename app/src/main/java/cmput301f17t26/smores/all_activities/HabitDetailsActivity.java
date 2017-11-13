@@ -24,6 +24,7 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -56,6 +57,9 @@ public class HabitDetailsActivity extends AppCompatActivity {
     private CheckBox mThuBox;
     private CheckBox mFriBox;
     private CheckBox mSatBox;
+    private TextView mDaysMissedText;
+    private TextView mDaysCompletedText;
+    private TextView mPercentageText;
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -79,6 +83,10 @@ public class HabitDetailsActivity extends AppCompatActivity {
         mThuBox = (CheckBox) findViewById(R.id.Habit_thu);
         mFriBox = (CheckBox) findViewById(R.id.Habit_fri);
         mSatBox = (CheckBox) findViewById(R.id.Habit_sat);
+        mDaysMissedText = (TextView) findViewById(R.id.Habit_daysMissed);
+        mDaysCompletedText = (TextView) findViewById(R.id.Habit_daysCompleted);
+        mDaysCompletedText = (TextView) findViewById(R.id.Habit_daysCompleted);
+        mPercentageText = (TextView) findViewById(R.id.Habit_percentage);
 
         mDateSelect = (Button) findViewById(R.id.Habit_dateBtn);
         mDateSelect.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +141,14 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mThuBox.setChecked(days.get(Habit.THURSDAY));
             mFriBox.setChecked(days.get(Habit.FRIDAY));
             mSatBox.setChecked(days.get(Habit.SATURDAY));
+
+            mHabit.calculateStats(this);
+            mDaysMissedText.setText(mHabit.getDaysMissed().toString());
+            mDaysCompletedText.setText(mHabit.getDaysCompleted().toString());
+            mPercentageText.setText(String.format("%.2f%%", mHabit.getPercentageFollowed()));
         }
 
-        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
+        mDateSelect.setText(String.format("%d - %d - %d", mYear + 1900, mMonth + 1, mDay));
     }
 
     @Override
@@ -227,7 +240,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
     private void saveNew() {
         Date date = new Date();
-        date.setYear(mYear);
+        date.setYear(mYear - 1900);
         date.setMonth(mMonth);
         date.setDate(mDay);
 
