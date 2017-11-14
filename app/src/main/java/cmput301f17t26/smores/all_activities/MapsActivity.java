@@ -46,6 +46,7 @@ import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 
 import static cmput301f17t26.smores.all_activities.HabitEventDetailsActivity.LOCATION_REQUEST_CODE;
 
@@ -53,6 +54,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ArrayList<HabitEvent> userHabitEvents;
+    private ArrayList<HabitEvent> friendHabitEvents;
     private CheckBox mMyself, mFriendsCheckbox;
     private EditText mRadiusField;
     private Button mSearch;
@@ -86,6 +88,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
             requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
+        friendHabitEvents = UserController.getUserController(this).getFriendsHabitEvents();
     }
 
 
@@ -211,7 +214,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void loadFriendMarkers() {
+        for (HabitEvent habitEvent: friendHabitEvents) {
+            try {
+                if (mRadiusField.getText().toString().trim().equals("")) {
+                    String fullTitle = getMarkerString(habitEvent);
+                    mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                } else {
+                    if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
+                        String fullTitle = getMarkerString(habitEvent);
+                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                    }
+                }
+            } catch (LocationNotSetException e) {
 
+            }
+        }
     }
 
     @NonNull

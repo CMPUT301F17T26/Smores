@@ -18,7 +18,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.UUID;
 
+import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.User;
 
 /**
@@ -108,5 +113,31 @@ public class UserController {
             user.setFollowingList(checkUserTask.get().get(0).getFollowingList());
         } catch (Exception e) {
         }
+    }
+
+    public ArrayList<HabitEvent> getFriendsHabitEvents() {
+        ArrayList<HabitEvent> friendHabitEvents = new ArrayList<>();
+        ElasticSearchController.GetHabitEventTask getHabitEventTask
+                = new ElasticSearchController.GetHabitEventTask();
+        for (UUID friendUUID: user.getFollowingList()) {
+            getHabitEventTask.execute("mID", friendUUID.toString());
+            try  {
+                ArrayList<HabitEvent> friendI = getHabitEventTask.get();
+                if (friendI.size() > 0) {
+                    Collections.sort(friendI, new Comparator<HabitEvent>() {
+                        @Override
+                        public int compare(HabitEvent o1, HabitEvent o2) {
+                            return o1.getDate().compareTo(o2.getDate());
+                        }
+                    });
+                    friendHabitEvents.add(friendI.get(friendHabitEvents.size() - 1));
+                }
+
+            } catch (Exception e) {
+
+            }
+
+        }
+        return friendHabitEvents;
     }
 }
