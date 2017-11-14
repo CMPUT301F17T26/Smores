@@ -18,12 +18,22 @@ public class Pair {
     public static final int REMOVE_HABIT_EVENT = 1;
     public static final int UPDATE_HABIT_EVENT = 2;
 
+    public static final int ADD_HABIT = 3;
+    public static final int REMOVE_HABIT = 4;
+    public static final int UPDATE_HABIT = 5;
+
     private HabitEvent mHabitEvent;
+    private Habit mHabit;
 
     private int mCommand;
 
     public Pair(HabitEvent habitEvent, int command) {
         mHabitEvent = habitEvent;
+        mCommand = command;
+    }
+
+    public Pair(Habit habit, int command) {
+        mHabit = habit;
         mCommand = command;
     }
 
@@ -46,6 +56,20 @@ public class Pair {
                         = new ElasticSearchController.UpdateHabitEventTask();
                 updateHabitEventTask.execute(mHabitEvent);
                 break;
+            case Pair.ADD_HABIT:
+                ElasticSearchController.AddHabitTask addHabitTask
+                        = new ElasticSearchController.AddHabitTask();
+                addHabitTask.execute(mHabit);
+                break;
+            case Pair.REMOVE_HABIT:
+                ElasticSearchController.RemoveHabitTask removeHabitTask
+                        = new ElasticSearchController.RemoveHabitTask();
+                removeHabitTask.execute(mHabit.getID());
+                break;
+            case Pair.UPDATE_HABIT:
+                ElasticSearchController.UpdateHabitTask updateHabitTask
+                        = new ElasticSearchController.UpdateHabitTask();
+                updateHabitTask.execute(mHabit);
         }
     }
 

@@ -11,7 +11,9 @@ package cmput301f17t26.smores.all_fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +25,7 @@ import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.SocialAdapter;
 import cmput301f17t26.smores.dummy.DummyContent;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 /**
  * A fragment representing a list of Items.
@@ -108,5 +111,10 @@ public class SocialFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DummyItem item);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
     }
 }

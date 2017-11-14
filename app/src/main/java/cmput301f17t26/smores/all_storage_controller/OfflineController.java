@@ -32,7 +32,7 @@ public class OfflineController {
 
     private static final String FILENAME = "OfflineEvents.sav";
     private static OfflineController mOfflineController = null;
-    private ArrayList<Pair> mHabitEventsCommandList;
+    private ArrayList<Pair> mCommandList;
 
 
     public static OfflineController getOfflineController(Context context) {
@@ -56,9 +56,9 @@ public class OfflineController {
             BufferedReader in = new BufferedReader(new InputStreamReader(fis));
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<Pair>>(){}.getType();
-            mHabitEventsCommandList = gson.fromJson(in, listType);
+            mCommandList = gson.fromJson(in, listType);
         } catch (FileNotFoundException e) {
-            mHabitEventsCommandList = new ArrayList<Pair>();
+            mCommandList = new ArrayList<Pair>();
         }
     }
 
@@ -67,7 +67,7 @@ public class OfflineController {
             FileOutputStream fos = context.openFileOutput(FILENAME,0);
             OutputStreamWriter writer = new OutputStreamWriter(fos);
             Gson gson = new Gson();
-            gson.toJson(mHabitEventsCommandList, writer);
+            gson.toJson(mCommandList, writer);
             writer.flush();
             retrieveOfflineEvents(context);
         } catch (Exception e) {
@@ -76,15 +76,15 @@ public class OfflineController {
     }
 
     public void addPair(Context context, Pair pair) {
-        mHabitEventsCommandList.add(pair);
+        mCommandList.add(pair);
         saveOfflineEvents(context);
     }
 
     public void executeOnServer(Context context) {
-        for (Pair pair: mHabitEventsCommandList) {
+        for (Pair pair: mCommandList) {
             pair.executeTask();
         }
-        mHabitEventsCommandList.clear();
+        mCommandList.clear();
         saveOfflineEvents(context);
     }
 }

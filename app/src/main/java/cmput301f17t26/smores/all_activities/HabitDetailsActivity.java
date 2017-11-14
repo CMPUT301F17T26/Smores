@@ -220,7 +220,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HabitController.getHabitController(this).saveHabits(this);
+        HabitController.getHabitController(this).updateHabit(this, mHabit);
         Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();

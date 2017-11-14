@@ -23,6 +23,8 @@ import java.util.UUID;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
 import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_models.Pair;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 /**
  * Created by Luke on 2017-10-31.
@@ -70,10 +72,15 @@ public class HabitController {
         loadHabits(context);
     }
 
+    public void updateHabit(Context context, Habit habit) {
+        updateHabitOnServer(context, habit);
+        saveHabits(context);
+    }
+
     public void addHabit(Context context, Habit habit) {
         mHabitList.add(habit);
         saveHabits(context);
-        addHabitToServer(habit);
+        addHabitToServer(context, habit);
     }
 
     public Habit getHabit(int i) {
@@ -81,30 +88,49 @@ public class HabitController {
     }
 
     public void deleteHabit(Context context, int i) {
-        deleteHabitFromServer(mHabitList.get(i));
+        deleteHabitFromServer(context, mHabitList.get(i));
         mHabitList.remove(i);
         saveHabits(context);
-    }
-
-    public void deleteHabitFromServer(Habit habit) {
-        ElasticSearchController.RemoveHabitTask removeHabitTask
-                = new ElasticSearchController.RemoveHabitTask();
-        removeHabitTask.execute(habit.getID());
     }
 
     public ArrayList<Habit> getHabitList() {
         return mHabitList;
     }
 
-    private void addHabitToServer(Habit habit) {
+    public void deleteHabitFromServer(Context context, Habit habit) {
+        ElasticSearchController.RemoveHabitTask removeHabitTask
+                = new ElasticSearchController.RemoveHabitTask();
+        removeHabitTask.execute(habit.getID());
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            removeHabitTask.execute(habit.getID());
+        } else {
+            Pair pair = new Pair(habit, Pair.REMOVE_HABIT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
+    }
+
+
+
+    private void addHabitToServer(Context context, Habit habit) {
         ElasticSearchController.AddHabitTask addHabitTask
                 = new ElasticSearchController.AddHabitTask();
-        //if internet {
-        addHabitTask.execute(habit);
-        //}
-        //else {
-        //listOfCommandsToDo.add(new Pair(habit, addHabitTask));
-        //}
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            addHabitTask.execute(habit);
+        } else {
+            Pair pair = new Pair(habit, Pair.ADD_HABIT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
+    }
+
+    private void updateHabitOnServer(Context context, Habit habit) {
+        ElasticSearchController.UpdateHabitTask updateHabitTask
+                = new ElasticSearchController.UpdateHabitTask();
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            updateHabitTask.execute(habit);
+        } else {
+            Pair pair = new Pair(habit, Pair.UPDATE_HABIT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
     }
 
     public Habit getHabit(UUID habitID) {

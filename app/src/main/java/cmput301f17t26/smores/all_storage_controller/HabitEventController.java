@@ -18,6 +18,13 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
@@ -36,6 +43,7 @@ public class HabitEventController {
     private static HabitEventController habitEventController = null;
     private ArrayList<HabitEvent> mHabitEvents, mFilteredHabitEvents;
     private static final String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitEventController";
+    private static final String FILENAME = "HabitEvents.sav";
 
     private HabitEventController(Context context) {
         mFilteredHabitEvents = new ArrayList<>();
@@ -75,6 +83,7 @@ public class HabitEventController {
             if (habitEvent.getID().equals(uuid)) {
                 deleteHabitEventFromServer(context, habitEvent);
                 mHabitEvents.remove(habitEvent);
+                mFilteredHabitEvents.remove(habitEvent);
                 break;
             }
         }
@@ -126,30 +135,33 @@ public class HabitEventController {
         return null;
     }
 
-    public void retrieveHabitEvents(Context context) {
-        SharedPreferences habitEventData = PreferenceManager.getDefaultSharedPreferences(context);
-        Gson gson = new Gson();
-        String JSONHabitEvent = habitEventData.getString(SAVED_DATA_KEY, "");
-
-        if (!JSONHabitEvent.equals("")) {
-            mHabitEvents = gson.fromJson(JSONHabitEvent, new TypeToken<ArrayList<HabitEvent>>(){}.getType());
+    private void retrieveHabitEvents(Context context) {
+        try {
+            FileInputStream fileInputStream = context.openFileInput(FILENAME);
+            BufferedReader in = new BufferedReader(new InputStreamReader(fileInputStream));
+            Gson gson = new Gson();
+            Type listType = new TypeToken<ArrayList<HabitEvent>>(){}.getType();
+            mHabitEvents = gson.fromJson(in, listType);
             mFilteredHabitEvents.addAll(mHabitEvents);
-        } else {
-            mFilteredHabitEvents = new ArrayList<HabitEvent>();
-            mHabitEvents = new ArrayList<HabitEvent>();
+        } catch (FileNotFoundException e) {
+            mFilteredHabitEvents = new ArrayList<>();
+            mHabitEvents = new ArrayList<>();
         }
+
+
     }
 
-    public void saveHabitEvents(Context context) {
-        SharedPreferences habitEventData = PreferenceManager.getDefaultSharedPreferences(context);
-        Gson gson = new Gson();
-        String JSONHabitEvents = gson.toJson(mHabitEvents);
+    private void saveHabitEvents(Context context) {
+        try {
+            FileOutputStream fileOutputStream = context.openFileOutput(FILENAME, 0);
+            OutputStreamWriter writer = new OutputStreamWriter(fileOutputStream);
+            Gson gson = new Gson();
+            gson.toJson(mHabitEvents, writer);
+            writer.flush();
+            retrieveHabitEvents(context);
+        } catch (Exception e) {
 
-        SharedPreferences.Editor prefsEditor = habitEventData.edit();
-        prefsEditor.putString(SAVED_DATA_KEY, JSONHabitEvents);
-        prefsEditor.apply();
-
-        retrieveHabitEvents(context);
+        }
     }
 
     private void deleteHabitEventFromServer(Context context, HabitEvent habitEvent) {
