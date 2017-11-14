@@ -26,6 +26,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.UUID;
 
@@ -63,6 +65,13 @@ public class HabitEventController {
 
     public void addHabitEvent(Context context, HabitEvent habitEvent) {
         mHabitEvents.add(habitEvent);
+        Collections.sort(mHabitEvents, new Comparator<HabitEvent>() {
+            @Override
+            public int compare(HabitEvent o1, HabitEvent o2) {
+                return o1.getDate().compareTo(o2.getDate());
+            }
+        });
+        Collections.reverse(mHabitEvents);
         addHabitEventToServer(context, habitEvent);
         saveHabitEvents(context);
     }
@@ -142,6 +151,7 @@ public class HabitEventController {
             Gson gson = new Gson();
             Type listType = new TypeToken<ArrayList<HabitEvent>>(){}.getType();
             mHabitEvents = gson.fromJson(in, listType);
+            mFilteredHabitEvents.clear();
             mFilteredHabitEvents.addAll(mHabitEvents);
         } catch (FileNotFoundException e) {
             mFilteredHabitEvents = new ArrayList<>();

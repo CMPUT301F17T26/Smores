@@ -13,6 +13,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,10 +24,13 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +40,11 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import cmput301f17t26.smores.R;
@@ -49,6 +58,7 @@ import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 0;
@@ -58,7 +68,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private TextView mHabitType_Fixed;
     private EditText mComment;
     private TextView mDateCompleted;
+    private CheckBox mYesterday;
     private ToggleButton mToggleLocation;
+    private Button mUpdateLocation;
+    private TextView mLocationString;
     private ImageButton mImageButton;
     private ImageView mImageView;
     private ImageButton mSave;
@@ -68,6 +81,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private HabitEvent mHabitEvent;
     private Location mLocation;
     private Bitmap mImage;
+    private String mLocationText;
 
     private ArrayList<Habit> mHabitList;
     private ArrayAdapter<String> spinnerDataAdapter;
@@ -83,7 +97,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mHabitType_Fixed = (TextView) findViewById(R.id.Event_hTypeFixed);
         mComment = (EditText) findViewById(R.id.Event_hComment);
         mDateCompleted = (TextView) findViewById(R.id.Event_hDate);
+        mYesterday = (CheckBox) findViewById(R.id.Event_hYesterday);
         mToggleLocation = (ToggleButton) findViewById(R.id.Event_hToggleButton);
+        mUpdateLocation = (Button) findViewById(R.id.Event_hUpdateButton);
+        mLocationString = (TextView) findViewById(R.id.Event_hLocationText);
         mImageButton = (ImageButton) findViewById(R.id.Event_hImagebtn);
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
@@ -92,6 +109,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         mHabitType.setVisibility(View.GONE);
         mHabitType_Fixed.setVisibility(View.GONE);
+        mUpdateLocation.setVisibility(View.GONE);
+        mYesterday.setVisibility(View.GONE);
 
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -120,10 +139,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         if (mHabitEventUUID != null) {
             mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventUUID);
-
+            mUpdateLocation.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
-            mDateCompleted.setText(String.format("%d - %d - %d", mHabitEvent.getDate().getYear() + 1900, mHabitEvent.getDate().getMonth() + 1, mHabitEvent.getDate().getDay()));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
+            mDateCompleted.setText(simpleDateFormat.format(mHabitEvent.getDate()));
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+                    mDateCompleted.getLayoutParams();
+            params.weight = 4.0f;
+            mDateCompleted.setLayoutParams(params);
             try {
                 mComment.setText(mHabitEvent.getComment());
             } catch (CommentNotSetException e) {
@@ -132,6 +156,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 mHabitEvent.getLocation();
                 Log.d("Details act", "Location is set!!");
                 mToggleLocation.setChecked(true);
+                mLocationString.setText(mHabitEvent.getLocationString());
             } catch (LocationNotSetException e) {
                 Log.d("Details act", "Location is not set!!");
             }
@@ -143,6 +168,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
         } else {
             mHabitType.setVisibility(View.VISIBLE);
+            mYesterday.setVisibility(View.VISIBLE);
             loadSpinner();
         }
 
@@ -178,11 +204,22 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+
+
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (isChecked) {
-                        getLocation();
+                        mUpdateLocation.setEnabled(true);
+                        if (NetworkUtils.isNetworkAvailable(HabitEventDetailsActivity.this)) {
+                            getLocation();
+                        } else {
+                            Toast.makeText(HabitEventDetailsActivity.this, "Oops, you are offline, please try again later!", Toast.LENGTH_SHORT).show();
+
+                        }
                     } else {
+                        mUpdateLocation.setEnabled(false);
                         mLocation = null;
+                        mLocationString.setText("");
+                        mLocationText = null;
                     }
                 } else {
                     String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
@@ -190,7 +227,28 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mUpdateLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                        if (NetworkUtils.isNetworkAvailable(HabitEventDetailsActivity.this)) {
+                            getLocation();
+                        } else {
+                            Toast.makeText(HabitEventDetailsActivity.this, "Oops, you are offline, please try again later!", Toast.LENGTH_SHORT).show();
+                            mToggleLocation.setEnabled(false);
+                        }
+
+                } else {
+                    String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
+                    requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
+                }
+
+            }
+        });
     }
+
+
 
     long time = 0;
 
@@ -228,6 +286,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
                     HabitController.getHabitController(this).getHabitIDByTitle(title));
 
+            if (mYesterday.isChecked()) {
+                habitEvent.setToPreviousDate();
+            }
+
             if (!mComment.getText().toString().equals("")) {
                 try {
                     habitEvent.setComment(mComment.getText().toString());
@@ -235,7 +297,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 }
             }
             if (mToggleLocation.isChecked())
-                habitEvent.setLocation(mLocation);
+                habitEvent.setLocation(mLocation, mLocationText);
             try {
                 habitEvent.setImage(mImage);
             } catch (ImageTooBigException e) {
@@ -256,9 +318,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
             if (mToggleLocation.isChecked()) {
                 if (mLocation != null)
-                    mHabitEvent.setLocation(mLocation);
+                    mHabitEvent.setLocation(mLocation, mLocationText);
             } else {
                 mHabitEvent.setLocation(null);
+
             }
             try {
                 mHabitEvent.setImage(mImage);
@@ -314,9 +377,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-            mImageView.setImageBitmap(imageBitmap);
+            mImageView.setImageBitmap(HabitEvent.decompressBitmap(imageBitmap));
             mImage = HabitEvent.compressBitmap(imageBitmap);
-
             if (mHabitEventUUID != null) {
                 try {
                     mHabitEvent.getLocation();
@@ -333,6 +395,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Location location) {
                     mLocation = location;
+                    Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
+                    try {
+                        List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                        String address = myList.get(0).getLocality() + ", " + myList.get(0).getPostalCode() + ", " + myList.get(0).getThoroughfare();
+                        mLocationString.setText(address);
+                        mLocationText = address;
+                    } catch (IOException e) {
+
+                    }
+
+
                 }
             });
         } catch (SecurityException e) {
