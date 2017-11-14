@@ -33,7 +33,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import java.util.UUID;
-import java.util.concurrent.RunnableFuture;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
@@ -44,7 +43,6 @@ import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
-import cmput301f17t26.smores.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
 
