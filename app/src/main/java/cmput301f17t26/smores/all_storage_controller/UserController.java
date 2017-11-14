@@ -108,9 +108,10 @@ public class UserController {
 
     public void updateFollowingList() {
         ElasticSearchController.CheckUserTask checkUserTask = new ElasticSearchController.CheckUserTask();
-        checkUserTask.execute(user.getUsername());
+        checkUserTask.execute("username", user.getUsername());
         try {
             user.setFollowingList(checkUserTask.get().get(0).getFollowingList());
+
         } catch (Exception e) {
         }
     }
@@ -120,9 +121,10 @@ public class UserController {
         ElasticSearchController.GetHabitEventTask getHabitEventTask
                 = new ElasticSearchController.GetHabitEventTask();
         for (UUID friendUUID: user.getFollowingList()) {
-            getHabitEventTask.execute("mID", friendUUID.toString());
+            getHabitEventTask.execute("mUserID", friendUUID.toString());
             try  {
                 ArrayList<HabitEvent> friendI = getHabitEventTask.get();
+
                 if (friendI.size() > 0) {
                     Collections.sort(friendI, new Comparator<HabitEvent>() {
                         @Override
@@ -130,7 +132,7 @@ public class UserController {
                             return o1.getDate().compareTo(o2.getDate());
                         }
                     });
-                    friendHabitEvents.add(friendI.get(friendHabitEvents.size() - 1));
+                    friendHabitEvents.add(friendI.get(friendI.size() - 1));
                 }
 
             } catch (Exception e) {

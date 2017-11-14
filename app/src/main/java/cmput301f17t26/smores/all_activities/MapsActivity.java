@@ -46,6 +46,7 @@ import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
+import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 import static cmput301f17t26.smores.all_activities.HabitEventDetailsActivity.LOCATION_REQUEST_CODE;
@@ -112,7 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
             requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
+        UserController.getUserController(this).updateFollowingList();
         friendHabitEvents = UserController.getUserController(this).getFriendsHabitEvents();
+
     }
 
 
@@ -232,6 +235,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void loadFriendMarkers() {
         for (HabitEvent habitEvent: friendHabitEvents) {
+
             try {
                 if (mRadiusField.getText().toString().trim().equals("")) {
                     String fullTitle = getMarkerString(habitEvent);
@@ -252,7 +256,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String getMarkerString(HabitEvent habitEvent) {
         String Habit_title = HabitController.getHabitController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
         String Habit_dateCompleted = habitEvent.getDate().toString();
-        return Habit_title + Habit_dateCompleted;
+        return Habit_title + " | " +Habit_dateCompleted;
+    }
+
+
+    private String getMarkerStringFriend(HabitEvent habitEvent) {
+        String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
+        String Habit_dateCompleted = habitEvent.getDate().toString();
+        return Habit_title + " | " +Habit_dateCompleted;
     }
 
 

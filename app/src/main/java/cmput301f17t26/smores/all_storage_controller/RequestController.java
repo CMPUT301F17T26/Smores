@@ -10,6 +10,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Request;
 import cmput301f17t26.smores.all_models.User;
@@ -95,4 +96,7 @@ public class RequestController {
         removeRequest(request);
     }
 
+    public String getHabitTitleByHabitID(UUID habitID) {
+        return null;
+    }
 }
