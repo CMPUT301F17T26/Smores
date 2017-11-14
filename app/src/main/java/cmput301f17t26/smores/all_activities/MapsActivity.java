@@ -133,9 +133,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.clear();
 
-        if (mMyself.isChecked()) {
-            loadMyMarkers();
-        }
+        loadMarkers();
 
         mRadiusField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -151,12 +149,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 } else {
                     mSearch.setEnabled(false);
-                    if (mMyself.isChecked()) {
-                        loadMyMarkers();
-                    }
-                    if (mFriendsCheckbox.isChecked()) {
-                        loadFriendMarkers();
-                    }
+                    loadMarkers();
 
 
                 }
@@ -172,14 +165,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 mMap.clear();
-
-                if (mMyself.isChecked()) {
-                    loadMyMarkers();
-                }
-
-                if (mFriendsCheckbox.isChecked()) {
-                    loadFriendMarkers();
-                }
+                loadMarkers();
             }
         });
 
@@ -187,12 +173,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mMap.clear();
-                if (mMyself.isChecked()) {
-                    loadMyMarkers();
-                }
-                if (mFriendsCheckbox.isChecked()) {
-                    loadFriendMarkers();
-                }
+                loadMarkers();
             }
         });
 
@@ -200,12 +181,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mMap.clear();
-                if (mMyself.isChecked()) {
-                    loadMyMarkers();
-                }
-                if (mFriendsCheckbox.isChecked()) {
-                    loadFriendMarkers();
-                }
+                loadMarkers();
             }
         });
 
@@ -215,41 +191,52 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 
+    private void loadMarkers() {
+        loadMyMarkers();
+        loadFriendMarkers();
+    }
+
     private void loadMyMarkers() {
-        for (HabitEvent habitEvent: userHabitEvents) {
-            try {
-                if (mRadiusField.getText().toString().trim().equals("")) {
-                    String fullTitle = getMarkerString(habitEvent);
-                    mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
-                } else {
-                    if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
+        if (mMyself.isChecked()) {
+            for (HabitEvent habitEvent: userHabitEvents) {
+                try {
+                    if (mRadiusField.getText().toString().trim().equals("")) {
                         String fullTitle = getMarkerString(habitEvent);
                         mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                    } else {
+                        if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
+                            String fullTitle = getMarkerString(habitEvent);
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                        }
                     }
-                }
-            } catch (LocationNotSetException e) {
+                } catch (LocationNotSetException e) {
 
+                }
             }
         }
+
     }
 
     private void loadFriendMarkers() {
-        for (HabitEvent habitEvent: friendHabitEvents) {
+        if (mFriendsCheckbox.isChecked()) {
+            for (HabitEvent habitEvent: friendHabitEvents) {
 
-            try {
-                if (mRadiusField.getText().toString().trim().equals("")) {
-                    String fullTitle = getMarkerString(habitEvent);
-                    mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
-                } else {
-                    if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
-                        String fullTitle = getMarkerString(habitEvent);
+                try {
+                    if (mRadiusField.getText().toString().trim().equals("")) {
+                        String fullTitle = getMarkerStringFriend(habitEvent);
                         mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                    } else {
+                        if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
+                            String fullTitle = getMarkerStringFriend(habitEvent);
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                        }
                     }
-                }
-            } catch (LocationNotSetException e) {
+                } catch (LocationNotSetException e) {
 
+                }
             }
         }
+
     }
 
     @NonNull
@@ -261,7 +248,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private String getMarkerStringFriend(HabitEvent habitEvent) {
-        String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
+        String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getUserID(), habitEvent.getHabitID());
         String Habit_dateCompleted = habitEvent.getDate().toString();
         return Habit_title + " | " +Habit_dateCompleted;
     }

@@ -12,6 +12,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.Request;
 import cmput301f17t26.smores.all_models.User;
 
@@ -96,7 +97,22 @@ public class RequestController {
         removeRequest(request);
     }
 
-    public String getHabitTitleByHabitID(UUID habitID) {
+    public String getHabitTitleByHabitID(UUID userID, UUID habitID) {
+        ArrayList<Habit> habits = new ArrayList<>();
+        ElasticSearchController.GetHabitTask getHabitTask
+                = new ElasticSearchController.GetHabitTask();
+        getHabitTask.execute("mUserID", userID.toString());
+        try {
+            habits.addAll(getHabitTask.get());
+            for (Habit habit: habits) {
+                if (habit.getID().equals(habitID)) {
+                    return habit.getTitle();
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
         return null;
     }
 }
