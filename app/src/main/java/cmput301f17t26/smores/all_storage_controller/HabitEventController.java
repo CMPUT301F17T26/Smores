@@ -36,8 +36,9 @@ public class HabitEventController {
     private static final String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitEventController";
 
     private HabitEventController(Context context) {
-        initHabitEvents(context);
         mFilteredHabitEvents = new ArrayList<>();
+        initHabitEvents(context);
+
     }
 
     private void initHabitEvents(Context context) {
@@ -130,7 +131,9 @@ public class HabitEventController {
 
         if (!JSONHabitEvent.equals("")) {
             mHabitEvents = gson.fromJson(JSONHabitEvent, new TypeToken<ArrayList<HabitEvent>>(){}.getType());
+            mFilteredHabitEvents.addAll(mHabitEvents);
         } else {
+            mFilteredHabitEvents = new ArrayList<HabitEvent>();
             mHabitEvents = new ArrayList<HabitEvent>();
         }
     }
