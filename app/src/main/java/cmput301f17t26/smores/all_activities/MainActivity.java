@@ -74,12 +74,6 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         mUserController = UserController.getUserController(this);
         getUser();
 
-        if (NetworkUtils.isNetworkAvailable(MainActivity.this)) {
-            OfflineController.getOfflineController(this).executeOnServer(MainActivity.this);
-        }
-        //checkForNetwork();
-        //thread.start();
-
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
         this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -255,25 +249,16 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-
-    }
-
-
-    @Override
     public void networkAvailable() {
-        Log.d("Main act", "Network available");
-
+        if (OfflineController.getOfflineController(this).executeOnServer(MainActivity.this)) {
+            Snackbar.make(mViewPager, "You are online! Synchronized Habit and Habit Events with server!", Snackbar.LENGTH_INDEFINITE).show();
+        } else {
+            Snackbar.make(mViewPager, "You are online!", Snackbar.LENGTH_INDEFINITE).show();
+        }
     }
 
     @Override
     public void networkUnavailable() {
-        Log.d("Main act", "Network unavailable");
+        Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
     }
 }

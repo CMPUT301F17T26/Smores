@@ -80,11 +80,15 @@ public class OfflineController {
         saveOfflineEvents(context);
     }
 
-    public void executeOnServer(Context context) {
+    public boolean executeOnServer(Context context) {
+        if (mCommandList.size() == 0) {
+            return false;
+        }
         for (Pair pair: mCommandList) {
             pair.executeTask();
         }
         mCommandList.clear();
         saveOfflineEvents(context);
+        return true;
     }
 }
