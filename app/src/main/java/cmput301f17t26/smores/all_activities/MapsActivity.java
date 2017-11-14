@@ -46,6 +46,7 @@ import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
+import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 import static cmput301f17t26.smores.all_activities.HabitEventDetailsActivity.LOCATION_REQUEST_CODE;
@@ -62,6 +63,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationClient;
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mMap != null) {
+            mMap.clear();
+        }
+        if (userHabitEvents != null) {
+            userHabitEvents.clear();
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
+        // code here to show dialog
+        super.onBackPressed();  // optional depending on your needs
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
@@ -69,8 +94,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        userHabitEvents = HabitEventController.getHabitEventController(this).getFilteredHabitEvents();
+        userHabitEvents = new ArrayList<>();
+        userHabitEvents.addAll(HabitEventController.getHabitEventController(this).getFilteredHabitEvents());
         mFriendsCheckbox = (CheckBox) findViewById(R.id.friendsCheckbox);
         mFriendsCheckbox.setChecked(false);
 
@@ -88,7 +113,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
             requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
+        UserController.getUserController(this).updateFollowingList();
         friendHabitEvents = UserController.getUserController(this).getFriendsHabitEvents();
+
     }
 
 
@@ -107,14 +134,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.clear();
 
         if (mMyself.isChecked()) {
-            for (HabitEvent habitEvent: userHabitEvents) {
-                try {
-                    String fullTitle = getMarkerString(habitEvent);
-                    mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
-                } catch (LocationNotSetException e) {
-                    continue;
-                }
-            }
+            loadMyMarkers();
         }
 
         mRadiusField.addTextChangedListener(new TextWatcher() {
@@ -215,6 +235,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void loadFriendMarkers() {
         for (HabitEvent habitEvent: friendHabitEvents) {
+
             try {
                 if (mRadiusField.getText().toString().trim().equals("")) {
                     String fullTitle = getMarkerString(habitEvent);
@@ -235,7 +256,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String getMarkerString(HabitEvent habitEvent) {
         String Habit_title = HabitController.getHabitController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
         String Habit_dateCompleted = habitEvent.getDate().toString();
-        return Habit_title + Habit_dateCompleted;
+        return Habit_title + " | " +Habit_dateCompleted;
+    }
+
+
+    private String getMarkerStringFriend(HabitEvent habitEvent) {
+        String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
+        String Habit_dateCompleted = habitEvent.getDate().toString();
+        return Habit_title + " | " +Habit_dateCompleted;
     }
 
 
