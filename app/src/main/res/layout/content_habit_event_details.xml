@@ -52,6 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:lines="2"
+            android:maxLength="20"
             android:minLines="2"
             android:hint="Comment"
             android:id="@+id/Event_hComment"

@@ -54,7 +54,7 @@
             android:lines="10"
             android:minLines="5"
             android:layout_weight="2"
-            android:maxLength="20"
+            android:maxLength="30"
             />
     </LinearLayout>
 
