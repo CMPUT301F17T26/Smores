@@ -25,6 +25,8 @@ import java.util.UUID;
 import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
+import cmput301f17t26.smores.all_models.Pair;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 /**
  * Created by Christian on 2017-10-31.
@@ -53,17 +55,17 @@ public class HabitEventController {
 
     public void addHabitEvent(Context context, HabitEvent habitEvent) {
         mHabitEvents.add(habitEvent);
-        addHabitEventToServer(habitEvent);
+        addHabitEventToServer(context, habitEvent);
         saveHabitEvents(context);
     }
 
     public void updateHabitEvent(Context context, HabitEvent habitEvent) {
-        updateHabitEventOnServer(habitEvent);
+        updateHabitEventOnServer(context, habitEvent);
         saveHabitEvents(context);
     }
 
     public void deleteHabitEvent(Context context, int index) {
-        deleteHabitEventFromServer(mHabitEvents.get(index));
+        deleteHabitEventFromServer(context, mHabitEvents.get(index));
         mHabitEvents.remove(index);
         saveHabitEvents(context);
     }
@@ -71,7 +73,7 @@ public class HabitEventController {
     public void deleteHabitEvent(Context context, UUID uuid) {
         for (HabitEvent habitEvent: mHabitEvents) {
             if (habitEvent.getID().equals(uuid)) {
-                deleteHabitEventFromServer(habitEvent);
+                deleteHabitEventFromServer(context, habitEvent);
                 mHabitEvents.remove(habitEvent);
                 break;
             }
@@ -150,27 +152,41 @@ public class HabitEventController {
         retrieveHabitEvents(context);
     }
 
-    public void deleteHabitEventFromServer(HabitEvent habitEvent) {
+    private void deleteHabitEventFromServer(Context context, HabitEvent habitEvent) {
         ElasticSearchController.RemoveHabitEventTask removeHabitEventTask
                 = new ElasticSearchController.RemoveHabitEventTask();
-        removeHabitEventTask.execute(habitEvent.getID());
+
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            removeHabitEventTask.execute(habitEvent.getID());
+        } else {
+            Pair pair = new Pair(habitEvent, Pair.REMOVE_HABIT_EVENT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
+
+
     }
 
-    public void addHabitEventToServer(HabitEvent habitEvent) {
+    private void addHabitEventToServer(Context context, HabitEvent habitEvent) {
         ElasticSearchController.AddHabitEventTask addHabitEventTask
                 = new ElasticSearchController.AddHabitEventTask();
-        //if internet {
-        addHabitEventTask.execute(habitEvent);
-        //}
-        //else {
-        //listOfCommandsToDo.add(new Pair(habit, addHabitTask));
-        //}
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            addHabitEventTask.execute(habitEvent);
+        } else {
+            Pair pair = new Pair(habitEvent, Pair.ADD_HABIT_EVENT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
     }
 
-    public void updateHabitEventOnServer(HabitEvent habitEvent) {
+    private void updateHabitEventOnServer(Context context, HabitEvent habitEvent) {
         ElasticSearchController.UpdateHabitEventTask updateHabitEventTask
                 = new ElasticSearchController.UpdateHabitEventTask();
-        updateHabitEventTask.execute(habitEvent);
+
+        if (NetworkUtils.isNetworkAvailable(context)) {
+            updateHabitEventTask.execute(habitEvent);
+        } else {
+            Pair pair = new Pair(habitEvent, Pair.UPDATE_HABIT_EVENT);
+            OfflineController.getOfflineController(context).addPair(context, pair);
+        }
     }
 
     public void deleteHabitEventsByHabit(Context context, UUID habitID) {

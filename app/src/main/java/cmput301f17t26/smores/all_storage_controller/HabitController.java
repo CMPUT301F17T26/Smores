@@ -81,7 +81,6 @@ public class HabitController {
     }
 
     public void deleteHabit(Context context, int i) {
-        //delete a habit based on the index
         deleteHabitFromServer(mHabitList.get(i));
         mHabitList.remove(i);
         saveHabits(context);
@@ -131,7 +130,6 @@ public class HabitController {
                 return habit.getTitle();
             }
         }
-        Log.d("habit controller", "not found");
         return null;
     }
 

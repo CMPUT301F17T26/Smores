@@ -35,7 +35,9 @@ import cmput301f17t26.smores.all_fragments.AddDialogFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
+import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener {
 
@@ -63,6 +65,10 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         setContentView(R.layout.activity_main);
         mUserController = UserController.getUserController(this);
         getUser();
+
+        if (NetworkUtils.isNetworkAvailable(MainActivity.this)) {
+            OfflineController.getOfflineController(this).executeOnServer(MainActivity.this);
+        }
 
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
