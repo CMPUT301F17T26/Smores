@@ -143,7 +143,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             mHabitType_Fixed.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
-            mDateCompleted.setText(simpleDateFormat.format(mHabitEvent.getDate()));
+            String dateString = simpleDateFormat.format(mHabitEvent.getDate());
+            mDateCompleted.setText(dateString);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
                     mDateCompleted.getLayoutParams();
             params.weight = 4.0f;

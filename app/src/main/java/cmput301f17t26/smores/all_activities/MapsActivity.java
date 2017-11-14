@@ -38,7 +38,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.common.collect.Maps;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
@@ -202,11 +204,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 try {
                     if (mRadiusField.getText().toString().trim().equals("")) {
                         String fullTitle = getMarkerString(habitEvent);
-                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                     } else {
                         if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
                             String fullTitle = getMarkerString(habitEvent);
-                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
                         }
                     }
                 } catch (LocationNotSetException e) {
@@ -242,15 +244,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @NonNull
     private String getMarkerString(HabitEvent habitEvent) {
         String Habit_title = HabitController.getHabitController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
-        String Habit_dateCompleted = habitEvent.getDate().toString();
-        return Habit_title + " | " +Habit_dateCompleted;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
+        String Habit_dateCompleted = simpleDateFormat.format(habitEvent.getDate());
+        return Habit_title + " | " + Habit_dateCompleted;
     }
 
 
     private String getMarkerStringFriend(HabitEvent habitEvent) {
         String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getUserID(), habitEvent.getHabitID());
-        String Habit_dateCompleted = habitEvent.getDate().toString();
-        return Habit_title + " | " +Habit_dateCompleted;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
+        String Habit_dateCompleted = simpleDateFormat.format(habitEvent.getDate());
+        return Habit_title + " | " + Habit_dateCompleted;
     }
 
 

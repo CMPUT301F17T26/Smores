@@ -6,7 +6,8 @@
 
     <TextView
         android:id="@+id/Event_Element_hTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:text="Title"
@@ -16,7 +17,8 @@
 
     <TextView
         android:id="@+id/Event_Element_hDate"
-        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
         android:text="19/1/17"
