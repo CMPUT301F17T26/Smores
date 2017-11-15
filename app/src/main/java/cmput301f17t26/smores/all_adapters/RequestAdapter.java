@@ -11,6 +11,7 @@ package cmput301f17t26.smores.all_adapters;
 
 import cmput301f17t26.smores.all_models.*;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -21,22 +22,18 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_storage_controller.RequestController;
+import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
-    private List<Request> mValues;
+    private List<Request> mRequests;
     private Context mContext;
 
     public RequestAdapter(Context context) {
-        mValues = RequestController.getRequestController(context).getRequests(context);
+        loadList();
         mContext = context;
     }
 
@@ -49,8 +46,8 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mUserName.setText(mValues.get(position).getFromUser());
+        holder.mItem = mRequests.get(position);
+        holder.mUserName.setText(mRequests.get(position).getFromUser());
 
         holder.mAccept.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +68,10 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        if (mRequests == null) {
+            return 0;
+        }
+        return mRequests.size();
     }
 
 
@@ -94,5 +94,24 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         public String toString() {
             return super.toString() + " '" + mUserName.getText() + "'";
         }
+    }
+
+    public void loadList() {
+        // Searching could be complex..so we will dispatch it to a different thread...
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                mRequests = RequestController.getRequestController(mContext).getRequests(mContext);
+                // Set on UI Thread
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Notify the List that the DataSet has changed...
+                        notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 }

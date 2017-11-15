@@ -40,7 +40,8 @@ public class SocialFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-
+    private SocialAdapter mSocialAdapter;
+    private RecyclerView recyclerView;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -73,9 +74,10 @@ public class SocialFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_social_list, container, false);
 
         Context context = view.getContext();
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.setAdapter(new SocialAdapter(DummyContent.ITEMS, mListener));
+        mSocialAdapter = new SocialAdapter(getActivity());
+        recyclerView.setAdapter(mSocialAdapter);
 
         return view;
     }
@@ -116,5 +118,8 @@ public class SocialFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if (mSocialAdapter != null) {
+            recyclerView.setAdapter(new SocialAdapter(getActivity()));
+        }
     }
 }

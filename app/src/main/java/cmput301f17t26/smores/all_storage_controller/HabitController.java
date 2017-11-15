@@ -87,20 +87,20 @@ public class HabitController {
         return mHabitList.get(i);
     }
 
-    public void deleteHabit(Context context, int i) {
-        deleteHabitFromServer(context, mHabitList.get(i));
-        mHabitList.remove(i);
+    public void deleteHabit(Context context, Habit habit) {
+        Log.d("Habit controller", "Gets called!");
+        mHabitList.remove(habit);
         saveHabits(context);
+        deleteHabitFromServer(context, habit);
     }
 
     public ArrayList<Habit> getHabitList() {
         return mHabitList;
     }
 
-    public void deleteHabitFromServer(Context context, Habit habit) {
+    private void deleteHabitFromServer(Context context, Habit habit) {
         ElasticSearchController.RemoveHabitTask removeHabitTask
                 = new ElasticSearchController.RemoveHabitTask();
-        removeHabitTask.execute(habit.getID());
         if (NetworkUtils.isNetworkAvailable(context)) {
             removeHabitTask.execute(habit.getID());
         } else {
