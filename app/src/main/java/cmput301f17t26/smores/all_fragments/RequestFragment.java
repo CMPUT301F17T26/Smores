@@ -92,21 +92,10 @@ public class RequestFragment extends Fragment {
 
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (mRequestAdapter != null) {
-            mRequestAdapter = new RequestAdapter(getActivity());
-            mRecyclerView.setAdapter(mRequestAdapter);
+    public void setUserVisibleHint(boolean isVisbleToUser) {
+        super.setUserVisibleHint(isVisbleToUser);
+        if (isVisbleToUser && mRequestAdapter != null) {
+            mRequestAdapter.loadList();
         }
     }
 

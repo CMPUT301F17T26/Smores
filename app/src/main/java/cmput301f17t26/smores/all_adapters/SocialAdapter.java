@@ -10,6 +10,7 @@
 package cmput301f17t26.smores.all_adapters;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,18 +19,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
-import cmput301f17t26.smores.all_fragments.SocialFragment.OnListFragmentInteractionListener;
 import cmput301f17t26.smores.all_models.Feed;
 import cmput301f17t26.smores.all_storage_controller.UserController;
-import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder> {
 
     private List<Feed> mFeed;
@@ -37,7 +31,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     public SocialAdapter(Context context) {
         mContext = context;
-        loadList();
     }
 
     @Override
@@ -49,7 +42,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mFeed.get(position);
+        holder.mFeed = mFeed.get(position);
         holder.mUsername.setText(mFeed.get(position).getUsername());
         holder.mHabitType.setText(mFeed.get(position).getHabit().getTitle());
     }
@@ -66,7 +59,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         public final View mView;
         public final TextView mUsername;
         public final TextView mHabitType;
-        public Feed mItem;
+        public Feed mFeed;
 
         public ViewHolder(View view) {
             super(view);
@@ -84,6 +77,15 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     public void loadList() {
         // Searching could be complex..so we will dispatch it to a different thread...
+
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Now loading feed...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -96,6 +98,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                     public void run() {
                         // Notify the List that the DataSet has changed...
                         notifyDataSetChanged();
+                        progressDialog.dismiss();
                     }
                 });
             }

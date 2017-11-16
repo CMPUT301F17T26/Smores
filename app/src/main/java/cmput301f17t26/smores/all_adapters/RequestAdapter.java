@@ -12,6 +12,7 @@ package cmput301f17t26.smores.all_adapters;
 import cmput301f17t26.smores.all_models.*;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,8 +23,6 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_storage_controller.RequestController;
-import cmput301f17t26.smores.all_storage_controller.UserController;
-import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     private Context mContext;
 
     public RequestAdapter(Context context) {
-        loadList();
         mContext = context;
     }
 
@@ -46,13 +44,13 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mRequests.get(position);
+        holder.mRequest = mRequests.get(position);
         holder.mUserName.setText(mRequests.get(position).getFromUser());
 
         holder.mAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestController.getRequestController(mContext).acceptRequest(mContext, holder.mItem);
+                RequestController.getRequestController(mContext).acceptRequest(mContext, holder.mRequest);
                 notifyDataSetChanged();
             }
         });
@@ -60,7 +58,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         holder.mReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RequestController.getRequestController(mContext).declineRequest(holder.mItem);
+                RequestController.getRequestController(mContext).declineRequest(holder.mRequest);
                 notifyDataSetChanged();
             }
         });
@@ -80,7 +78,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
         public final TextView mUserName;
         public final Button mAccept;
         public final Button mReject;
-        public Request mItem;
+        public Request mRequest;
 
         public ViewHolder(View view) {
             super(view);
@@ -98,6 +96,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     public void loadList() {
         // Searching could be complex..so we will dispatch it to a different thread...
+
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Now loading requests...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -109,6 +115,7 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                     public void run() {
                         // Notify the List that the DataSet has changed...
                         notifyDataSetChanged();
+                        progressDialog.dismiss();
                     }
                 });
             }

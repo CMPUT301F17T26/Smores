@@ -40,6 +40,7 @@ import cmput301f17t26.smores.all_fragments.AddDialogFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
+import cmput301f17t26.smores.all_fragments.SocialFragment;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
@@ -169,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                                 MainActivity.this.startActivity(intent);
                             }
                         });
+
                         return;
                     case 3: //SOCIAL
                         mAddFloatingActionButton.hide();
@@ -215,6 +217,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
 
             }
         });
+
+
 
     }
 
