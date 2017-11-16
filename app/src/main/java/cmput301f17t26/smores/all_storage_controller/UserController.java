@@ -202,7 +202,7 @@ public class UserController {
         return feed;
     }
 
-    private String getUsernameByID(UUID uuid) {
+    public String getUsernameByID(UUID uuid) {
         ElasticSearchController.CheckUserTask checkUserTask
                 = new ElasticSearchController.CheckUserTask();
         checkUserTask.execute("mID", uuid.toString());

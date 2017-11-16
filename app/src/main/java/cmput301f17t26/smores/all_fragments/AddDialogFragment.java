@@ -17,9 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import java.util.UUID;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_models.Request;
+import cmput301f17t26.smores.all_models.User;
 import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
@@ -41,10 +45,35 @@ public class AddDialogFragment extends DialogFragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
+
+                String username = mToUser.getText().toString().trim();
+
+                if (username.equals("")) {
+                    Toast.makeText(getActivity(), "Please enter a username!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (username.equals(UserController.getUserController(getActivity()).getUser().getUsername())) {
+                    Toast.makeText(getActivity(), "Nice try, but you cannot add yourself!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                UserController.getUserController(getActivity()).updateFollowingList();
+                for (UUID friendUUID: UserController.getUserController(getActivity()).getUser().getFollowingList()) {
+                    String friendUsername =  UserController.getUserController(getActivity()).getUsernameByID(friendUUID);
+                    if (friendUsername.equals(username)) {
+                        Toast.makeText(getActivity(), "You have already added this person!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+
+                if ( RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
                         new Request(UserController.getUserController(getActivity()).getUser().getUsername(),
-                                mToUser.getText().toString()));
-                dismiss();
+                                mToUser.getText().toString()))) {
+                    Toast.makeText(getActivity(), "Request sent!", Toast.LENGTH_SHORT).show();
+                    dismiss();
+                } else {
+                    Toast.makeText(getActivity(), "User not found!", Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
 
