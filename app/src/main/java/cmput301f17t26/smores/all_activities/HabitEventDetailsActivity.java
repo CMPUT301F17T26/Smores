@@ -192,15 +192,13 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
 
+        mYesterday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                loadSpinner();
+            }
+        });
 
-//        mImageButton.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View v) {
-//                mImageView.setImageBitmap(null);
-//                mImage = null;
-//                return true;
-//            }
-//        });
 
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -338,10 +336,19 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         ArrayList<Habit> availableHabits = new ArrayList<>();
         availableHabits.addAll(mHabitList);
         ArrayList<String> stringAvailableHabits = new ArrayList<>();
-        for (Habit habit : availableHabits) {
-            if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)) {
-                stringAvailableHabits.add(habit.getTitle());
+
+        if (!mYesterday.isChecked()) {
+            for (Habit habit : availableHabits) {
+                if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)) {
+                    stringAvailableHabits.add(habit.getTitle());
+                }
             }
+        } else if (mYesterday.isChecked()) {
+             for (Habit habit : availableHabits) {
+                 if (HabitEventController.getHabitEventController(this).doesHabitEventExistForYesterday(habit)) {
+                     stringAvailableHabits.add(habit.getTitle());
+                 }
+             }
         }
         spinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableHabits);
         spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

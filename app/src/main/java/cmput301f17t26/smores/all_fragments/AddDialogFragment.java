@@ -65,7 +65,7 @@ public class AddDialogFragment extends DialogFragment {
                     }
                 }
 
-                if ( RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
+                if (RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
                         new Request(UserController.getUserController(getActivity()).getUser().getUsername(),
                                 mToUser.getText().toString()))) {
                     Toast.makeText(getActivity(), "Request sent!", Toast.LENGTH_SHORT).show();

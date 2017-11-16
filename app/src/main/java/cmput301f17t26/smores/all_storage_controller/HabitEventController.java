@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -115,6 +116,23 @@ public class HabitEventController {
     public Boolean doesHabitEventExist (Habit habit) {
         ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
         Date date = new Date();
+        for (HabitEvent habitEvent: habitEvents) {
+            if (habitEvent.getDate().getYear() == date.getYear() &&
+                    habitEvent.getDate().getMonth() == date.getMonth() &&
+                    habitEvent.getDate().getDay() == date.getDay()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean doesHabitEventExistForYesterday(Habit habit) {
+        ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
+        Date date = new Date();
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DATE, -1);
+        date = cal.getTime();
         for (HabitEvent habitEvent: habitEvents) {
             if (habitEvent.getDate().getYear() == date.getYear() &&
                     habitEvent.getDate().getMonth() == date.getMonth() &&
