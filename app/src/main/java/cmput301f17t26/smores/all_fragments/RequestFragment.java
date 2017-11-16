@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,7 @@ public class RequestFragment extends Fragment {
     private TextView username;
     private RecyclerView mRecyclerView;
     private RequestAdapter mRequestAdapter;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -83,6 +85,13 @@ public class RequestFragment extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         mRequestAdapter = new RequestAdapter(context);
         mRecyclerView.setAdapter(mRequestAdapter);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+            }
+        });
 
         username = (TextView) view.findViewById(R.id.request_username);
         username.setText(UserController.getUserController(getActivity()).getUser().getUsername());
@@ -92,11 +101,15 @@ public class RequestFragment extends Fragment {
 
 
     @Override
-    public void setUserVisibleHint(boolean isVisbleToUser) {
-        super.setUserVisibleHint(isVisbleToUser);
-        if (isVisbleToUser && mRequestAdapter != null) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mRequestAdapter != null) {
             mRequestAdapter.loadList();
         }
     }
 
+    private void refreshItems() {
+        mRequestAdapter.loadList();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 }

@@ -120,9 +120,9 @@ public class UserController {
 
     public ArrayList<HabitEvent> getFriendsHabitEvents() {
         ArrayList<HabitEvent> friendHabitEvents = new ArrayList<>();
-        ElasticSearchController.GetHabitEventTask getHabitEventTask
-                = new ElasticSearchController.GetHabitEventTask();
         for (UUID friendUUID: user.getFollowingList()) {
+            ElasticSearchController.GetHabitEventTask getHabitEventTask
+                    = new ElasticSearchController.GetHabitEventTask();
             getHabitEventTask.execute("mUserID", friendUUID.toString());
             try  {
                 ArrayList<HabitEvent> friendI = getHabitEventTask.get();
@@ -148,10 +148,10 @@ public class UserController {
 
     public ArrayList<Habit>  getFriendsHabits() {
         ArrayList<Habit> friendHabits = new ArrayList<>();
-        ElasticSearchController.GetHabitTask getHabitTask
-                = new ElasticSearchController.GetHabitTask();
-        for (UUID friendUUID: user.getFollowingList()) {
 
+        for (UUID friendUUID: user.getFollowingList()) {
+            ElasticSearchController.GetHabitTask getHabitTask
+                    = new ElasticSearchController.GetHabitTask();
             getHabitTask.execute("mUserID", friendUUID.toString());
             try {
                 ArrayList<Habit> friendI = getHabitTask.get();

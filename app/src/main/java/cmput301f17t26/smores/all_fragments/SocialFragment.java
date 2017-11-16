@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +37,7 @@ public class SocialFragment extends Fragment {
     private int mColumnCount = 1;
     private SocialAdapter mSocialAdapter;
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -68,20 +70,32 @@ public class SocialFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_social_list, container, false);
 
         Context context = view.getContext();
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mSocialAdapter = new SocialAdapter(getActivity());
         recyclerView.setAdapter(mSocialAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshItems();
+            }
+        });
 
         return view;
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisbleToUser) {
-        super.setUserVisibleHint(isVisbleToUser);
-        if (isVisbleToUser && mSocialAdapter != null) {
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && mSocialAdapter != null) {
             mSocialAdapter.loadList();
         }
+    }
+
+    void refreshItems() {
+        mSocialAdapter.loadList();;
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
 }
