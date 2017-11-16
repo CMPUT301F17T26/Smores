@@ -26,12 +26,13 @@ import cmput301f17t26.smores.all_models.Request;
 import cmput301f17t26.smores.all_models.User;
 import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 /**
  * Created by rohan on 10/8/2017.
  */
 
-public class AddDialogFragment extends DialogFragment {
+public class AddFriendFragment extends DialogFragment {
     private Button mSendButton;
     private Button mCancelButton;
     private EditText mToUser;
@@ -45,6 +46,11 @@ public class AddDialogFragment extends DialogFragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+                    Toast.makeText(getActivity(), "No Internet connection! Please try again later.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
                 String username = mToUser.getText().toString().trim();
 

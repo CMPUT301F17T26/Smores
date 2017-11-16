@@ -13,14 +13,10 @@ package cmput301f17t26.smores.all_activities;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.os.AsyncTask;
-import android.os.SystemClock;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -36,11 +32,10 @@ import java.util.UUID;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
-import cmput301f17t26.smores.all_fragments.AddDialogFragment;
+import cmput301f17t26.smores.all_fragments.AddFriendFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
-import cmput301f17t26.smores.all_fragments.SocialFragment;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
@@ -195,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             @Override
                             public void onClick(View view) {
                                 FragmentManager manager = MainActivity.this.getSupportFragmentManager();
-                                AddDialogFragment addDialogFragment = new AddDialogFragment();
-                                addDialogFragment.show(manager, "AddDialog");
+                                AddFriendFragment addFriendFragment = new AddFriendFragment();
+                                addFriendFragment.show(manager, "AddDialog");
                             }
                         });
 
