@@ -50,6 +50,7 @@ import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.RequestController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.DateUtils;
 
 import static cmput301f17t26.smores.all_activities.HabitEventDetailsActivity.LOCATION_REQUEST_CODE;
 
@@ -244,16 +245,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @NonNull
     private String getMarkerString(HabitEvent habitEvent) {
         String Habit_title = HabitController.getHabitController(this).getHabitTitleByHabitID(habitEvent.getHabitID());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
-        String Habit_dateCompleted = simpleDateFormat.format(habitEvent.getDate());
+        String Habit_dateCompleted = DateUtils.getStringOfDate(habitEvent.getDate());
         return Habit_title + " | " + Habit_dateCompleted;
     }
 
 
     private String getMarkerStringFriend(HabitEvent habitEvent) {
         String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getUserID(), habitEvent.getHabitID());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
-        String Habit_dateCompleted = simpleDateFormat.format(habitEvent.getDate());
+        String Habit_dateCompleted = DateUtils.getStringOfDate(habitEvent.getDate());
         return Habit_title + " | " + Habit_dateCompleted;
     }
 
