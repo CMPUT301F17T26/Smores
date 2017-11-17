@@ -38,6 +38,7 @@ import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.DateUtils;
 
 public class HabitDetailsActivity extends AppCompatActivity {
     public static final int HABIT_POSITION_NONE = -1;
@@ -121,7 +122,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mNameText.setText(mHabit.getTitle());
             mReasonText.setText(mHabit.getReason());
 
-            mYear = mHabit.getStartDate().getYear();
+            mYear = mHabit.getStartDate().getYear() + 1900;
             mMonth = mHabit.getStartDate().getMonth();
             mDay = mHabit.getStartDate().getDate();
 
@@ -133,9 +134,13 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mThuBox.setChecked(days.get(Habit.THURSDAY));
             mFriBox.setChecked(days.get(Habit.FRIDAY));
             mSatBox.setChecked(days.get(Habit.SATURDAY));
+            mDateSelect.setText(DateUtils.getStringOfDate(mHabit.getStartDate()));
+
+        } else {
+            mDateSelect.setText(DateUtils.getStringOfDate(today));
         }
 
-        mDateSelect.setText(String.format("%d - %d - %d", mYear, mMonth + 1, mDay));
+
     }
 
     @Override
@@ -147,7 +152,11 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
-                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth + 1, mDay));
+                    Date d = new Date();
+                    d.setYear(mYear - 1900);
+                    d.setMonth(mMonth);
+                    d.setDate(mDay);
+                    mDateSelect.setText(DateUtils.getStringOfDate(d));
                 }
             }, mYear, mMonth, mDay);
         }
@@ -197,7 +206,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
     private void saveEdited() {
         Date date = mHabit.getStartDate();
-        date.setYear(mYear);
+        date.setYear(mYear - 1900);
         date.setMonth(mMonth);
         date.setDate(mDay);
 
@@ -227,7 +236,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
     private void saveNew() {
         Date date = new Date();
-        date.setYear(mYear);
+        date.setYear(mYear - 1900);
         date.setMonth(mMonth);
         date.setDate(mDay);
 

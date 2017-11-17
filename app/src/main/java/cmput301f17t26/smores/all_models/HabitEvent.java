@@ -255,4 +255,8 @@ public class HabitEvent {
     public static Bitmap decompressBitmap(Bitmap scaledBitmap) {
         return Bitmap.createScaledBitmap(scaledBitmap, 256, 256, true);
     }
+
+    public void setDate(Date date) {
+        mDateCompleted = date;
+    }
 }

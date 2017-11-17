@@ -88,8 +88,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         mValues.clear();
         Calendar today = Calendar.getInstance();
         Date todayDate = new Date();
+        today.setTime(todayDate);
         for (Habit habit : HabitController.getHabitController(mContext).getHabitList()) {
-            if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1) == true) {
+            if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1)) {
                 if (habit.getStartDate().compareTo(todayDate) < 0) {
                     if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit)) {
                         mValues.add(habit);
@@ -97,7 +98,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
                 }
             }
         }
-
         notifyDataSetChanged();
     }
 }

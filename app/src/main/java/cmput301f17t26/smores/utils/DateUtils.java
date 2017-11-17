@@ -25,8 +25,8 @@ public class DateUtils {
         return getStringOfDate(calendar.getTime());
     }
 
-    private static SimpleDateFormat getDateFormat() {
-        return new SimpleDateFormat("EEE d, Y", Locale.getDefault());
+    public static SimpleDateFormat getDateFormat() {
+        return new SimpleDateFormat("EEE MMM d, y", Locale.getDefault());
     }
 
 }

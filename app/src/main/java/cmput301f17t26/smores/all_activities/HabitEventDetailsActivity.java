@@ -18,6 +18,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,6 +32,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +43,12 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
+import java.text.ParseException;
+import java.util.Calendar;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,17 +66,25 @@ import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkUtils;
 
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 0;
     public static final int LOCATION_REQUEST_CODE = 2;
     public static final int CAMERA_REQUEST = 1;
+    private RadioButton mTodayRad;
+    private RadioButton mPreviousDayRad;
+    private RadioGroup mRadioGroup;
+
+    private Spinner mPreviousDaySpin;
+    private TextView mPreviousDayText;
+
     private Spinner mHabitType;
     private TextView mHabitType_Fixed;
     private EditText mComment;
     private TextView mDateCompleted;
-    private CheckBox mYesterday;
+
     private ToggleButton mToggleLocation;
     private Button mUpdateLocation;
     private TextView mLocationString;
@@ -85,6 +101,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
     private ArrayList<Habit> mHabitList;
     private ArrayAdapter<String> spinnerDataAdapter;
+    private ArrayAdapter<String> previousSpinnerDataAdapter;
+    private ArrayList<Date> mDaysMissed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +111,47 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getUIElements();
+        mHabitList = HabitController.getHabitController(this).getHabitList();
+
+        viewHiding();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if (bundle != null && bundle.get("habitEventPosition") != null) {
+            mHabitEventUUID = (UUID) bundle.get("habitEventPosition");
+        }
+        setListeners();
+        loadDetails();
+    }
+
+    private void viewHiding() {
+        mHabitType.setVisibility(View.GONE);
+        mHabitType_Fixed.setVisibility(View.GONE);
+        mUpdateLocation.setVisibility(View.GONE);
+
+        mPreviousDayText.setVisibility(View.GONE);
+        mPreviousDaySpin.setVisibility(View.GONE);
+        mRadioGroup.setVisibility(View.GONE);
+        mTodayRad.setVisibility(View.GONE);
+        mPreviousDayRad.setVisibility(View.GONE);
+
+    }
+
+    private void getUIElements() {
+        mTodayRad = (RadioButton) findViewById(R.id.Event_hTodayRad);
+        mPreviousDayRad = (RadioButton) findViewById(R.id.Event_hPreviousDayRad);
+
+        mRadioGroup = (RadioGroup) findViewById(R.id.RadGroup);
+        mPreviousDayText = (TextView) findViewById(R.id.Event_hPreviousText);
+        mPreviousDaySpin = (Spinner) findViewById(R.id.Event_hPreviousSpinner);
+
         mHabitType = (Spinner) findViewById(R.id.Event_hType);
         mHabitType_Fixed = (TextView) findViewById(R.id.Event_hTypeFixed);
         mComment = (EditText) findViewById(R.id.Event_hComment);
         mDateCompleted = (TextView) findViewById(R.id.Event_hDate);
-        mYesterday = (CheckBox) findViewById(R.id.Event_hYesterday);
         mToggleLocation = (ToggleButton) findViewById(R.id.Event_hToggleButton);
         mUpdateLocation = (Button) findViewById(R.id.Event_hUpdateButton);
         mLocationString = (TextView) findViewById(R.id.Event_hLocationText);
@@ -105,73 +159,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
-        mHabitList = HabitController.getHabitController(this).getHabitList();
+    }
 
-        mHabitType.setVisibility(View.GONE);
-        mHabitType_Fixed.setVisibility(View.GONE);
-        mUpdateLocation.setVisibility(View.GONE);
-        mYesterday.setVisibility(View.GONE);
-
-
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveButtonHandler();
-            }
-        });
-
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-
-        if (bundle != null && bundle.get("habitEventPosition") != null) {
-
-            mHabitEventUUID = (UUID) bundle.get("habitEventPosition");
-        }
-
+    private void setListeners() {
         mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 deleteButtonHandler();
             }
         });
-
-        if (mHabitEventUUID != null) {
-            mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventUUID);
-            mUpdateLocation.setVisibility(View.VISIBLE);
-            mHabitType_Fixed.setVisibility(View.VISIBLE);
-            mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
-            String dateString = simpleDateFormat.format(mHabitEvent.getDate());
-            mDateCompleted.setText(dateString);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
-                    mDateCompleted.getLayoutParams();
-            params.weight = 4.0f;
-            mDateCompleted.setLayoutParams(params);
-            try {
-                mComment.setText(mHabitEvent.getComment());
-            } catch (CommentNotSetException e) {
-            }
-            try {
-                mHabitEvent.getLocation();
-                Log.d("Details act", "Location is set!!");
-                mToggleLocation.setChecked(true);
-                mLocationString.setText(mHabitEvent.getLocationString());
-            } catch (LocationNotSetException e) {
-                Log.d("Details act", "Location is not set!!");
-            }
-            try {
-                mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
-                mImage = mHabitEvent.getImage();
-            } catch (ImageNotSetException e) {
-            }
-
-        } else {
-            mHabitType.setVisibility(View.VISIBLE);
-            mYesterday.setVisibility(View.VISIBLE);
-            loadSpinner();
-        }
 
         mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -192,12 +188,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
 
-        mYesterday.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                loadSpinner();
-            }
-        });
 
 
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -245,8 +235,64 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
             }
         });
+
+        mSave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                saveButtonHandler();
+            }
+        });
+
+        mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup radioGroup, @IdRes int i) {
+                if (((RadioButton) findViewById(i)).getText().equals("Previous Day")) {
+                    mPreviousDayText.setVisibility(View.VISIBLE);
+                    mPreviousDaySpin.setVisibility(View.VISIBLE);
+                } else {
+                    mPreviousDayText.setVisibility(View.GONE);
+                    mPreviousDaySpin.setVisibility(View.GONE);
+                }
+                loadSpinner();
+                loadPreviousSpinner();
+            }
+        });
     }
 
+    private void loadDetails() {
+        if (mHabitEventUUID != null) {
+            mHabitEvent = HabitEventController.getHabitEventController(this).getHabitEvent(mHabitEventUUID);
+            mUpdateLocation.setVisibility(View.VISIBLE);
+            mHabitType_Fixed.setVisibility(View.VISIBLE);
+            mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
+            String dateString = simpleDateFormat.format(mHabitEvent.getDate());
+            mDateCompleted.setText(dateString);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
+                    mDateCompleted.getLayoutParams();
+            params.weight = 4.0f;
+            mDateCompleted.setLayoutParams(params);
+            try {
+                mComment.setText(mHabitEvent.getComment());
+            } catch (CommentNotSetException e) {}
+            try {
+                mHabitEvent.getLocation();
+                mToggleLocation.setChecked(true);
+                mLocationString.setText(mHabitEvent.getLocationString());
+            } catch (LocationNotSetException e) {}
+            try {
+                mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
+                mImage = mHabitEvent.getImage();
+            } catch (ImageNotSetException e) {}
+
+        } else {
+            mHabitType.setVisibility(View.VISIBLE);
+            mTodayRad.setVisibility(View.VISIBLE);
+            mPreviousDayRad.setVisibility(View.VISIBLE);
+            mRadioGroup.setVisibility(View.VISIBLE);
+            loadSpinner();
+        }
+    }
 
 
     long time = 0;
@@ -275,61 +321,72 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
     private void saveButtonHandler() {
         if (mHabitEventUUID == null) {
-            String title = null;
-            try {
-                title = mHabitType.getSelectedItem().toString();
-            } catch (NullPointerException e) {
-                Toast.makeText(HabitEventDetailsActivity.this, "Please select a Habit Type!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
-                    HabitController.getHabitController(this).getHabitIDByTitle(title));
-
-            if (mYesterday.isChecked()) {
-                habitEvent.setToPreviousDate();
-            }
-
-            if (!mComment.getText().toString().equals("")) {
-                try {
-                    habitEvent.setComment(mComment.getText().toString());
-                } catch (CommentTooLongException e) {
-                }
-            }
-            if (mToggleLocation.isChecked())
-                habitEvent.setLocation(mLocation, mLocationText);
-            try {
-                habitEvent.setImage(mImage);
-            } catch (ImageTooBigException e) {
-            }
-            HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
-            finish();
+            saveNew();
         } else {
-            if (!mComment.getText().toString().equals("")) {
-                try {
-                    mHabitEvent.setComment(mComment.getText().toString());
-                } catch (CommentTooLongException e) {
-                }
-            }
-            else {
-                try {
-                    mHabitEvent.setComment(null);
-                } catch (Exception e) {}
-            }
-            if (mToggleLocation.isChecked()) {
-                if (mLocation != null)
-                    mHabitEvent.setLocation(mLocation, mLocationText);
-            } else {
-                mHabitEvent.setLocation(null);
-
-            }
-            try {
-                mHabitEvent.setImage(mImage);
-            } catch (ImageTooBigException e) {
-            }
-            HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
-            finish();
+            saveExsisting();
         }
 
+    }
+
+    private void saveExsisting() {
+        if (!mComment.getText().toString().equals("")) {
+            try {
+                mHabitEvent.setComment(mComment.getText().toString());
+            } catch (CommentTooLongException e) {
+            }
+        }
+        else {
+            try {
+                mHabitEvent.setComment(null);
+            } catch (Exception e) {}
+        }
+        if (mToggleLocation.isChecked()) {
+            if (mLocation != null)
+                mHabitEvent.setLocation(mLocation, mLocationText);
+        } else {
+            mHabitEvent.setLocation(null);
+
+        }
+        try {
+            mHabitEvent.setImage(mImage);
+        } catch (ImageTooBigException e) {
+        }
+        HabitEventController.getHabitEventController(this).updateHabitEvent(this, mHabitEvent);
+        finish();
+    }
+
+    private void saveNew() {
+        String title = null;
+        try {
+            title = mHabitType.getSelectedItem().toString();
+        } catch (NullPointerException e) {
+            Toast.makeText(HabitEventDetailsActivity.this, "Please select a Habit Type!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        HabitEvent habitEvent = new HabitEvent(UserController.getUserController(this).getUser().getUserID(),
+                HabitController.getHabitController(this).getHabitIDByTitle(title));
+
+        if (mPreviousDayRad.isChecked()) {
+            SimpleDateFormat simpleDateFormat = DateUtils.getDateFormat();
+            try {
+                mPreviousDaySpin.getSelectedItem().toString();
+                Date previousDate = simpleDateFormat.parse(mPreviousDaySpin.getSelectedItem().toString());
+                Log.d("Date Read in as: ", mPreviousDaySpin.getSelectedItem().toString());
+                Log.d("Date saved to: ", DateUtils.getStringOfDate(previousDate));
+                habitEvent.setDate(previousDate);
+            } catch (Exception e) {
+                Toast.makeText(HabitEventDetailsActivity.this, "Please select a previous date!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        try { habitEvent.setComment(mComment.getText().toString()); } catch (CommentTooLongException e) {}
+
+        if (mToggleLocation.isChecked())
+            habitEvent.setLocation(mLocation, mLocationText);
+        try { habitEvent.setImage(mImage); } catch (ImageTooBigException e) {}
+        HabitEventController.getHabitEventController(this).addHabitEvent(this, habitEvent);
+        finish();
     }
 
     public void loadSpinner() {
@@ -337,22 +394,46 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         availableHabits.addAll(mHabitList);
         ArrayList<String> stringAvailableHabits = new ArrayList<>();
 
-        if (!mYesterday.isChecked()) {
+
+        if (mTodayRad.isChecked()) {
             for (Habit habit : availableHabits) {
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+                if (simpleDateFormat.format(habit.getStartDate()).compareTo(simpleDateFormat.format(new Date())) > 0) {
+                    continue;
+                }
                 if (HabitEventController.getHabitEventController(this).doesHabitEventExist(habit)) {
                     stringAvailableHabits.add(habit.getTitle());
                 }
             }
-        } else if (mYesterday.isChecked()) {
-             for (Habit habit : availableHabits) {
-                 if (HabitEventController.getHabitEventController(this).doesHabitEventExistForYesterday(habit)) {
-                     stringAvailableHabits.add(habit.getTitle());
-                 }
-             }
+        } else if (mPreviousDayRad.isChecked()) {
+            for (Habit habit : availableHabits) {
+                stringAvailableHabits.add(habit.getTitle());
+            }
         }
         spinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableHabits);
         spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHabitType.setAdapter(spinnerDataAdapter);
+
+    }
+
+    public void loadPreviousSpinner() {
+        if (mPreviousDayRad.getVisibility() != View.GONE) {
+            if (mPreviousDayRad.isChecked()) {
+                String habitTitle;
+                try {
+                    habitTitle =  mHabitType.getSelectedItem().toString();
+                } catch (NullPointerException e) { return; }
+                Habit habit = HabitController.getHabitController(this).getHabitByTitle(habitTitle);
+                mDaysMissed = HabitEventController.getHabitEventController(this).getMissedHabitEvents(habit);
+                ArrayList<String> stringAvailableDays = new ArrayList<>();
+                for (Date date : mDaysMissed) {
+                    stringAvailableDays.add(DateUtils.getStringOfDate(date));
+                }
+                previousSpinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableDays);
+                previousSpinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                mPreviousDaySpin.setAdapter(previousSpinnerDataAdapter);
+            }
+        }
 
     }
 

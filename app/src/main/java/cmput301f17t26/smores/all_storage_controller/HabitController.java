@@ -159,6 +159,15 @@ public class HabitController {
         return null;
     }
 
+    public Habit getHabitByTitle(String title) {
+        for (Habit habit : mHabitList) {
+            if (habit.getTitle().equals(title)) {
+                return habit;
+            }
+        }
+        return null;
+    }
+
     public boolean isHabitTitleUnique(String title, int habitPosition) {
         for (Habit habit : mHabitList) {
             if (title.equals(habit.getTitle())

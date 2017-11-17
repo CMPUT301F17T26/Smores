@@ -18,6 +18,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.joda.time.LocalDate;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -30,12 +32,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.Pair;
+import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkUtils;
 
 /**
@@ -126,13 +130,8 @@ public class HabitEventController {
         return true;
     }
 
-    public Boolean doesHabitEventExistForYesterday(Habit habit) {
+    public Boolean doesHabitEventExist (Habit habit, Date date) {
         ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
-        Date date = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(date);
-        cal.add(Calendar.DATE, -1);
-        date = cal.getTime();
         for (HabitEvent habitEvent: habitEvents) {
             if (habitEvent.getDate().getYear() == date.getYear() &&
                     habitEvent.getDate().getMonth() == date.getMonth() &&
@@ -141,6 +140,48 @@ public class HabitEventController {
             }
         }
         return true;
+    }
+
+    public Boolean doesHabitEventExistForYesterday(Habit habit) {
+        ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
+        Date date = new Date();
+        date = yesterday(date);
+        for (HabitEvent habitEvent: habitEvents) {
+            if (habitEvent.getDate().getYear() == date.getYear() &&
+                    habitEvent.getDate().getMonth() == date.getMonth() &&
+                    habitEvent.getDate().getDay() == date.getDay()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public ArrayList<Date> getMissedHabitEvents(Habit habit) {
+        ArrayList<Date> missedHabitEvents = new ArrayList<>();
+        HashMap<Integer, Boolean> mDays = habit.getDaysOfWeek();
+
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(habit.getStartDate());
+
+        Calendar endCal = Calendar.getInstance();
+        LocalDate endDate = LocalDate.fromCalendarFields(endCal);
+        endDate = endDate.minusDays(1);
+        for (LocalDate date = LocalDate.fromCalendarFields(startCal); date.isBefore(endDate); date = date.plusDays(1)) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(date.toDate());
+            if (mDays.get(c.get(Calendar.DAY_OF_WEEK) - 1) && doesHabitEventExist(habit, date.toDate())) {
+                missedHabitEvents.add(date.toDate());
+                Log.d("Found: ", DateUtils.getStringOfDate(date.toDate()));
+            }
+        }
+
+        return missedHabitEvents;
+    }
+
+    private Date yesterday(Date date) {
+        LocalDate localDate = LocalDate.fromDateFields(date);
+        localDate = localDate.minusDays(1);
+        return localDate.toDate();
     }
 
     @NonNull
