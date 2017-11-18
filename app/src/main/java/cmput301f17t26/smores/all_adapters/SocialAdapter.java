@@ -16,10 +16,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
+import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Feed;
+import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 
 import java.util.List;
@@ -45,6 +49,21 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         holder.mFeed = mFeed.get(position);
         holder.mUsername.setText(mFeed.get(position).getUsername());
         holder.mHabitType.setText(mFeed.get(position).getHabit().getTitle());
+
+        HabitEvent habitEvent = mFeed.get(position).getHabitEvent();
+        if (habitEvent != null) {
+            try {
+                holder.mHabitEventComment.setText(habitEvent.getComment());
+                holder.mHabitEventImage.setImageBitmap(habitEvent.getImage());
+            } catch (CommentNotSetException e) {
+                holder.mHabitEventComment.setText("No comment avaliable.");
+            } catch (ImageNotSetException e) {
+                holder.mHabitEventImage.setImageResource(R.mipmap.app_icon_round);
+            }
+        } else {
+            holder.mHabitEventComment.setText(mFeed.get(position).getHabit().getReason());
+        }
+
     }
 
     @Override
@@ -59,6 +78,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         public final View mView;
         public final TextView mUsername;
         public final TextView mHabitType;
+        public final TextView mHabitEventComment;
+        public final ImageView mHabitEventImage;
         public Feed mFeed;
 
         public ViewHolder(View view) {
@@ -66,6 +87,8 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
             mView = view;
             mUsername = (TextView) view.findViewById(R.id.Username);
             mHabitType = (TextView) view.findViewById(R.id.HabitType);
+            mHabitEventComment = (TextView) view.findViewById(R.id.HabitEventComment);
+            mHabitEventImage = (ImageView) view.findViewById(R.id.HabitEventImage);
         }
 
         @Override

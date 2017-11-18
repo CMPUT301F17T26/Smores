@@ -38,10 +38,10 @@
        </LinearLayout>
 
        <ImageView
+           android:id="@+id/HabitEventImage"
            android:layout_width="0dp"
            android:layout_height="match_parent"
-           android:layout_weight="1"
-           android:src="@mipmap/app_icon_round"/>
+           android:layout_weight="1" />
 
    </LinearLayout>
 
@@ -52,10 +52,10 @@
         android:layout_weight="1">
 
         <TextView
-            android:id="@+id/HabitReason"
+            android:id="@+id/HabitEventComment"
             android:layout_width="0dp"
             android:layout_weight="1"
-            tools:text="Habit Reason"
+            tools:text="Habit Event Comment"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"/>
