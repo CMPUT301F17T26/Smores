@@ -9,31 +9,30 @@
 
 package cmput301f17t26.smores.all_adapters;
 
+import cmput301f17t26.smores.all_models.*;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
-import cmput301f17t26.smores.all_fragments.RequestFragment.OnListFragmentInteractionListener;
-import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
+import cmput301f17t26.smores.all_storage_controller.RequestController;
 
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
-    private final OnListFragmentInteractionListener mListener;
+    private List<Request> mRequests;
+    private Context mContext;
 
-    public RequestAdapter(List<DummyItem> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
-        mListener = listener;
+    public RequestAdapter(Context context) {
+        mContext = context;
     }
 
     @Override
@@ -45,43 +44,81 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText("Request " + mValues.get(position).content);
+        holder.mRequest = mRequests.get(position);
+        holder.mUserName.setText(mRequests.get(position).getFromUser());
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
+        holder.mAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onListFragmentInteraction(holder.mItem);
-                }
+                RequestController.getRequestController(mContext).acceptRequest(mContext, holder.mRequest);
+                notifyDataSetChanged();
+            }
+        });
+
+        holder.mReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestController.getRequestController(mContext).declineRequest(holder.mRequest);
+                notifyDataSetChanged();
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        if (mRequests == null) {
+            return 0;
+        }
+        return mRequests.size();
     }
+
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mIdView;
-        public final TextView mContentView;
-        public DummyItem mItem;
+        public final TextView mUserName;
+        public final Button mAccept;
+        public final Button mReject;
+        public Request mRequest;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mUserName = (TextView) view.findViewById(R.id.request_from_username);
+            mAccept = (Button) view.findViewById(R.id.btnAccept);
+            mReject = (Button) view.findViewById(R.id.btnReject);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mUserName.getText() + "'";
         }
+    }
+
+    public void loadList() {
+        // Searching could be complex..so we will dispatch it to a different thread...
+
+        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Now loading requests...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                mRequests = RequestController.getRequestController(mContext).getRequests(mContext);
+                // Set on UI Thread
+                ((Activity) mContext).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // Notify the List that the DataSet has changed...
+                        notifyDataSetChanged();
+                        progressDialog.dismiss();
+                    }
+                });
+            }
+        }).start();
     }
 }

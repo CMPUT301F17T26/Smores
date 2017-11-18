@@ -11,11 +11,12 @@
 package cmput301f17t26.smores.all_activities;
 
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -31,13 +32,15 @@ import java.util.UUID;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TabAdapter;
-import cmput301f17t26.smores.all_fragments.AddDialogFragment;
+import cmput301f17t26.smores.all_fragments.AddFriendFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
+import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NetworkStateReceiver;
 
-public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -57,12 +60,17 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     public static final int NEW_HABIT = 0;
     public static final int EDIT_HABIT = 1;
 
+    private NetworkStateReceiver networkStateReceiver; //https://stackoverflow.com/questions/6169059/android-event-for-internet-connectivity-state-change
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mUserController = UserController.getUserController(this);
         getUser();
+
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(this);
+        this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
@@ -157,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                                 MainActivity.this.startActivity(intent);
                             }
                         });
+
                         return;
                     case 3: //SOCIAL
                         mAddFloatingActionButton.hide();
@@ -181,8 +190,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             @Override
                             public void onClick(View view) {
                                 FragmentManager manager = MainActivity.this.getSupportFragmentManager();
-                                AddDialogFragment addDialogFragment = new AddDialogFragment();
-                                addDialogFragment.show(manager, "AddDialog");
+                                AddFriendFragment addFriendFragment = new AddFriendFragment();
+                                addFriendFragment.show(manager, "AddDialog");
                             }
                         });
 
@@ -203,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
 
             }
         });
+
+
 
     }
 
@@ -232,5 +243,19 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         Intent intent = new Intent (MainActivity.this, HabitEventDetailsActivity.class);
         intent.putExtra("habitEventPosition", position);
         MainActivity.this.startActivityForResult(intent, EDIT_HABIT);
+    }
+
+    @Override
+    public void networkAvailable() {
+        if (OfflineController.getOfflineController(this).executeOnServer(MainActivity.this)) {
+            Snackbar.make(mViewPager, "You are online! Synchronized Habit and Habit Events with server!", Snackbar.LENGTH_INDEFINITE).show();
+        } else {
+            Snackbar.make(mViewPager, "You are online!", Snackbar.LENGTH_INDEFINITE).show();
+        }
+    }
+
+    @Override
+    public void networkUnavailable() {
+        Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
     }
 }

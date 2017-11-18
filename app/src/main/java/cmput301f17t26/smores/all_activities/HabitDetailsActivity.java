@@ -39,6 +39,7 @@ import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.DateUtils;
 
 public class HabitDetailsActivity extends AppCompatActivity {
     public static final int HABIT_POSITION_NONE = -1;
@@ -129,7 +130,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mNameText.setText(mHabit.getTitle());
             mReasonText.setText(mHabit.getReason());
 
-            mYear = mHabit.getStartDate().getYear();
+            mYear = mHabit.getStartDate().getYear() + 1900;
             mMonth = mHabit.getStartDate().getMonth();
             mDay = mHabit.getStartDate().getDate();
 
@@ -141,14 +142,17 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mThuBox.setChecked(days.get(Habit.THURSDAY));
             mFriBox.setChecked(days.get(Habit.FRIDAY));
             mSatBox.setChecked(days.get(Habit.SATURDAY));
-
             mHabit.calculateStats(this);
             mDaysMissedText.setText(mHabit.getDaysMissed().toString());
             mDaysCompletedText.setText(mHabit.getDaysCompleted().toString());
             mPercentageText.setText(String.format("%.2f%%", mHabit.getPercentageFollowed()));
+
+            mDateSelect.setText(DateUtils.getStringOfDate(mHabit.getStartDate()));
+
+        } else {
+            mDateSelect.setText(DateUtils.getStringOfDate(today));
         }
 
-        mDateSelect.setText(String.format("%d - %d - %d", mYear + 1900, mMonth + 1, mDay));
     }
 
     @Override
@@ -160,7 +164,11 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mYear = year;
                     mMonth = month;
                     mDay = day;
-                    mDateSelect.setText(String.format("%d-%d-%d", mYear, mMonth + 1, mDay));
+                    Date d = new Date();
+                    d.setYear(mYear - 1900);
+                    d.setMonth(mMonth);
+                    d.setDate(mDay);
+                    mDateSelect.setText(DateUtils.getStringOfDate(d));
                 }
             }, mYear, mMonth, mDay);
         }
@@ -202,7 +210,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         }
         else{
             HabitEventController.getHabitEventController(this).deleteHabitEventsByHabit(this, mHabit.getID());
-            HabitController.getHabitController(this).deleteHabit(this, mHabitPosition);
+            HabitController.getHabitController(this).deleteHabit(this, mHabit);
             Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
             setResult(HABIT_DELETED);
             finish();
@@ -210,7 +218,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
     private void saveEdited() {
         Date date = mHabit.getStartDate();
-        date.setYear(mYear);
+        date.setYear(mYear - 1900);
         date.setMonth(mMonth);
         date.setDate(mDay);
 
@@ -233,7 +241,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        HabitController.getHabitController(this).saveHabits(this);
+        HabitController.getHabitController(this).updateHabit(this, mHabit);
         Toast.makeText(HabitDetailsActivity.this, "Habit saved", Toast.LENGTH_SHORT).show();
         setResult(HABIT_SAVED);
         finish();

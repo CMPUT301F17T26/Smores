@@ -119,5 +119,6 @@ public class TodayFragment extends Fragment {
             mTodayAdapter.filterTodayHabits();
         }
         mTodayAdapter.filterTodayHabits();
+
     }
 }

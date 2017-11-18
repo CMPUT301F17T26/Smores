@@ -11,6 +11,7 @@ package cmput301f17t26.smores.all_fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +41,10 @@ public class AddUserFragment extends DialogFragment {
             public void onClick(View view) {
 
                 UserController userController = UserController.getUserController(getActivity());
-
-                if (userController.addUser(getActivity(), new User(mUserName.getText().toString()))) { //we were able to add a user
+                String username = mUserName.getText().toString().trim();
+                if (username.equals("")) {
+                    Toast.makeText(getActivity(), "Please enter a username!", Toast.LENGTH_SHORT).show();
+                } else if (userController.addUser(getActivity(), new User(username))) { //we were able to add a user
                     Toast.makeText(getActivity(), "Added!", Toast.LENGTH_SHORT).show();
                     dismiss();
                 } else {

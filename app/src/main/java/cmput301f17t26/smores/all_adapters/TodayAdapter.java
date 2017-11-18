@@ -11,6 +11,7 @@ package cmput301f17t26.smores.all_adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,10 +87,17 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     {
         mValues.clear();
         Calendar today = Calendar.getInstance();
-        for (Habit habit : HabitController.getHabitController(mContext).getHabitList())
-            if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1) == true)
-                if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit))
-                    mValues.add(habit);
+        Date todayDate = new Date();
+        today.setTime(todayDate);
+        for (Habit habit : HabitController.getHabitController(mContext).getHabitList()) {
+            if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1)) {
+                if (habit.getStartDate().compareTo(todayDate) < 0) {
+                    if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit)) {
+                        mValues.add(habit);
+                    }
+                }
+            }
+        }
         notifyDataSetChanged();
     }
 }

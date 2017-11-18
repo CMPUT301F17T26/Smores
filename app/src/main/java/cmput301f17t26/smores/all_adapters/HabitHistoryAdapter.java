@@ -26,8 +26,10 @@ import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -63,13 +65,12 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 
         holder.mItem = mFilterValues.get(position);
         try {
-            holder.mTitleView.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
+            holder.mComment.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
         } catch (CommentNotSetException e) {
-            holder.mTitleView.setText("No comment"); // HabitEvent.getTitle() not implemented
+            holder.mComment.setText("No comment"); // HabitEvent.getTitle() not implemented
         }
+        holder.mHabitType.setText(HabitController.getHabitController(mContext).getHabitTitleByHabitID(holder.mItem.getHabitID()));
 
-        // holder.mTitleView.setText("Dummy Title");
-        holder.mDateView.setText(mFilterValues.get(position).getDate().toString());
         final UUID uuid = mFilterValues.get(position).getID();
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,21 +91,21 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
-        public final TextView mTitleView;
-        public final TextView mDateView;
+        public final TextView mHabitType;
+        public final TextView mComment;
         public HabitEvent mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mTitleView = (TextView) view.findViewById(R.id.Event_Element_hTitle);
-            mDateView = (TextView) view.findViewById(R.id.Event_Element_hDate);
+            mHabitType = (TextView) view.findViewById(R.id.Event_Element_hTitle);
+            mComment = (TextView) view.findViewById(R.id.Event_Element_hDate);
 
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mTitleView.getText() + "'";
+            return super.toString() + " '" + mHabitType.getText() + "'";
         }
     }
 

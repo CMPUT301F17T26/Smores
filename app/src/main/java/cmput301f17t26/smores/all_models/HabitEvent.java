@@ -22,6 +22,8 @@ import android.util.Base64;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import org.apache.commons.lang3.time.DateUtils;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Date;
 import java.util.UUID;
@@ -49,6 +51,7 @@ public class HabitEvent {
     private transient Bitmap mImage;
     private String thumbnailBase64;
     private Location mLocation;
+    private String mLocationString;
 
     private UUID mUserID;
     private UUID mHabitID;
@@ -87,7 +90,15 @@ public class HabitEvent {
      * @param location
      */
     public void setLocation(Location location) {
+        if (location == null) {
+            mLocationString = null;
+        }
         mLocation = location;
+    }
+
+    public void setLocation(Location location, String locationString) {
+        mLocation = location;
+        mLocationString = locationString;
     }
 
     /**
@@ -119,6 +130,7 @@ public class HabitEvent {
      */
     public void removeLocation() {
         mLocation = null;
+        mLocationString = null;
     }
 
     /**
@@ -227,6 +239,14 @@ public class HabitEvent {
         return mDateCompleted;
     }
 
+    public String getLocationString() {
+        return mLocationString;
+    }
+
+    public void setToPreviousDate() {
+        mDateCompleted =  DateUtils.addDays(mDateCompleted, -1);
+    }
+
     public static Bitmap compressBitmap(Bitmap bitmap) {
         return Bitmap.createScaledBitmap(bitmap, 127, 127, true);
 
@@ -234,5 +254,9 @@ public class HabitEvent {
 
     public static Bitmap decompressBitmap(Bitmap scaledBitmap) {
         return Bitmap.createScaledBitmap(scaledBitmap, 256, 256, true);
+    }
+
+    public void setDate(Date date) {
+        mDateCompleted = date;
     }
 }
