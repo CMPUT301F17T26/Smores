@@ -183,7 +183,7 @@ public class HabitEvent {
      * @throws ImageNotSetException
      */
     public Bitmap getImage() throws ImageNotSetException {
-        if (mImage == null && thumbnailBase64 == null) {
+        if (thumbnailBase64 == null) {
             throw new ImageNotSetException();
         } else {
             if (thumbnailBase64 != null) {

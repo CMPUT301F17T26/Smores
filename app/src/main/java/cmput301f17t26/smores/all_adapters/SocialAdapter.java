@@ -61,6 +61,7 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                 holder.mHabitEventImage.setImageResource(R.mipmap.app_icon_round);
             }
         } else {
+            holder.mHabitEventImage.setImageResource(R.mipmap.app_icon_round);
             holder.mHabitEventComment.setText(mFeed.get(position).getHabit().getReason());
         }
 

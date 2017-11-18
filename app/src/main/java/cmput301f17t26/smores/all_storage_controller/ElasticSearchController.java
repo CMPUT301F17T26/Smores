@@ -302,6 +302,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
                 SearchResult execute = client.execute(search);
                 if (execute.isSucceeded()) {
                     List<HabitEvent> foundHabitEvents = execute.getSourceAsObjectList(HabitEvent.class);
+
                     hitList = execute.getHits(Map.class);
                     habitEventsToDelete.addAll(foundHabitEvents);
                 }

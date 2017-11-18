@@ -239,7 +239,7 @@ public class HabitEventController {
 
         if (NetworkUtils.isNetworkAvailable(context)) {
             removeHabitEventTask.execute(habitEvent.getID());
-            Log.d("HabitEvent", "Delete excuted");
+
         } else {
             Pair pair = new Pair(habitEvent, Pair.REMOVE_HABIT_EVENT);
             OfflineController.getOfflineController(context).addPair(context, pair);
