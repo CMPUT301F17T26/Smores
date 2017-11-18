@@ -8,10 +8,14 @@ package cmput301f17t26.smores.all_models;
 
 import cmput301f17t26.smores.all_storage_controller.ElasticSearchController;
 
-/**
- * Created by rohan on 11/13/2017.
- */
 
+/**
+ * Represents a Habit-command or HabitEvent-command Pair
+ *
+ * @author rohan
+ * @version 1.0
+ * @since 1.0
+ */
 public class Pair {
 
     public static final int ADD_HABIT_EVENT = 0;
@@ -27,18 +31,32 @@ public class Pair {
 
     private int mCommand;
 
+    /**
+     * Constructs a HabitEvent-command Pair object.
+     *
+     * @param habitEvent data
+     * @param command ADD_HABIT_EVENT = 0, REMOVE_HABIT_EVENT = 1, UPDATE_HABIT_EVENT = 2
+     */
     public Pair(HabitEvent habitEvent, int command) {
         mHabitEvent = habitEvent;
         mCommand = command;
     }
 
+    /**
+     * Constructs a Habit-command Pair object.
+     *
+     * @param habit data
+     * @param command ADD_HABIT = 3, REMOVE_HABIT = 4, UPDATE_HABIT = 5
+     */
     public Pair(Habit habit, int command) {
         mHabit = habit;
         mCommand = command;
     }
 
 
-
+    /**
+     * Runs paired command code on associated Habit or HabitEvent data.
+     */
     public void executeTask() {
         switch (mCommand) {
             case Pair.ADD_HABIT_EVENT:

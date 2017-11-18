@@ -6,32 +6,51 @@
 
 package cmput301f17t26.smores.all_models;
 
-import java.util.UUID;
 
 /**
- * Created by Christian on 2017-11-13.
+ * Represents a request between two users
+ *
+ * @author Chris
+ * @version 1.0
+ * @since 1.0
  */
-
 public class Request {
     private String mToUser;
     private String mFromUser;
     private String mID;
 
+    /**
+     * Constructs a Request object.
+     *
+     * @param fromUser receiver username
+     * @param toUser sender username
+     */
     public Request(String fromUser, String toUser) {
         mToUser = toUser;
         mFromUser = fromUser;
         mID = mToUser + mFromUser;
     }
 
+    /**
+     * Returns request unique identifier.
+     * @return mID String
+     */
     public String getID() {
         return mID;
     }
 
+    /**
+     * Returns request receiver username.
+     * @return mToUser
+     */
     public String getToUser() {
         return mToUser;
     }
 
-
+    /**
+     * Returns request sender username.
+     * @return mFromUser
+     */
     public String getFromUser() {
         return mFromUser;
     }

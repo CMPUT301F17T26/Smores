@@ -265,13 +265,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             mUpdateLocation.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setVisibility(View.VISIBLE);
             mHabitType_Fixed.setText(HabitController.getHabitController(this).getHabit(mHabitEvent.getHabitID()).getTitle());
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY - MMM - dd", Locale.getDefault());
-            String dateString = simpleDateFormat.format(mHabitEvent.getDate());
-            mDateCompleted.setText(dateString);
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)
-                    mDateCompleted.getLayoutParams();
-            params.weight = 4.0f;
-            mDateCompleted.setLayoutParams(params);
+            mDateCompleted.setText(DateUtils.getStringOfDate(mHabitEvent.getDate()));
             try {
                 mComment.setText(mHabitEvent.getComment());
             } catch (CommentNotSetException e) {}

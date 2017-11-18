@@ -6,35 +6,58 @@
 
 package cmput301f17t26.smores.all_models;
 
-/**
- * Created by Rohan on 11/14/2017.
- */
 
+/**
+ * Represents a social feed
+ *
+ * @author rohan
+ * @version 1.0
+ * @since 1.0
+ */
 public class Feed {
 
     private Habit mHabit;
     private HabitEvent mHabitEvent;
     private String mUsername;
 
+    /**
+     * Constructs a feed object
+     *
+     * @param username friend identifier
+     * @param habit friend habit type
+     * @param habitEvent friend's most recent habit event
+     */
     public Feed(String username, Habit habit, HabitEvent habitEvent) {
         mUsername = username;
         mHabit = habit;
         mHabitEvent = habitEvent;
     }
 
+    /**
+     * Returns friend habit object
+     *
+     * @return mHabit Habit
+     */
     public Habit getHabit() {
         return mHabit;
     }
 
+    /**
+     * Returns friend habit event
+     *
+     * @return mHabitEvent HabitEvent
+     */
     public HabitEvent getHabitEvent() {
         return mHabitEvent;
     }
 
+    /**
+     * Returns friend username
+     *
+     * @return mUsername String
+     */
     public String getUsername() {
         return mUsername;
     }
-
-
-
 
 }
