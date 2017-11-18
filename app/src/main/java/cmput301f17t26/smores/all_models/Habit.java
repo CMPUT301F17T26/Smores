@@ -221,6 +221,9 @@ public class Habit {
         mDaysMissed = newMissed;
 
         mCurrentPercentage = (mDaysCompleted * 100.0d ) / (mDaysMissed + mDaysCompleted);
+        if (Double.isNaN(mCurrentPercentage)) {
+            mCurrentPercentage = 0;
+        }
     }
 
     private int findExpectedHabitEvents() {
