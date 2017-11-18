@@ -18,7 +18,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.UUID;
 
+import cmput301f17t26.smores.all_models.Feed;
+import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.User;
 
 /**
@@ -77,7 +84,7 @@ public class UserController {
         return user != null;
     }
 
-    private boolean checkUsername(String username) {
+    boolean checkUsername(String username) {
         ArrayList<User> foundUsers = new ArrayList<User>();
         ElasticSearchController.CheckUserTask checkUserTask
                 = new ElasticSearchController.CheckUserTask();
@@ -101,4 +108,109 @@ public class UserController {
         }
     }
 
+    public void updateFollowingList() {
+        ElasticSearchController.CheckUserTask checkUserTask = new ElasticSearchController.CheckUserTask();
+        checkUserTask.execute("username", user.getUsername());
+        try {
+            user.setFollowingList(checkUserTask.get().get(0).getFollowingList());
+
+        } catch (Exception e) {
+        }
+    }
+
+    public ArrayList<HabitEvent> getFriendsHabitEvents() {
+        ArrayList<HabitEvent> friendHabitEvents = new ArrayList<>();
+        for (UUID friendUUID: user.getFollowingList()) {
+            ElasticSearchController.GetHabitEventTask getHabitEventTask
+                    = new ElasticSearchController.GetHabitEventTask();
+            getHabitEventTask.execute("mUserID", friendUUID.toString());
+            try  {
+                ArrayList<HabitEvent> friendI = getHabitEventTask.get();
+                Log.d("User controller", friendI.get(0).getHabitID().toString());
+
+                if (friendI.size() > 0) {
+                    Collections.sort(friendI, new Comparator<HabitEvent>() {
+                        @Override
+                        public int compare(HabitEvent o1, HabitEvent o2) {
+                            return o1.getDate().compareTo(o2.getDate());
+                        }
+                    });
+                    friendHabitEvents.add(friendI.get(friendI.size() - 1));
+                }
+
+            } catch (Exception e) {
+
+            }
+
+        }
+        return friendHabitEvents;
+    }
+
+    public ArrayList<Habit>  getFriendsHabits() {
+        ArrayList<Habit> friendHabits = new ArrayList<>();
+
+        for (UUID friendUUID: user.getFollowingList()) {
+            ElasticSearchController.GetHabitTask getHabitTask
+                    = new ElasticSearchController.GetHabitTask();
+            getHabitTask.execute("mUserID", friendUUID.toString());
+            try {
+                ArrayList<Habit> friendI = getHabitTask.get();
+                Log.d("User controller", friendI.get(0).getTitle());
+                if (friendI.size() > 0) {
+                    friendHabits.addAll(friendI);
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        return friendHabits;
+    }
+
+    public ArrayList<Feed> getFeed() {
+        ArrayList<HabitEvent> friendsHabitEvents = getFriendsHabitEvents();
+        ArrayList<Habit> friendsHabits = getFriendsHabits();
+        ArrayList<Habit> unprocessedHabits = new ArrayList<Habit>();
+        unprocessedHabits.addAll(friendsHabits);
+        ArrayList<Feed> feed = new ArrayList<>();
+        for (Habit habit: friendsHabits) {
+
+            for (HabitEvent habitEvent: friendsHabitEvents) {
+                if (habitEvent.getHabitID().equals(habit.getID())) {
+                    Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, habitEvent);
+                    unprocessedHabits.remove(habit);
+                    feed.add(f);
+                }
+            }
+        }
+        for (Habit habit: unprocessedHabits) {
+            Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, null);
+            feed.add(f);
+        }
+
+        Collections.sort(feed, new Comparator<Feed>() {
+            @Override
+            public int compare(Feed o1, Feed o2) {
+                int compareValue = o1.getUsername().compareTo(o2.getUsername());
+                if (compareValue != 0) {
+                    return compareValue;
+                } else {
+                    return o1.getHabit().getTitle().compareTo(o2.getHabit().getTitle());
+                }
+            }
+        });
+
+        return feed;
+    }
+
+    public String getUsernameByID(UUID uuid) {
+        ElasticSearchController.CheckUserTask checkUserTask
+                = new ElasticSearchController.CheckUserTask();
+        checkUserTask.execute("mID", uuid.toString());
+        try {
+            ArrayList<User> users = checkUserTask.get();
+            return users.get(0).getUsername();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

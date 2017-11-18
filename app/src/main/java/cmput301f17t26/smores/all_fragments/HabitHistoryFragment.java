@@ -111,6 +111,7 @@ public class HabitHistoryFragment extends Fragment {
 
             }
         });
+        mEditText.clearFocus();
 
         return view;
     }
@@ -141,6 +142,8 @@ public class HabitHistoryFragment extends Fragment {
         if (mHabitHistoryAdapter != null) {
             mHabitHistoryAdapter = new HabitHistoryAdapter(mListener);
             recyclerView.setAdapter(mHabitHistoryAdapter);
+            mEditText.setText("");
+            mEditText.clearFocus();
         }
     }
 

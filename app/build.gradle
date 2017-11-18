@@ -5,7 +5,7 @@ android {
     buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "cmput301f17t26.smores"
-        minSdkVersion 25
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -28,6 +28,7 @@ dependencies {
     })
     compile files('src/include/jest-droid-2.0.1-SNAPSHOT.jar')
     compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'joda-time:joda-time:2.9.4'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:recyclerview-v7:25.3.1'

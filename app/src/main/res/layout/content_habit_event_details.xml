@@ -14,6 +14,48 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+        <RadioGroup
+            android:id="@+id/RadGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:checked="true"
+                android:id="@+id/Event_hTodayRad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today"/>
+            <RadioButton
+                android:id="@+id/Event_hPreviousDayRad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Previous Day"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:id="@+id/Event_hPreviousText"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Previous Day"/>
+        <Spinner
+            android:id="@+id/Event_hPreviousSpinner"
+            android:layout_weight="2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content">
+            
+        </Spinner>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -69,14 +111,14 @@
             android:layout_weight="1"
             android:textColor="@android:color/black"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:text="Date"/>
+            android:text="Date Complete"/>
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="Set to today's date on save."
+            android:text="Date set on save."
             android:id="@+id/Event_hDate"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>/>
     </LinearLayout>
 
 
@@ -95,7 +137,36 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="ToggleButton"/>
+        <Button
+            android:id="@+id/Event_hUpdateButton"
+            android:text="Update"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:text="Location"/>
+
+        <TextView
+            android:id="@+id/Event_hLocationText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:textColor="@android:color/black"
+            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
+            android:text=""/>
+
+    </LinearLayout>
+
+
 
     <LinearLayout
         android:layout_width="match_parent"

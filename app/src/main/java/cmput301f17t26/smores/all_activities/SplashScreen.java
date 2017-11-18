@@ -13,6 +13,8 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_storage_controller.OfflineController;
+import cmput301f17t26.smores.utils.NetworkUtils;
 
 public class SplashScreen extends AppCompatActivity {
     private int SLEEP_TIMER = 2;

@@ -31,7 +31,7 @@ public class User {
 
     private UUID mID;
     private String username;
-    private ArrayList<UUID> requests;
+    private ArrayList<UUID> requests; // TODO refactor requests into RequestController
     private ArrayList<UUID> following;
 
     /**
@@ -84,6 +84,11 @@ public class User {
      */
     public void addFollowing (UUID friend) throws InvalidUUIDException {
         following.add(friend);
+    }
+
+    public void setFollowingList(ArrayList<UUID> friends) {
+        following.clear();
+        following.addAll(friends);
     }
 
     /**
