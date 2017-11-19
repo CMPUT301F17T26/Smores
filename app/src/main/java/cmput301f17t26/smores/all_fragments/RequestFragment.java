@@ -94,7 +94,7 @@ public class RequestFragment extends Fragment {
         });
 
         username = (TextView) view.findViewById(R.id.request_username);
-        username.setText(UserController.getUserController(getActivity()).getUser().getUsername());
+
 
         return view;
     }
@@ -104,6 +104,7 @@ public class RequestFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser && mRequestAdapter != null) {
+            username.setText(UserController.getUserController(getActivity()).getUser().getUsername());
             mRequestAdapter.loadList();
         }
     }

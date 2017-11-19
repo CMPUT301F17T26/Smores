@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
 
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
-        this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+
 
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
@@ -96,6 +96,17 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         setupTabLayoutListener();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.unregisterReceiver(networkStateReceiver);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

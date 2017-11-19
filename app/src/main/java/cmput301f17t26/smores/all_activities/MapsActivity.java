@@ -11,14 +11,13 @@ package cmput301f17t26.smores.all_activities;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -28,22 +27,19 @@ import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.common.collect.Maps;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import cmput301f17t26.smores.R;
-import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
@@ -64,6 +60,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Button mSearch;
     private Location currentLocation;
     private FusedLocationProviderClient mFusedLocationClient;
+    private Thread worker;
+    private HashMap<UUID, String> friendHabitTitles;
+    private HashMap<UUID, String> friendUsernames;
+    private static final int FROM_ONCREATE = 0;
+    private static final int FROM_UPDATE = 1;
 
     @Override
     public void onResume() {
@@ -116,8 +117,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String[] permissionRequested = {Manifest.permission.ACCESS_COARSE_LOCATION};
             requestPermissions(permissionRequested, LOCATION_REQUEST_CODE);
         }
-        UserController.getUserController(this).updateFollowingList();
-        friendHabitEvents = UserController.getUserController(this).getFriendsHabitEvents();
+
 
     }
 
@@ -136,7 +136,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         mMap.clear();
 
-        loadMarkers();
+        loadData(FROM_ONCREATE);
 
         mRadiusField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -152,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 } else {
                     mSearch.setEnabled(false);
-                    loadMarkers();
+                    loadData(FROM_UPDATE);
 
 
                 }
@@ -168,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View v) {
                 mMap.clear();
-                loadMarkers();
+                loadData(FROM_UPDATE);
             }
         });
 
@@ -176,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mMap.clear();
-                loadMarkers();
+                loadData(FROM_UPDATE);
             }
         });
 
@@ -184,7 +184,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 mMap.clear();
-                loadMarkers();
+                loadData(FROM_UPDATE);
             }
         });
 
@@ -194,10 +194,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
     }
 
-    private void loadMarkers() {
-        loadMyMarkers();
-        loadFriendMarkers();
-    }
 
     private void loadMyMarkers() {
         if (mMyself.isChecked()) {
@@ -205,11 +201,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 try {
                     if (mRadiusField.getText().toString().trim().equals("")) {
                         String fullTitle = getMarkerString(habitEvent);
-                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mode_edit_black_24dp)));
                     } else {
                         if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
                             String fullTitle = getMarkerString(habitEvent);
-                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mode_edit_black_24dp)));
+                        } else {
+                            String fullTitle = getMarkerString(habitEvent);
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_mode_edit_black_24dp)).alpha(0.2f));
                         }
                     }
                 } catch (LocationNotSetException e) {
@@ -227,11 +226,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 try {
                     if (mRadiusField.getText().toString().trim().equals("")) {
                         String fullTitle = getMarkerStringFriend(habitEvent);
-                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                        mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).snippet(getMarkerUserNameFriend(habitEvent)));
                     } else {
                         if (currentLocation.distanceTo(habitEvent.getLocation()) <= 1000 * Float.valueOf(mRadiusField.getText().toString())){
                             String fullTitle = getMarkerStringFriend(habitEvent);
-                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle));
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).snippet(getMarkerUserNameFriend(habitEvent)));
+                        } else {
+                            String fullTitle = getMarkerStringFriend(habitEvent);
+                            mMap.addMarker(new MarkerOptions().position(habitEvent.getLatLng()).title(fullTitle).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).alpha(0.2f).snippet(getMarkerUserNameFriend(habitEvent))); //grey
                         }
                     }
                 } catch (LocationNotSetException e) {
@@ -251,9 +253,41 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private String getMarkerStringFriend(HabitEvent habitEvent) {
-        String Habit_title = RequestController.getRequestController(this).getHabitTitleByHabitID(habitEvent.getUserID(), habitEvent.getHabitID());
+        String Habit_title = friendHabitTitles.get(habitEvent.getID());
         String Habit_dateCompleted = DateUtils.getStringOfDate(habitEvent.getDate());
         return Habit_title + " | " + Habit_dateCompleted;
+    }
+
+    private String getMarkerUserNameFriend(HabitEvent habitEvent) {
+        String friendUsername = friendUsernames.get(habitEvent.getID());
+        return friendUsername;
+    }
+
+    private void loadData(final int called_from) {
+
+        worker = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (called_from == FROM_ONCREATE) {
+                    UserController.getUserController(MapsActivity.this).updateFollowingList();
+                    friendHabitEvents = UserController.getUserController(MapsActivity.this).getFriendsHabitEvents();
+                }
+                friendHabitTitles = new HashMap<>();
+                friendUsernames = new HashMap<>();
+                for (HabitEvent habitEvent: friendHabitEvents) {
+                    friendHabitTitles.put(habitEvent.getID(), RequestController.getRequestController(MapsActivity.this).getHabitTitleByHabitID(habitEvent.getUserID(), habitEvent.getHabitID()));
+                    friendUsernames.put(habitEvent.getID(), UserController.getUserController(MapsActivity.this).getUsernameByID(habitEvent.getUserID()));
+                }
+                MapsActivity.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadMyMarkers();
+                        loadFriendMarkers();
+                    }
+                });
+            }
+        });
+        worker.start();
     }
 
 
