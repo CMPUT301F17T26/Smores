@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mTabAdapter);
-
+        mViewPager.setOffscreenPageLimit(4);
         mTabLayout = (TabLayout) findViewById(R.id.tabs);
         mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
@@ -125,10 +125,10 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
             public void onTabSelected(TabLayout.Tab tab) {
                 switch(tab.getPosition()) {
                     case 0: //TODAY
-                        mAddFloatingActionButton.setVisibility(View.GONE);
+                        mAddFloatingActionButton.setVisibility(View.INVISIBLE);
                         mAddFloatingActionButton.hide();
 
-                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.setVisibility(View.INVISIBLE);
                         mMapsFloatingActionButton.hide();
                         return;
                     case 1: //HABIT
@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             }
                         });
 
-                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.setVisibility(View.INVISIBLE);
                         mMapsFloatingActionButton.hide();
                         return;
                     case 2: //HABIT HISTORY
@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                         return;
                     case 3: //SOCIAL
                         mAddFloatingActionButton.hide();
-                        mAddFloatingActionButton.setVisibility(View.GONE);
+                        mAddFloatingActionButton.setVisibility(View.INVISIBLE);
 
                         mMapsFloatingActionButton.show();
                         mMapsFloatingActionButton.setVisibility(View.VISIBLE);
@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             }
                         });
 
-                        mMapsFloatingActionButton.setVisibility(View.GONE);
+                        mMapsFloatingActionButton.setVisibility(View.INVISIBLE);
                         mMapsFloatingActionButton.hide();
                         return;
                 }
