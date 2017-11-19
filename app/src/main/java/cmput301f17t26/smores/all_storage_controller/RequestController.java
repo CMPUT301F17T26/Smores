@@ -10,6 +10,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Habit;
@@ -60,6 +61,22 @@ public class RequestController {
             mRequests.addAll(getRequestTask.get());
         } catch (Exception e) {
         }
+    }
+
+    public boolean checkIfRequestPending(Request request) {
+        ElasticSearchController.GetRequestTask getRequestTask
+                = new ElasticSearchController.GetRequestTask();
+        getRequestTask.execute("mID", request.getID());
+        try {
+            ArrayList<Request> foundRequests = getRequestTask.get();
+            if (foundRequests.size() > 0) {
+               return true;
+            } else {
+               return  false;
+            }
+        } catch (Exception e) {
+        }
+        return  false;
     }
 
     private void putRequest(Request request) {
@@ -115,4 +132,6 @@ public class RequestController {
 
         return null;
     }
+
+
 }

@@ -46,6 +46,7 @@ public class AddUserFragment extends DialogFragment {
                 final String username = mUserName.getText().toString().trim();
                 if (username.equals("")) {
                     Toast.makeText(getActivity(), "Please enter a username!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                 new Thread(new Runnable() {
@@ -72,7 +73,6 @@ public class AddUserFragment extends DialogFragment {
                 }).start();
             }
         });
-
         setCancelable(false);
         return view;
     }
