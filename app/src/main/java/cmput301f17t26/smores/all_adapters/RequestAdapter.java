@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
@@ -76,16 +77,16 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mUserName;
-        public final Button mAccept;
-        public final Button mReject;
+        public final ImageButton mAccept;
+        public final ImageButton mReject;
         public Request mRequest;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mUserName = (TextView) view.findViewById(R.id.request_from_username);
-            mAccept = (Button) view.findViewById(R.id.btnAccept);
-            mReject = (Button) view.findViewById(R.id.btnReject);
+            mAccept = (ImageButton) view.findViewById(R.id.btnAccept);
+            mReject = (ImageButton) view.findViewById(R.id.btnReject);
         }
 
         @Override

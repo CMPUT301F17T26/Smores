@@ -4,9 +4,12 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:orientation="vertical"
+    android:layout_margin="4dp"
+    android:background="@color/darkGrey"
               android:layout_height="match_parent">
     <LinearLayout
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content">
         <TextView
             android:layout_width="0dp"
@@ -19,7 +22,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:text="4455179c-ac72-11e7-abc4-cec278b6b50a"
+            tools:text="\@realDonaldTrump"
             android:id="@+id/request_username"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
     </LinearLayout>
