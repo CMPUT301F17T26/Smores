@@ -46,8 +46,6 @@
            android:background="@drawable/img"
            android:layout_weight="1" />
 
-
-
    </LinearLayout>
 
     <LinearLayout
@@ -64,6 +62,12 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
             android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Percentage Complete:"/>
 
     </LinearLayout>
 </LinearLayout>
