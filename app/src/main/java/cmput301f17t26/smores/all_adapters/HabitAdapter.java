@@ -10,6 +10,7 @@
 package cmput301f17t26.smores.all_adapters;
 
 import android.app.Activity;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -51,6 +52,8 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = mValues.get(position);
+        holder.mItem.calculateStats((Context) mListener);
+        HabitController.getHabitController((Context) mListener).saveHabits((Context) mListener);
         holder.mHabitName.setText(mValues.get(position).getTitle());
         holder.mHabitStat.setText(mValues.get(position).getReason());
 

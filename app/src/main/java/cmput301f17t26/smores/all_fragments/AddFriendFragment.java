@@ -9,6 +9,8 @@
 
 package cmput301f17t26.smores.all_fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 
 import android.support.v4.app.DialogFragment;
@@ -46,40 +48,84 @@ public class AddFriendFragment extends DialogFragment {
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mSendButton.setEnabled(false);
 
                 if (!NetworkUtils.isNetworkAvailable(getActivity())) {
                     Toast.makeText(getActivity(), "No Internet connection! Please try again later.", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                String username = mToUser.getText().toString().trim();
+                final Context mContext = getActivity();
+                final String username = mToUser.getText().toString().trim();
 
                 if (username.equals("")) {
                     Toast.makeText(getActivity(), "Please enter a username!", Toast.LENGTH_SHORT).show();
                     return;
-                } else if (username.equals(UserController.getUserController(getActivity()).getUser().getUsername())) {
-                    Toast.makeText(getActivity(), "Nice try, but you cannot add yourself!", Toast.LENGTH_SHORT).show();
-                    return;
                 }
 
-                UserController.getUserController(getActivity()).updateFollowingList();
-                for (UUID friendUUID: UserController.getUserController(getActivity()).getUser().getFollowingList()) {
-                    String friendUsername =  UserController.getUserController(getActivity()).getUsernameByID(friendUUID);
-                    if (friendUsername.equals(username)) {
-                        Toast.makeText(getActivity(), "You have already added this person!", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (username.equals(UserController.getUserController(getActivity()).getUser().getUsername())) {
 
-                if (RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
-                        new Request(UserController.getUserController(getActivity()).getUser().getUsername(),
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "Nice try, but you cannot add yourself!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
+
+                        UserController.getUserController(getActivity()).updateFollowingList();
+                        for (UUID friendUUID: UserController.getUserController(getActivity()).getUser().getFollowingList()) {
+                            String friendUsername =  UserController.getUserController(getActivity()).getUsernameByID(friendUUID);
+                            if (friendUsername.equals(username)) {
+
+                                ((Activity) mContext).runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getActivity(), "You have already added this person!", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                                return;
+                            }
+                        }
+
+                        if (RequestController.getRequestController(getActivity()).checkIfRequestPending( new Request(UserController.getUserController(getActivity()).getUser().getUsername(),
                                 mToUser.getText().toString()))) {
-                    Toast.makeText(getActivity(), "Request sent!", Toast.LENGTH_SHORT).show();
-                    dismiss();
-                } else {
-                    Toast.makeText(getActivity(), "User not found!", Toast.LENGTH_SHORT).show();
-                }
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "The person has not yet accepted your request!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                            return;
+                        }
 
+                        if (RequestController.getRequestController(getActivity()).AddRequest(getActivity(),
+                                new Request(UserController.getUserController(getActivity()).getUser().getUsername(),
+                                        mToUser.getText().toString()))) {
+
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "Request sent!", Toast.LENGTH_SHORT).show();
+                                    dismiss();
+                                }
+                            });
+
+                        } else {
+
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getActivity(), "User not found!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    }
+                }).start();
+                mSendButton.setEnabled(true);
             }
         });
 

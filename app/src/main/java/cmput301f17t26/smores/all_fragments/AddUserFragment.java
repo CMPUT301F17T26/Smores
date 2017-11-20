@@ -9,6 +9,8 @@
 
 package cmput301f17t26.smores.all_fragments;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -39,20 +41,38 @@ public class AddUserFragment extends DialogFragment {
         mCheckButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                UserController userController = UserController.getUserController(getActivity());
-                String username = mUserName.getText().toString().trim();
+                final Context mContext = getActivity();
+                final UserController userController = UserController.getUserController(getActivity());
+                final String username = mUserName.getText().toString().trim();
                 if (username.equals("")) {
                     Toast.makeText(getActivity(), "Please enter a username!", Toast.LENGTH_SHORT).show();
-                } else if (userController.addUser(getActivity(), new User(username))) { //we were able to add a user
-                    Toast.makeText(getActivity(), "Added!", Toast.LENGTH_SHORT).show();
-                    dismiss();
-                } else {
-                    Toast.makeText(getActivity(), "Another user already has your username! Please try again", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (userController.addUser(mContext, new User(username))) {
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, "Added!", Toast.LENGTH_SHORT).show();
+                                    dismiss();
+                                }
+                            });
+                        } else {
+                            ((Activity) mContext).runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext, "Another user already has your username! Please try again", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
+                        }
+                    }
+                }).start();
             }
         });
-
         setCancelable(false);
         return view;
     }

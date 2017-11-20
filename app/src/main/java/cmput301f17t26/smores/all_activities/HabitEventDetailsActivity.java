@@ -13,10 +13,13 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -45,7 +48,10 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.w3c.dom.Text;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,6 +78,8 @@ import cmput301f17t26.smores.utils.NetworkUtils;
 public class HabitEventDetailsActivity extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 0;
     public static final int LOCATION_REQUEST_CODE = 2;
+    public static final int GALLERY_REQUEST_CODE = 3;
+    public static final int GALLERY_REQUEST = 4;
     public static final int CAMERA_REQUEST = 1;
     private RadioButton mTodayRad;
     private RadioButton mPreviousDayRad;
@@ -90,6 +98,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private TextView mLocationString;
     private ImageButton mImageButton;
     private ImageView mImageView;
+    private Button mGalleryButton;
     private ImageButton mSave;
     private ImageButton mDelete;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -156,6 +165,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         mUpdateLocation = (Button) findViewById(R.id.Event_hUpdateButton);
         mLocationString = (TextView) findViewById(R.id.Event_hLocationText);
         mImageButton = (ImageButton) findViewById(R.id.Event_hImagebtn);
+        mGalleryButton = (Button) findViewById(R.id.Event_hGallerybtn);
         mImageView = (ImageView) findViewById((R.id.Event_hImage));
         mSave = (ImageButton) findViewById(R.id.Event_hSave);
         mDelete = (ImageButton) findViewById(R.id.Event_hDelete);
@@ -185,6 +195,18 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return mImageButtonOnTouch(event);
+            }
+        });
+
+        mGalleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    invokeGallery();
+                } else {
+                    String[] permissionRequested = {Manifest.permission.READ_EXTERNAL_STORAGE};
+                    requestPermissions(permissionRequested, GALLERY_REQUEST_CODE);
+                }
             }
         });
 
@@ -258,6 +280,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void loadDetails() {
         if (mHabitEventUUID != null) {
@@ -435,6 +459,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Request for camera", Toast.LENGTH_LONG).show();
                 invokeCamera();
             } else {
                 Toast.makeText(this, "Unable to request camera", Toast.LENGTH_LONG).show();
@@ -446,6 +471,14 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
 
             } else {
                 Toast.makeText(this, "Unable to request location services", Toast.LENGTH_LONG).show();
+                mToggleLocation.setChecked(false);
+            }
+        } else if (requestCode == GALLERY_REQUEST_CODE) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Request for storage granted", Toast.LENGTH_LONG).show();
+                invokeGallery();
+            } else {
+                Toast.makeText(this, "Unable to request storage services", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -455,6 +488,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         startActivityForResult(cameraIntent, CAMERA_REQUEST);
     }
 
+    private void invokeGallery() {
+        Intent galleryIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        File pictureDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        String pictureDirectoryPath = pictureDirectory.getPath();
+        Uri data = Uri.parse(pictureDirectoryPath);
+        galleryIntent.setDataAndType(data, "image/*");
+        startActivityForResult(galleryIntent, GALLERY_REQUEST);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
@@ -462,12 +504,24 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(HabitEvent.decompressBitmap(imageBitmap));
             mImage = HabitEvent.compressBitmap(imageBitmap);
-            if (mHabitEventUUID != null) {
+            /*if (mHabitEventUUID != null) {
                 try {
                     mHabitEvent.getLocation();
                     mToggleLocation.setChecked(true);
                 } catch (LocationNotSetException e) {
                 }
+            }*/
+        } else if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK) {
+            Uri imageUri = data.getData();
+
+            try {
+                InputStream inputStream = getContentResolver().openInputStream(imageUri);
+                Bitmap imageBitmap =  BitmapFactory.decodeStream(inputStream);
+                mImageView.setImageBitmap(HabitEvent.decompressBitmap(imageBitmap));
+                mImage = HabitEvent.compressBitmap(imageBitmap);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Unable to open image", Toast.LENGTH_LONG).show();
             }
         }
     }

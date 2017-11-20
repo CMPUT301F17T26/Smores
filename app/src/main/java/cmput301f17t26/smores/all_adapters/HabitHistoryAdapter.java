@@ -28,6 +28,8 @@ import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -146,6 +148,23 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
                         }
                     }
                 }
+
+                Collections.sort(mFilterValues, new Comparator<HabitEvent>() {
+                    @Override
+                    public int compare(HabitEvent habitEvent, HabitEvent t1) {
+                        return habitEvent.getDate().compareTo(t1.getDate());
+                    }
+                });
+                Collections.reverse(mFilterValues);
+
+                Collections.sort(mControllerFilterValue, new Comparator<HabitEvent>() {
+                    @Override
+                    public int compare(HabitEvent habitEvent, HabitEvent t1) {
+                        return habitEvent.getDate().compareTo(t1.getDate());
+                    }
+                });
+                Collections.reverse(mControllerFilterValue);
+
                 // Set on UI Thread
                 ((Activity) mContext).runOnUiThread(new Runnable() {
                     @Override
