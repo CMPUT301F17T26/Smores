@@ -11,15 +11,18 @@ package cmput301f17t26.smores.all_activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.NetworkOnMainThreadException;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
@@ -73,9 +76,10 @@ import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.utils.DateUtils;
+import cmput301f17t26.smores.utils.NetworkStateReceiver;
 import cmput301f17t26.smores.utils.NetworkUtils;
 
-public class HabitEventDetailsActivity extends AppCompatActivity {
+public class HabitEventDetailsActivity extends AppCompatActivity implements NetworkStateReceiver.NetworkStateReceiverListener {
     public static final int CAMERA_REQUEST_CODE = 0;
     public static final int LOCATION_REQUEST_CODE = 2;
     public static final int GALLERY_REQUEST_CODE = 3;
@@ -113,6 +117,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     private ArrayAdapter<String> previousSpinnerDataAdapter;
     private ArrayList<Date> mDaysMissed;
 
+    private NetworkStateReceiver networkStateReceiver;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,6 +129,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         getUIElements();
         mHabitList = HabitController.getHabitController(this).getHabitList();
 
+        networkStateReceiver = new NetworkStateReceiver();
+        networkStateReceiver.addListener(this);
         viewHiding();
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -134,6 +142,16 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
         }
         setListeners();
         loadDetails();
+    }
+
+    private void interentViews() {
+        if (!NetworkUtils.isNetworkAvailable(this)) {
+            mToggleLocation.setEnabled(false);
+            mUpdateLocation.setEnabled(false);
+        } else {
+            mToggleLocation.setEnabled(true);
+            mUpdateLocation.setEnabled(true);
+        }
     }
 
     private void viewHiding() {
@@ -535,7 +553,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
                     Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
                     try {
                         List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        String address = myList.get(0).getLocality() + ", " + myList.get(0).getPostalCode() + ", " + myList.get(0).getThoroughfare();
+                        StringBuilder Baddress = new StringBuilder();
+                        if (!(myList.get(0).getLocality() == null)) {
+                            Baddress.append(" " + myList.get(0).getLocality());
+                        }
+                        if (!(myList.get(0).getPostalCode() == null)) {
+                            Baddress.append(" " + myList.get(0).getPostalCode());
+                        }
+                        if (!(myList.get(0).getThoroughfare() == null)) {
+                            Baddress.append(" " + myList.get(0).getThoroughfare());
+                        }
+                        String address = Baddress.toString();
                         mLocationString.setText(address);
                         mLocationText = address;
                     } catch (IOException e) {
@@ -552,4 +580,27 @@ public class HabitEventDetailsActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void networkAvailable() {
+        interentViews();
+        Toast.makeText(this, "You are online, location tracking is possible!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void networkUnavailable() {
+        interentViews();
+        Toast.makeText(this, "You are offline, disabling updating/setting location", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        this.unregisterReceiver(networkStateReceiver);
+    }
 }
