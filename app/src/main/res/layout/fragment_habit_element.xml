@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="150dp"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="4dp"
     android:orientation="vertical"
@@ -37,77 +37,86 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.5"
+        android:layout_weight="1"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/Sunday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Su"
+            android:layout_weight="1"
+            android:text="Su"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Monday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Mo"
+            android:layout_weight="1"
+            android:text="Mo"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Tuesday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Tu"
+            android:layout_weight="1"
+            android:text="Tu"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Wednesday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="We"
+            android:layout_weight="1"
+            android:text="We"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Thursday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Th"
+            android:layout_weight="1"
+            android:text="Th"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Friday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Fr"
+            android:layout_weight="1"
+            android:text="Fr"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
         <TextView
             android:id="@+id/Saterday"
             android:layout_width="0dp"
-            android:layout_weight="0.0714"
-            tools:text="Sa"
+            android:layout_weight="1"
+            android:text="Sa"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
+            android:layout_margin="1dp"
             android:textAppearance="?attr/textAppearanceListItem"/>
 
+        <!--<TextView-->
+            <!--android:id="@+id/Sunday"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_weight="1"-->
+            <!--tools:text="Su Mo Tu We Th Fr Sa"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_margin="@dimen/text_margin"-->
+            <!--android:textAppearance="?attr/textAppearanceListItem"/>-->
         <ImageView
             android:id="@+id/HabitProgess"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="7"
             />
     </LinearLayout>
 
