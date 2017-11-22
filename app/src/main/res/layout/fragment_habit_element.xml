@@ -37,8 +37,71 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.5"
         android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/Sunday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Su"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Monday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Mo"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Tuesday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Tu"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Wednesday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="We"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Thursday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Th"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Friday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Fr"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
+
+        <TextView
+            android:id="@+id/Saterday"
+            android:layout_width="0dp"
+            android:layout_weight="0.0714"
+            tools:text="Sa"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textAppearance="?attr/textAppearanceListItem"/>
 
         <ImageView
             android:id="@+id/HabitProgess"
@@ -46,15 +109,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
-
-        <TextView
-            android:id="@+id/HabitsDaysList"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            tools:text="MTWRFS"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/text_margin"
-            android:textAppearance="?attr/textAppearanceListItem"/>
     </LinearLayout>
 
 
