@@ -31,25 +31,25 @@ public class User {
 
     private UUID mID;
     private String username;
-    private ArrayList<UUID> requests; // TODO refactor requests into RequestController
+    private ArrayList<UUID> requests; // TODO remove
     private ArrayList<UUID> following;
 
     /**
-     * Creates a user object
+     * Creates a user object and generates an associated user ID.
      *
-     * @param username
+     * @param username unique string based identifier
      */
     public User (String username) {
         mID = UUID.randomUUID();
-        requests = new ArrayList<>();
+        requests = new ArrayList<>(); // TODO remove
         following = new ArrayList<>();
         this.username = username;
     }
 
     /**
-     * Returns user's ID.
+     * Returns generated user ID.
      *
-     * @return UUID mID
+     * @return UUID
      */
     public UUID getUserID () {
         return mID;
@@ -58,7 +58,7 @@ public class User {
     /**
      * Returns user's username.
      *
-     * @return String username
+     * @return string based identifier
      */
     public String getUsername () {
         return username;
@@ -70,6 +70,7 @@ public class User {
      *
      * @param friend
      * @throws InvalidUUIDException
+     * @deprecated unused
      */
     public void addRequest (UUID friend) throws InvalidUUIDException {
         requests.add(friend);
@@ -81,11 +82,16 @@ public class User {
      *
      * @param friend
      * @throws InvalidUUIDException
+     * @deprecated unused
      */
     public void addFollowing (UUID friend) throws InvalidUUIDException {
         following.add(friend);
     }
 
+    /**
+     * Replaces the current following list with the contents of the passed in list
+     * @param friends ArrayList of user IDs to follow, undefined behavior if null
+     */
     public void setFollowingList(ArrayList<UUID> friends) {
         following.clear();
         following.addAll(friends);
@@ -96,6 +102,7 @@ public class User {
      * I.e. Removes a person who requested to follow the user.
      *
      * @param friend
+     * @deprecated unused
      */
     public void removeRequest (UUID friend) {
         requests.remove(friend);
@@ -106,16 +113,17 @@ public class User {
      * I.e. A list of people who have requested to follow the user.
      *
      * @return ArrayList<UUID> requests
+     * @deprecated
      */
     public ArrayList<UUID> getRequestsList () {
         return requests;
     }
 
     /**
-     * Returns a list of followers, by UUID.
+     * Returns a list of followers by UUID.
      * I.e. A list of people who the user is following.
      *
-     * @return ArrayList<UUID> following
+     * @return list of user IDs of users being followed
      */
     public ArrayList<UUID> getFollowingList() {
         return following;
@@ -127,6 +135,7 @@ public class User {
      *
      * @param index
      * @return UUID request
+     * @deprecated
      */
     public UUID getRequest(int index) {
         return requests.get(index);
@@ -136,8 +145,8 @@ public class User {
      * Returns a specified user on the following list, by UUID.
      * I.e. A person who the user is following.
      *
-     * @param index
-     * @return UUID following
+     * @param index position in following list
+     * @return ID of followed user
      */
     public UUID getFollowing(int index) {
         return following.get(index);
