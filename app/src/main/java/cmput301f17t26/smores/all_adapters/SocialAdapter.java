@@ -56,7 +56,6 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
         int progress = (int) mFeed.get(position).getHabit().getPercentageFollowed();
 
         holder.mProgressNum.setText(progress + " %");
-        Log.d("Progress", Integer.toString(progress));
         switch (progress) {
             case 0:
                 holder.mProgress.setImageResource(R.drawable.progress000); break;

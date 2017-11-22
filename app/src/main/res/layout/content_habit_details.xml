@@ -237,25 +237,34 @@
         android:layout_height="match_parent"
         android:gravity="right|bottom">
 
-        <ImageButton
-            android:id="@+id/Habit_saveBtn"
+        <ImageView
+            android:id="@+id/HabitEventStat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/save"
+            android:src="@drawable/stat000"
+            android:layout_gravity="left"
+            />
 
-            android:src="@drawable/save" />
-
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="    "/>
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/Habit_deleteBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/delete"
-            android:src="@drawable/delete" />
+            <ImageButton
+                android:id="@+id/Habit_deleteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/delete"
+                android:src="@drawable/delete" />
+
+            <ImageButton
+                android:id="@+id/Habit_saveBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/save"
+                android:src="@drawable/save" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
