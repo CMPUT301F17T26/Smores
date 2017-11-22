@@ -142,6 +142,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         }
         setListeners();
         loadDetails();
+        interentViews();
     }
 
     private void interentViews() {
@@ -151,6 +152,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         } else {
             mToggleLocation.setEnabled(true);
             mUpdateLocation.setEnabled(true);
+        }
+        if (mHabitEvent != null) {
+            try {
+                mHabitEvent.getLocation();
+                mToggleLocation.setEnabled(true);
+            } catch (LocationNotSetException e) {
+                if (!NetworkUtils.isNetworkAvailable(this)) {
+                    mToggleLocation.setEnabled(false);
+                }
+
+            }
         }
     }
 
@@ -242,9 +254,13 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                             getLocation();
                         } else {
                             Toast.makeText(HabitEventDetailsActivity.this, "Oops, you are offline, please try again later!", Toast.LENGTH_SHORT).show();
-
+                            mUpdateLocation.setEnabled(false);
+                            mToggleLocation.setEnabled(false);
                         }
                     } else {
+                        if (!NetworkUtils.isNetworkAvailable(HabitEventDetailsActivity.this)) {
+                            mToggleLocation.setEnabled(false);
+                        }
                         mUpdateLocation.setEnabled(false);
                         mLocation = null;
                         mLocationString.setText("");
