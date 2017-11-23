@@ -123,7 +123,7 @@ public class HabitEventController {
         for (HabitEvent habitEvent: habitEvents) {
             if (habitEvent.getDate().getYear() == date.getYear() &&
                     habitEvent.getDate().getMonth() == date.getMonth() &&
-                    habitEvent.getDate().getDay() == date.getDay()) {
+                    habitEvent.getDate().getDate() == date.getDate()) {
                 return false;
             }
         }
