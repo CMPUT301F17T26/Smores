@@ -39,10 +39,8 @@ public class HabitController {
     private static String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitController";
 
     private ArrayList<Habit> mHabitList;
-    protected Set<DataListener> mDataListenerSet;
 
     private HabitController(Context context) {
-        mDataListenerSet = new HashSet<>();
         loadHabits(context);
     }
 
@@ -64,7 +62,7 @@ public class HabitController {
         else {
             mHabitList = gson.fromJson(JSONHabits,new TypeToken<ArrayList<Habit>>(){}.getType());
         }
-        notifyAllObservers();
+        Log.d("main", Integer.toString(mHabitList.size() ));
     }
 
     public void saveHabits(Context context) {
@@ -184,21 +182,5 @@ public class HabitController {
             }
         }
         return true;
-    }
-
-    public void addListener(DataListener dataListener) {
-        mDataListenerSet.add(dataListener);
-        notifyUpdate(dataListener);
-    }
-    public void removeListener(DataListener dataListener) {
-        mDataListenerSet.remove(dataListener);
-    }
-    private void notifyUpdate(DataListener dataListener) {
-        dataListener.onDataUpdated();
-    }
-    private void notifyAllObservers() {
-        for (DataListener dataListener: mDataListenerSet) {
-            notifyUpdate(dataListener);
-        }
     }
 }

@@ -13,6 +13,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -22,6 +23,7 @@ import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
 
 import static android.content.Context.ALARM_SERVICE;
+import static android.content.Context.SYSTEM_HEALTH_SERVICE;
 import static cmput301f17t26.smores.all_activities.MainActivity.NOTIFICATION_REQUEST_CODE;
 
 /**
@@ -63,6 +65,10 @@ public class Notification_reciever extends BroadcastReceiver {
 
         calendar.set(Calendar.HOUR_OF_DAY, 8);
         calendar.set(Calendar.MINUTE, 30);
+
+        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            calendar.add(Calendar.DATE, 1);
+        }
 
 
         Intent intent = new Intent(context, Notification_reciever.class);

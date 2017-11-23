@@ -59,7 +59,6 @@ public class HabitEventController {
 
     private HabitEventController(Context context) {
         mFilteredHabitEvents = new ArrayList<>();
-        mDataListenerSet = new HashSet<>();
         initHabitEvents(context);
 
     }
@@ -201,7 +200,6 @@ public class HabitEventController {
             mFilteredHabitEvents = new ArrayList<>();
             mHabitEvents = new ArrayList<>();
         }
-        notifyAllObservers();
     }
 
     private void saveHabitEvents(Context context) {
@@ -260,22 +258,6 @@ public class HabitEventController {
             if (event.getHabitID().equals(habitID)) {
                 deleteHabitEvent(context, event.getID());
             }
-        }
-    }
-
-    public void addListener(DataListener dataListener) {
-        mDataListenerSet.add(dataListener);
-        notifyUpdate(dataListener);
-    }
-    public void removeListener(DataListener dataListener) {
-        mDataListenerSet.remove(dataListener);
-    }
-    private void notifyUpdate(DataListener dataListener) {
-        dataListener.onDataUpdated();
-    }
-    private void notifyAllObservers() {
-        for (DataListener dataListener: mDataListenerSet) {
-            notifyUpdate(dataListener);
         }
     }
 }

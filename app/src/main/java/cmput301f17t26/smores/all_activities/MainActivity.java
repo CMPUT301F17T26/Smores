@@ -51,7 +51,7 @@ import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
 import cmput301f17t26.smores.utils.Notification_reciever;
 
-public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener, DataListener {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
 
     public static final int NOTIFICATION_REQUEST_CODE = 100;
     /**
@@ -113,16 +113,12 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     public void onResume() {
         super.onResume();
         this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-        HabitController.getHabitController(this).addListener(this);
-        HabitEventController.getHabitEventController(this).addListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         this.unregisterReceiver(networkStateReceiver);
-        HabitController.getHabitController(this).removeListener(this);
-        HabitEventController.getHabitEventController(this).removeListener(this);
     }
 
     @Override
@@ -287,26 +283,4 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
     }
 
-    @Override
-    public void onDataUpdated() {
-//            Calendar calendar = Calendar.getInstance();
-//            calendar.setTimeInMillis(System.currentTimeMillis());
-//
-//            calendar.set(Calendar.HOUR_OF_DAY, 8);
-//            calendar.set(Calendar.MINUTE, 30);
-//
-//
-//            Intent intent = new Intent(MainActivity.this, Notification_reciever.class);
-//            intent.putExtra("NOTIFICATION_EXTRA", 1);
-//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-
-           // Log.d("Main activity", "onDataUpdated: Set the notification!");
-//            Log.d("main", "Pending intent!");
-
-            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-
-    }
 }
