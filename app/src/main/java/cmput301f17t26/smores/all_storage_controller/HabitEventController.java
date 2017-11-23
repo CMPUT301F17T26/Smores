@@ -142,20 +142,6 @@ public class HabitEventController {
         return true;
     }
 
-    public Boolean doesHabitEventExistForYesterday(Habit habit) {
-        ArrayList<HabitEvent> habitEvents = getHabitEventsByHabit(habit);
-        Date date = new Date();
-        date = yesterday(date);
-        for (HabitEvent habitEvent: habitEvents) {
-            if (habitEvent.getDate().getYear() == date.getYear() &&
-                    habitEvent.getDate().getMonth() == date.getMonth() &&
-                    habitEvent.getDate().getDay() == date.getDay()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public ArrayList<Date> getMissedHabitEvents(Habit habit) {
         ArrayList<Date> missedHabitEvents = new ArrayList<>();
         HashMap<Integer, Boolean> mDays = habit.getDaysOfWeek();
@@ -165,7 +151,6 @@ public class HabitEventController {
 
         Calendar endCal = Calendar.getInstance();
         LocalDate endDate = LocalDate.fromCalendarFields(endCal);
-        endDate = endDate.minusDays(1);
         for (LocalDate date = LocalDate.fromCalendarFields(startCal); date.isBefore(endDate); date = date.plusDays(1)) {
             Calendar c = Calendar.getInstance();
             c.setTime(date.toDate());
@@ -176,12 +161,6 @@ public class HabitEventController {
         }
 
         return missedHabitEvents;
-    }
-
-    private Date yesterday(Date date) {
-        LocalDate localDate = LocalDate.fromDateFields(date);
-        localDate = localDate.minusDays(1);
-        return localDate.toDate();
     }
 
     @NonNull
