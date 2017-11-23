@@ -565,28 +565,33 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    mLocation = location;
-                    Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        StringBuilder Baddress = new StringBuilder();
-                        if (!(myList.get(0).getLocality() == null)) {
-                            Baddress.append(" " + myList.get(0).getLocality());
-                        }
-                        if (!(myList.get(0).getPostalCode() == null)) {
-                            Baddress.append(" " + myList.get(0).getPostalCode());
-                        }
-                        if (!(myList.get(0).getThoroughfare() == null)) {
-                            Baddress.append(" " + myList.get(0).getThoroughfare());
-                        }
-                        String address = Baddress.toString();
-                        mLocationString.setText(address);
-                        mLocationText = address;
-                    } catch (IOException e) {
+                    if (location != null) {
+                        mLocation = location;
+                        Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
+                        try {
+                            List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            StringBuilder Baddress = new StringBuilder();
+                            if (!(myList.get(0).getLocality() == null)) {
+                                Baddress.append(" " + myList.get(0).getLocality());
+                            }
+                            if (!(myList.get(0).getPostalCode() == null)) {
+                                Baddress.append(" " + myList.get(0).getPostalCode());
+                            }
+                            if (!(myList.get(0).getThoroughfare() == null)) {
+                                Baddress.append(" " + myList.get(0).getThoroughfare());
+                            }
+                            String address = Baddress.toString();
+                            mLocationString.setText(address);
+                            mLocationText = address;
+                        } catch (IOException e) {
 
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Turn on location services to add a location.",
+                                Toast.LENGTH_SHORT).show();
+                        mToggleLocation.setChecked(false);
                     }
-
-
                 }
             });
         } catch (SecurityException e) {
