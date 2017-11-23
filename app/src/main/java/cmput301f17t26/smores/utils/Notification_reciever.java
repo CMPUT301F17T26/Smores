@@ -66,18 +66,17 @@ public class Notification_reciever extends BroadcastReceiver {
         calendar.set(Calendar.HOUR_OF_DAY, 8);
         calendar.set(Calendar.MINUTE, 30);
 
-        if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
-            calendar.add(Calendar.DATE, 1);
-        }
+        //if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
+            //calendar.add(Calendar.DATE, 1);
+        //}
 
 
         Intent intent = new Intent(context, Notification_reciever.class);
         intent.putExtra("NOTIFICATION_EXTRA", 1);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
-        Log.d("main", "Setup notifications!");
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Log.d("datechange", "Setup notification for next day at 8:30am");
     }
 
 }
