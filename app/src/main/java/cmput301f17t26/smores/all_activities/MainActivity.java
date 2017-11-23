@@ -10,8 +10,12 @@
 
 package cmput301f17t26.smores.all_activities;
 
+import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +32,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 import cmput301f17t26.smores.R;
@@ -36,12 +42,18 @@ import cmput301f17t26.smores.all_fragments.AddFriendFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
+import cmput301f17t26.smores.all_storage_controller.HabitController;
+import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.DataListener;
+import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
+import cmput301f17t26.smores.utils.Notification_reciever;
 
-public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener, DataListener {
 
+    public static final int NOTIFICATION_REQUEST_CODE = 100;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -59,19 +71,20 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     private UserController mUserController;
     public static final int NEW_HABIT = 0;
     public static final int EDIT_HABIT = 1;
-
+    private boolean startedByNotification;
     private NetworkStateReceiver networkStateReceiver; //https://stackoverflow.com/questions/6169059/android-event-for-internet-connectivity-state-change
+    private Bundle mSavedInstanceState = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mUserController = UserController.getUserController(this);
         getUser();
-
+        startedByNotification =  getIntent().getBooleanExtra("START_NOTIFICATION", false);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
 
-
+        mSavedInstanceState = savedInstanceState;
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
 
@@ -100,12 +113,16 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     public void onResume() {
         super.onResume();
         this.registerReceiver(networkStateReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        HabitController.getHabitController(this).addListener(this);
+        HabitEventController.getHabitEventController(this).addListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
         this.unregisterReceiver(networkStateReceiver);
+        HabitController.getHabitController(this).removeListener(this);
+        HabitEventController.getHabitEventController(this).removeListener(this);
     }
 
     @Override
@@ -268,5 +285,28 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     @Override
     public void networkUnavailable() {
         Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
+    }
+
+    @Override
+    public void onDataUpdated() {
+//            Calendar calendar = Calendar.getInstance();
+//            calendar.setTimeInMillis(System.currentTimeMillis());
+//
+//            calendar.set(Calendar.HOUR_OF_DAY, 8);
+//            calendar.set(Calendar.MINUTE, 30);
+//
+//
+//            Intent intent = new Intent(MainActivity.this, Notification_reciever.class);
+//            intent.putExtra("NOTIFICATION_EXTRA", 1);
+//            PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+//            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+
+           // Log.d("Main activity", "onDataUpdated: Set the notification!");
+//            Log.d("main", "Pending intent!");
+
+            //alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
     }
 }

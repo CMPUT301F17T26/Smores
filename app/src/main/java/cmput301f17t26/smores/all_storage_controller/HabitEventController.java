@@ -33,12 +33,15 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.Pair;
+import cmput301f17t26.smores.utils.DataListener;
 import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkUtils;
 
@@ -52,8 +55,11 @@ public class HabitEventController {
     private static final String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitEventController";
     private static final String FILENAME = "HabitEvents.sav";
 
+    protected Set<DataListener> mDataListenerSet;
+
     private HabitEventController(Context context) {
         mFilteredHabitEvents = new ArrayList<>();
+        mDataListenerSet = new HashSet<>();
         initHabitEvents(context);
 
     }
@@ -195,8 +201,7 @@ public class HabitEventController {
             mFilteredHabitEvents = new ArrayList<>();
             mHabitEvents = new ArrayList<>();
         }
-
-
+        notifyAllObservers();
     }
 
     private void saveHabitEvents(Context context) {
@@ -255,6 +260,22 @@ public class HabitEventController {
             if (event.getHabitID().equals(habitID)) {
                 deleteHabitEvent(context, event.getID());
             }
+        }
+    }
+
+    public void addListener(DataListener dataListener) {
+        mDataListenerSet.add(dataListener);
+        notifyUpdate(dataListener);
+    }
+    public void removeListener(DataListener dataListener) {
+        mDataListenerSet.remove(dataListener);
+    }
+    private void notifyUpdate(DataListener dataListener) {
+        dataListener.onDataUpdated();
+    }
+    private void notifyAllObservers() {
+        for (DataListener dataListener: mDataListenerSet) {
+            notifyUpdate(dataListener);
         }
     }
 }

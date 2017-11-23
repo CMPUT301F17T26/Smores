@@ -10,7 +10,10 @@
 package cmput301f17t26.smores.all_fragments;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
@@ -21,9 +24,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import cmput301f17t26.smores.R;
+import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_models.User;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NetworkUtils;
+import cmput301f17t26.smores.utils.Notification_reciever;
+
+import static android.content.Context.ALARM_SERVICE;
+import static cmput301f17t26.smores.all_activities.MainActivity.NOTIFICATION_REQUEST_CODE;
 
 /**
  * Created by apate on 2017-10-31.
@@ -57,6 +68,8 @@ public class AddUserFragment extends DialogFragment {
                                 @Override
                                 public void run() {
                                     Toast.makeText(mContext, "Added!", Toast.LENGTH_SHORT).show();
+                                    Notification_reciever.setUpNotifcations(mContext);
+
                                     dismiss();
                                 }
                             });

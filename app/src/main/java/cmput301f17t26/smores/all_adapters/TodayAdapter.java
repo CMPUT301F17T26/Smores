@@ -100,4 +100,9 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         }
         notifyDataSetChanged();
     }
+
+    public Integer getSizeOfTodayHabits() {
+        filterTodayHabits();
+        return mValues.size();
+    }
 }
