@@ -66,6 +66,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
         holder.mHabitName.setText(mValues.get(position).getTitle());
         holder.mHabitStat.setText(mValues.get(position).getReason());
         int progress = (int) mValues.get(position).getPercentageFollowed();
+        holder.mStatNum.setText(Integer.toString(progress) + "%");
 
         if (holder.mItem.getDaysOfWeek().get(0)) {
             holder.mSunday.setTypeface(null, Typeface.BOLD);
@@ -331,6 +332,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
         public final TextView mThursday;
         public final TextView mFriday;
         public final TextView mSaturday;
+        public final TextView mStatNum;
         public Habit mItem;
 
         public ViewHolder(View view) {
@@ -346,6 +348,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
             mThursday = (TextView) view.findViewById(R.id.Thursday);
             mFriday = (TextView) view.findViewById(R.id.Friday);
             mSaturday = (TextView) view.findViewById(R.id.Saterday);
+            mStatNum = (TextView) view.findViewById(R.id.HabitProgessNum);
         }
     }
 }
