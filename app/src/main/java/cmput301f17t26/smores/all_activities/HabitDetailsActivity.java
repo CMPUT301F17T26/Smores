@@ -487,7 +487,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
             mHabit.setReason(mReasonText.getText().toString());
             mHabit.setTitle(mNameText.getText().toString());
             mHabit.setStartDate(date);
-            mHabit.setDaysOfWeek(days);
+            mHabit.setDaysOfWeek(days, this);
 
         } catch (Exception e) {
             e.printStackTrace();
