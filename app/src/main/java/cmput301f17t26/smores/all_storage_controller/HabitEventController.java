@@ -251,7 +251,7 @@ public class HabitEventController {
     }
 
     public void deleteHabitEventsByHabit(Context context, UUID habitID) {
-        for (HabitEvent event: mHabitEvents) {
+        for (HabitEvent event: new ArrayList<>(mHabitEvents)) {
             if (event.getHabitID().equals(habitID)) {
                 deleteHabitEvent(context, event.getID());
             }
