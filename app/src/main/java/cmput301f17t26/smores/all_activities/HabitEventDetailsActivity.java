@@ -30,6 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -311,6 +312,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                 }
                 loadSpinner();
                 loadPreviousSpinner();
+            }
+        });
+
+        mHabitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadPreviousSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }

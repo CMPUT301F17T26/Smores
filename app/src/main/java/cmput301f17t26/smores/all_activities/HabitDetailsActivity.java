@@ -436,7 +436,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteButtonHandler() {
-        boolean valid = true;
         if (mHabitPosition == HABIT_POSITION_NONE) {
             Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
                     Toast.LENGTH_SHORT).show();
