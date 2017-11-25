@@ -15,6 +15,9 @@
 package cmput301f17t26.smores.all_activities;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -29,6 +32,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -205,7 +209,23 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         mDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteButtonHandler();
+                if (mHabitEventUUID == null) {
+                    Toast.makeText(HabitEventDetailsActivity.this, "You cannot delete a habit event before it has been created!", Toast.LENGTH_SHORT).show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HabitEventDetailsActivity.this);
+                    builder.setMessage("Delete habit event?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deleteButtonHandler();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
 
@@ -372,12 +392,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
     }
 
     private void deleteButtonHandler() {
-        if (mHabitEventUUID == null) {
-            Toast.makeText(HabitEventDetailsActivity.this, "You cannot delete a habit event before it has been created!", Toast.LENGTH_SHORT).show();
-        } else {
-            HabitEventController.getHabitEventController(this).deleteHabitEvent(this, mHabitEventUUID);
-            finish();
-        }
+        finish();
+        HabitEventController.getHabitEventController(this).deleteHabitEvent(this, mHabitEventUUID);
     }
 
     private void saveButtonHandler() {
@@ -630,3 +646,4 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         return false;
     }
 }
+

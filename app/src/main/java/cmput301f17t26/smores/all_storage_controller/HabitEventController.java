@@ -150,7 +150,7 @@ public class HabitEventController {
         HashMap<Integer, Boolean> mDays = habit.getDaysOfWeek();
 
         Calendar startCal = Calendar.getInstance();
-        startCal.setTime(habit.getStartDate());
+        startCal.setTime(habit.getCheckpoint());
 
         Calendar endCal = Calendar.getInstance();
         LocalDate endDate = LocalDate.fromCalendarFields(endCal);
@@ -162,7 +162,7 @@ public class HabitEventController {
                 Log.d("Found: ", DateUtils.getStringOfDate(date.toDate()));
             }
         }
-
+        Collections.reverse(missedHabitEvents);
         return missedHabitEvents;
     }
 
