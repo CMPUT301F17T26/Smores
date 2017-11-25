@@ -5,7 +5,12 @@
     android:background="@color/darkGrey"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+<ImageView
+    android:id="@+id/todayBG"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    android:src="@drawable/empty"/>
 <android.support.v7.widget.RecyclerView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -16,6 +21,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:visibility="gone"
     app:layoutManager="LinearLayoutManager"
     tools:context="cmput301f17t26.smores.all_fragments.TodayFragment"
     tools:listitem="@layout/fragment_today_element"/>

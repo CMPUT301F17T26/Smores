@@ -17,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
@@ -37,7 +38,7 @@ public class TodayFragment extends Fragment {
     private OnListFragmentInteractionListener mListener;
     private TodayAdapter mTodayAdapter;
     private RecyclerView recyclerView;
-
+    private ImageView background;
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -70,11 +71,22 @@ public class TodayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_today_list, container, false);
 
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mTodayAdapter = new TodayAdapter(getActivity());
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        background = (ImageView) view.findViewById(R.id.todayBG);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mTodayAdapter);
         mTodayAdapter.filterTodayHabits();
+
+
+        if (mTodayAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
+
         return view;
     }
 
@@ -117,8 +129,13 @@ public class TodayFragment extends Fragment {
             mTodayAdapter = new TodayAdapter(getActivity());
             recyclerView.setAdapter(mTodayAdapter);
             mTodayAdapter.filterTodayHabits();
+            if (mTodayAdapter.getItemCount() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                background.setVisibility(View.VISIBLE);
+            } else {
+                background.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         }
-        mTodayAdapter.filterTodayHabits();
-
     }
 }
