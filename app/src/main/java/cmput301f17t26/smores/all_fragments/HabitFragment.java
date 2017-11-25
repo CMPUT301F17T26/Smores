@@ -83,7 +83,7 @@ public class HabitFragment extends Fragment {
 
         Context context = view.getContext();
         mHabitAdapter = new HabitAdapter(mListener);
-        background = (ImageView) view.findViewById(R.id.todayBG);
+        background = (ImageView) view.findViewById(R.id.habitBG);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mHabitAdapter);
