@@ -1,10 +1,16 @@
 /*
+ * TodayFragment
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Fragment to show a list of habits to do today
- * Outstanding issues: Make it prettier (show more info on the list item)
+ * Purpose: With the help of the today adapter, shows a list of all habits to do today
+ * Provides a clean icon to show if you have completed the habit for the day, or if its still pending.
  */
 
 package cmput301f17t26.smores.all_fragments;

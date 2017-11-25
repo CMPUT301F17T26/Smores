@@ -1,10 +1,16 @@
 /*
+ * AddUserFragment
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Fragment to add a new user
- * Outstanding issues: None known
+ * Purpose: Fragment to add a new user.
+ * Prompts the user for a username.
  */
 
 package cmput301f17t26.smores.all_fragments;
@@ -13,7 +19,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +29,7 @@ import android.widget.Toast;
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_models.User;
 import cmput301f17t26.smores.all_storage_controller.UserController;
+import cmput301f17t26.smores.utils.NotificationReceiver;
 
 /**
  * Created by apate on 2017-10-31.
@@ -57,6 +63,8 @@ public class AddUserFragment extends DialogFragment {
                                 @Override
                                 public void run() {
                                     Toast.makeText(mContext, "Added!", Toast.LENGTH_SHORT).show();
+                                    NotificationReceiver.setUpNotifcations(mContext);
+
                                     dismiss();
                                 }
                             });

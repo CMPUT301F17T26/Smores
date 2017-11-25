@@ -1,11 +1,16 @@
 /*
+ * MainActivity
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
  * Purpose: View class for hosting fragments for habits to do today, habits, habit events,
  * social & requests. Also can launch activities for viewing details of habits & habit events & maps.
- * Outstanding issues: None known at this time
  */
 
 package cmput301f17t26.smores.all_activities;
@@ -42,6 +47,7 @@ import cmput301f17t26.smores.utils.NetworkStateReceiver;
 
 public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
 
+    public static final int NOTIFICATION_REQUEST_CODE = 100;
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
      * fragments for each of the sections. We use a
@@ -59,19 +65,20 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     private UserController mUserController;
     public static final int NEW_HABIT = 0;
     public static final int EDIT_HABIT = 1;
-
+    private boolean startedByNotification;
     private NetworkStateReceiver networkStateReceiver; //https://stackoverflow.com/questions/6169059/android-event-for-internet-connectivity-state-change
+    private Bundle mSavedInstanceState = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mUserController = UserController.getUserController(this);
         getUser();
-
+        startedByNotification =  getIntent().getBooleanExtra("START_NOTIFICATION", false);
         networkStateReceiver = new NetworkStateReceiver();
         networkStateReceiver.addListener(this);
 
-
+        mSavedInstanceState = savedInstanceState;
         mAddFloatingActionButton = (FloatingActionButton) findViewById(R.id.addFab);
         mMapsFloatingActionButton = (FloatingActionButton) findViewById(R.id.mapsFab);
 
@@ -269,4 +276,5 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     public void networkUnavailable() {
         Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
     }
+
 }

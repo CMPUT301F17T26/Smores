@@ -1,10 +1,15 @@
 /*
+ * HabitEventDetailsActivity
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
  * Purpose: View class for adding, editing and deleting Habit Events.
- * Outstanding issues: Being able to add an habit event for previous day.
  */
 
 package cmput301f17t26.smores.all_activities;
@@ -22,22 +27,21 @@ import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.NetworkOnMainThreadException;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -49,14 +53,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -245,8 +245,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         mToggleLocation.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-
-
                 if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (isChecked) {
                         mUpdateLocation.setEnabled(true);
@@ -311,6 +309,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                 }
                 loadSpinner();
                 loadPreviousSpinner();
+            }
+        });
+
+        mHabitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadPreviousSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
@@ -423,8 +432,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             try {
                 mPreviousDaySpin.getSelectedItem().toString();
                 Date previousDate = simpleDateFormat.parse(mPreviousDaySpin.getSelectedItem().toString());
-                Log.d("Date Read in as: ", mPreviousDaySpin.getSelectedItem().toString());
-                Log.d("Date saved to: ", DateUtils.getStringOfDate(previousDate));
                 habitEvent.setDate(previousDate);
             } catch (Exception e) {
                 Toast.makeText(HabitEventDetailsActivity.this, "Please select a previous date!", Toast.LENGTH_SHORT).show();
@@ -465,7 +472,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         spinnerDataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, stringAvailableHabits);
         spinnerDataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mHabitType.setAdapter(spinnerDataAdapter);
-
     }
 
     public void loadPreviousSpinner() {
@@ -493,14 +499,12 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Request for camera", Toast.LENGTH_LONG).show();
                 invokeCamera();
             } else {
                 Toast.makeText(this, "Unable to request camera", Toast.LENGTH_LONG).show();
             }
         } else if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Request for location granted", Toast.LENGTH_LONG).show();
                 getLocation();
 
             } else {
@@ -509,7 +513,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             }
         } else if (requestCode == GALLERY_REQUEST_CODE) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Request for storage granted", Toast.LENGTH_LONG).show();
                 invokeGallery();
             } else {
                 Toast.makeText(this, "Unable to request storage services", Toast.LENGTH_LONG).show();
@@ -538,13 +541,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             mImageView.setImageBitmap(HabitEvent.decompressBitmap(imageBitmap));
             mImage = HabitEvent.compressBitmap(imageBitmap);
-            /*if (mHabitEventUUID != null) {
-                try {
-                    mHabitEvent.getLocation();
-                    mToggleLocation.setChecked(true);
-                } catch (LocationNotSetException e) {
-                }
-            }*/
         } else if (requestCode == GALLERY_REQUEST && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
 
@@ -565,6 +561,7 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
+
                     if (location != null) {
                         mLocation = location;
                         Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
@@ -580,11 +577,10 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                             if (!(myList.get(0).getThoroughfare() == null)) {
                                 Baddress.append(" " + myList.get(0).getThoroughfare());
                             }
-                            String address = Baddress.toString();
+                            String address = Baddress.toString().trim();
                             mLocationString.setText(address);
                             mLocationText = address;
                         } catch (IOException e) {
-
                         }
                     } else {
                         Toast.makeText(getApplicationContext(),
@@ -604,7 +600,6 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
     @Override
     public void networkAvailable() {
         interentViews();
-        Toast.makeText(this, "You are online, location tracking is possible!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -623,5 +618,15 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
     public void onPause() {
         super.onPause();
         this.unregisterReceiver(networkStateReceiver);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return false;
     }
 }

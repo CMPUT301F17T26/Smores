@@ -1,17 +1,21 @@
 /*
+ * HabitEventController
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Controller class for storing and retrieving Habit Events
- * Outstanding Issues: None at this time
+ * Purpose: Controller class for storing and retrieving Habit Events. Implements the CRUD Interface
+ * Also talks to OfflineController and ElasticSearchController for dealing with offline/online behavior.
  */
 
 package cmput301f17t26.smores.all_storage_controller;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -35,7 +39,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.UUID;
 
-import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.Pair;
@@ -164,7 +167,7 @@ public class HabitEventController {
     }
 
     @NonNull
-    private ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
+    public ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
         ArrayList<HabitEvent> habitEvents = new ArrayList<>();
         for (HabitEvent habitEvent: mHabitEvents) {
             if (habitEvent.getHabitID().equals(habit.getID())) {
@@ -195,8 +198,6 @@ public class HabitEventController {
             mFilteredHabitEvents = new ArrayList<>();
             mHabitEvents = new ArrayList<>();
         }
-
-
     }
 
     private void saveHabitEvents(Context context) {
@@ -251,7 +252,7 @@ public class HabitEventController {
     }
 
     public void deleteHabitEventsByHabit(Context context, UUID habitID) {
-        for (HabitEvent event: mHabitEvents) {
+        for (HabitEvent event: new ArrayList<>(mHabitEvents)) {
             if (event.getHabitID().equals(habitID)) {
                 deleteHabitEvent(context, event.getID());
             }

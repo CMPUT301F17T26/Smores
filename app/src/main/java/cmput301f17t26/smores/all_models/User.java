@@ -3,13 +3,13 @@
  *
  * Version 1.0
  *
- * October 28, 2016
+ * October 28, 2017
  *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Represents a User class
+ * Purpose: Represents a User model.
  */
 
 package cmput301f17t26.smores.all_models;

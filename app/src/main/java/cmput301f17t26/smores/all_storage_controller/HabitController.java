@@ -1,10 +1,16 @@
 /*
+ * HabitController
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Controller class for storing and retrieving Habits
- * Outstanding Issues: None at this time
+ * Purpose: Controller class for storing and retrieving Habits. Implements the CRUD interface.
+ * Also talks to OfflineController and ElasticSearchController for dealing with offline/online behavior.
  */
 
 package cmput301f17t26.smores.all_storage_controller;
@@ -18,7 +24,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
@@ -58,6 +63,7 @@ public class HabitController {
         else {
             mHabitList = gson.fromJson(JSONHabits,new TypeToken<ArrayList<Habit>>(){}.getType());
         }
+        Log.d("main", Integer.toString(mHabitList.size() ));
     }
 
     public void saveHabits(Context context) {
