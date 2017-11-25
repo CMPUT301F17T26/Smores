@@ -52,6 +52,8 @@ public class Habit {
     private HashMap<Integer, Boolean> mDaysOfWeek;
 
     private Date mLastCheckpoint;
+    private int mCheckpointDaysMissed;
+    private int mCheckpointDaysCompleted;
     private int mDaysMissed;
     private int mDaysCompleted;
     private double mCurrentPercentage;
@@ -80,9 +82,17 @@ public class Habit {
         mStartDate = startDate;
         mDaysOfWeek = daysOfWeek;
 
-        mLastCheckpoint = startDate;
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        mLastCheckpoint = c.getTime();
         mDaysMissed = 0;
         mDaysCompleted = 0;
+        mCheckpointDaysMissed = 0;
+        mCheckpointDaysCompleted = 0;
         mCurrentPercentage = 0d;
     }
 
@@ -128,8 +138,12 @@ public class Habit {
      *
      * @param daysOfWeek specified by user
      */
-    public void setDaysOfWeek(HashMap<Integer, Boolean> daysOfWeek) {
-        mDaysOfWeek = daysOfWeek;
+    public void setDaysOfWeek(HashMap<Integer, Boolean> daysOfWeek, Context context) {
+        if (!daysOfWeek.equals(mDaysOfWeek)) {
+            boolean today = mDaysOfWeek.get(new Date().getDay());
+            mDaysOfWeek = daysOfWeek;
+            checkpointStats(context, today);
+        }
     }
 
     /**
@@ -157,6 +171,15 @@ public class Habit {
      */
     public Date getStartDate() {
         return mStartDate;
+    }
+
+    /**
+     * Returns habit's last checkpoint date
+     *
+     * @return Date mLastCheckpoint
+     */
+    public Date getCheckpoint() {
+        return mLastCheckpoint;
     }
 
     /**
@@ -214,11 +237,11 @@ public class Habit {
     }
 
     public void calculateStats(Context context) {
-        int expected = findExpectedHabitEvents();
-        int newCompleted = findHabitEvents(context);
-        int newMissed = expected - newCompleted;
-        mDaysCompleted = newCompleted;
-        mDaysMissed = newMissed;
+        int totalExpected = mCheckpointDaysCompleted + mCheckpointDaysMissed + findExpectedHabitEvents();
+        int totalCompleted = mCheckpointDaysCompleted + findHabitEvents(context);
+        int totalMissed = totalExpected - totalCompleted + mCheckpointDaysMissed;
+        mDaysCompleted = totalCompleted;
+        mDaysMissed = totalMissed;
 
         mCurrentPercentage = (mDaysCompleted * 100.0d ) / (mDaysMissed + mDaysCompleted);
         if (Double.isNaN(mCurrentPercentage)) {
@@ -226,8 +249,33 @@ public class Habit {
         }
     }
 
+    public void checkpointStats(Context context, boolean today) {
+        mCheckpointDaysMissed = mDaysMissed;
+        mCheckpointDaysCompleted = mDaysCompleted;
+        Calendar c = Calendar.getInstance();
+        c.setTime(new Date());
+        c.set(Calendar.MILLISECOND, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        mLastCheckpoint = c.getTime();
+
+        ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(context).getHabitEventsByHabit(this);
+        if (today) {
+            if (habitEvents.get(0).getDate().compareTo(mLastCheckpoint) > 0) {
+                if (true == mDaysOfWeek.get(mLastCheckpoint.getDay())) {
+                    mCheckpointDaysCompleted--;
+                }
+            } else {
+                mCheckpointDaysMissed--;
+            }
+        }
+
+        calculateStats(context);
+    }
+
     /**
-     * Calculates the number of habit events that should of been completed.
+     * Calculates the number of habit events that should have been completed.
      *
      * @return expected number of habit events
      */
@@ -236,10 +284,6 @@ public class Habit {
 
         Calendar startCal = Calendar.getInstance();
         startCal.setTime(mLastCheckpoint);
-        startCal.set(Calendar.MILLISECOND, 0);
-        startCal.set(Calendar.SECOND, 0);
-        startCal.set(Calendar.MINUTE, 0);
-        startCal.set(Calendar.HOUR_OF_DAY, 0);
 
         Calendar endCal = Calendar.getInstance();
         endCal.setTime(new Date());
@@ -266,10 +310,13 @@ public class Habit {
         Calendar c = Calendar.getInstance();
         int successes = 0;
 
+        Calendar startCal = Calendar.getInstance();
+        startCal.setTime(mLastCheckpoint);
+
         for(HabitEvent habitEvent : habitEvents) {
             c.setTime(habitEvent.getDate());
             if (mID.equals(habitEvent.getHabitID())
-                    && habitEvent.getDate().compareTo(mLastCheckpoint) > 0
+                    && habitEvent.getDate().compareTo(startCal.getTime()) >= 0
                     && mDaysOfWeek.get(c.get(Calendar.DAY_OF_WEEK) - 1)) {
                 successes++;
             }
