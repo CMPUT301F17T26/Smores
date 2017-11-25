@@ -164,7 +164,7 @@ public class HabitEventController {
     }
 
     @NonNull
-    private ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
+    public ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
         ArrayList<HabitEvent> habitEvents = new ArrayList<>();
         for (HabitEvent habitEvent: mHabitEvents) {
             if (habitEvent.getHabitID().equals(habit.getID())) {
