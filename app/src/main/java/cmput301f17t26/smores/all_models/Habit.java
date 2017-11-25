@@ -262,7 +262,7 @@ public class Habit {
 
         ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(context).getHabitEventsByHabit(this);
         if (today) {
-            if (habitEvents.get(0).getDate().compareTo(mLastCheckpoint) > 0) {
+            if (0 != habitEvents.size() && habitEvents.get(0).getDate().compareTo(mLastCheckpoint) > 0) {
                 if (true == mDaysOfWeek.get(mLastCheckpoint.getDay())) {
                     mCheckpointDaysCompleted--;
                 }
