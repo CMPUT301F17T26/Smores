@@ -44,11 +44,12 @@
         <TextView
             android:id="@+id/Sunday"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:text="Su"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:layout_weight="1"
+            android:text="Su"
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Monday"
@@ -57,7 +58,8 @@
             android:text="Mo"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Tuesday"
@@ -66,7 +68,8 @@
             android:text="Tu"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Wednesday"
@@ -75,7 +78,8 @@
             android:text="We"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Thursday"
@@ -84,7 +88,8 @@
             android:text="Th"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Friday"
@@ -93,7 +98,8 @@
             android:text="Fr"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <TextView
             android:id="@+id/Saterday"
@@ -102,7 +108,8 @@
             android:text="Sa"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
-            android:textAppearance="?attr/textAppearanceListItem"/>
+            android:textAppearance="?attr/textAppearanceListItem"
+            android:textColor="@color/common_google_signin_btn_text_dark_disabled" />
 
         <!--<TextView-->
             <!--android:id="@+id/Sunday"-->
