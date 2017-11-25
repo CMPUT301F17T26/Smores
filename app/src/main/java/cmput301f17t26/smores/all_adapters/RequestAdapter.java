@@ -1,10 +1,16 @@
 /*
+ * RequestAdapter
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Adapter class to show a list of requests
- * Outstanding issues: To be implemented
+ * Purpose: Adapter class to convert Requests (model objects) to List view items
+ * Displays all the friend requests that you have, as well as the option to accept/reject them.
  */
 
 package cmput301f17t26.smores.all_adapters;

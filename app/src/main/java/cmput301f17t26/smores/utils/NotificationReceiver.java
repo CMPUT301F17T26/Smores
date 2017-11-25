@@ -1,19 +1,26 @@
 /*
+ * NotificationReceiver
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
+ *
+ * Purpose: Display a notification at a specified time once a day.
+ * The notification shows the number of habits to do today.
  */
 
 package cmput301f17t26.smores.utils;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -23,14 +30,13 @@ import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
 
 import static android.content.Context.ALARM_SERVICE;
-import static android.content.Context.SYSTEM_HEALTH_SERVICE;
 import static cmput301f17t26.smores.all_activities.MainActivity.NOTIFICATION_REQUEST_CODE;
 
 /**
  * Created by rohan on 11/22/2017.
  */
 
-public class Notification_reciever extends BroadcastReceiver {
+public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Calendar c = Calendar.getInstance();
@@ -70,7 +76,7 @@ public class Notification_reciever extends BroadcastReceiver {
             calendar.add(Calendar.DATE, 1);
         }
 
-        Intent intent = new Intent(context, Notification_reciever.class);
+        Intent intent = new Intent(context, NotificationReceiver.class);
         intent.putExtra("NOTIFICATION_EXTRA", 1);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);

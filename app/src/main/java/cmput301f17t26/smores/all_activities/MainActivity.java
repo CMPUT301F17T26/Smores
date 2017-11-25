@@ -1,21 +1,22 @@
 /*
+ * MainActivity
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
  * Purpose: View class for hosting fragments for habits to do today, habits, habit events,
  * social & requests. Also can launch activities for viewing details of habits & habit events & maps.
- * Outstanding issues: None known at this time
  */
 
 package cmput301f17t26.smores.all_activities;
 
-import android.Manifest;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -32,8 +33,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.UUID;
 
 import cmput301f17t26.smores.R;
@@ -42,14 +41,9 @@ import cmput301f17t26.smores.all_fragments.AddFriendFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
-import cmput301f17t26.smores.all_storage_controller.HabitController;
-import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
-import cmput301f17t26.smores.utils.DataListener;
-import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
-import cmput301f17t26.smores.utils.Notification_reciever;
 
 public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
 

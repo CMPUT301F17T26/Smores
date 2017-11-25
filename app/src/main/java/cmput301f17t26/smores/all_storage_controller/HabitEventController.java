@@ -1,17 +1,21 @@
 /*
+ * HabitEventController
+ *
+ * Version 1.0
+ *
+ * November 25, 2017
+ *
  * Copyright (c) 2017 Team 26, CMPUT 301, University of Alberta - All Rights Reserved.
  * You may use, distribute, or modify this code under terms and conditions of the Code of Student Behavior at University of Alberta.
  * You can find a copy of the license in this project. Otherwise please contact rohan@ualberta.ca
  *
- * Purpose: Controller class for storing and retrieving Habit Events
- * Outstanding Issues: None at this time
+ * Purpose: Controller class for storing and retrieving Habit Events. Implements the CRUD Interface
+ * Also talks to OfflineController and ElasticSearchController for dealing with offline/online behavior.
  */
 
 package cmput301f17t26.smores.all_storage_controller;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -33,15 +37,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.UUID;
 
-import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_models.Pair;
-import cmput301f17t26.smores.utils.DataListener;
 import cmput301f17t26.smores.utils.DateUtils;
 import cmput301f17t26.smores.utils.NetworkUtils;
 
@@ -54,8 +54,6 @@ public class HabitEventController {
     private ArrayList<HabitEvent> mHabitEvents, mFilteredHabitEvents;
     private static final String SAVED_DATA_KEY = "cmput301f17t26.smores.all_storage_controller.HabitEventController";
     private static final String FILENAME = "HabitEvents.sav";
-
-    protected Set<DataListener> mDataListenerSet;
 
     private HabitEventController(Context context) {
         mFilteredHabitEvents = new ArrayList<>();
