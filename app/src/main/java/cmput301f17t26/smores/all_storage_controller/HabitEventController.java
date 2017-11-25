@@ -167,7 +167,7 @@ public class HabitEventController {
     }
 
     @NonNull
-    private ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
+    public ArrayList<HabitEvent> getHabitEventsByHabit(Habit habit) {
         ArrayList<HabitEvent> habitEvents = new ArrayList<>();
         for (HabitEvent habitEvent: mHabitEvents) {
             if (habitEvent.getHabitID().equals(habit.getID())) {
@@ -252,7 +252,7 @@ public class HabitEventController {
     }
 
     public void deleteHabitEventsByHabit(Context context, UUID habitID) {
-        for (HabitEvent event: mHabitEvents) {
+        for (HabitEvent event: new ArrayList<>(mHabitEvents)) {
             if (event.getHabitID().equals(habitID)) {
                 deleteHabitEvent(context, event.getID());
             }

@@ -34,6 +34,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -43,6 +44,7 @@ import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_exceptions.ReasonTooLongException;
 import cmput301f17t26.smores.all_exceptions.TitleTooLongException;
 import cmput301f17t26.smores.all_models.Habit;
+import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
@@ -102,6 +104,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
         mDateSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 showDialog(DIALOG_ID);
             }
         });
@@ -376,7 +379,7 @@ public class HabitDetailsActivity extends AppCompatActivity {
     @Override
     protected Dialog onCreateDialog(int id) {
         if (id == DIALOG_ID) {
-            return new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            DatePickerDialog dpd = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
                 @Override
                 public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                     mYear = year;
@@ -389,6 +392,24 @@ public class HabitDetailsActivity extends AppCompatActivity {
                     mDateSelect.setText(DateUtils.getStringOfDate(d));
                 }
             }, mYear, mMonth, mDay);
+
+            DatePicker dp = dpd.getDatePicker();
+
+            Calendar minCal = Calendar.getInstance();
+            minCal.set(mYear, mMonth, mDay);
+            dp.setMinDate(minCal.getTimeInMillis());
+
+            if (HABIT_POSITION_NONE != mHabitPosition) {
+                ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(this)
+                        .getHabitEventsByHabit(mHabit);
+                if ( 0 != habitEvents.size()) {
+                    Calendar maxCal = Calendar.getInstance();
+                    maxCal.setTime(habitEvents.get(habitEvents.size() - 1).getDate());
+                    dp.setMaxDate(maxCal.getTimeInMillis());
+                }
+            }
+
+            return dpd;
         }
         return null;
     }
@@ -421,7 +442,6 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteButtonHandler() {
-        boolean valid = true;
         if (mHabitPosition == HABIT_POSITION_NONE) {
             Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
                     Toast.LENGTH_SHORT).show();

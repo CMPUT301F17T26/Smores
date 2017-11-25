@@ -317,15 +317,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mFusedLocationClient.getLastLocation().addOnSuccessListener(MapsActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    currentLocation = location;
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
-                            .zoom(14)
-                            .bearing(90)
-                            .tilt(30)
-                            .build();
-                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
+                    if (location != null) {
+                        currentLocation = location;
+                        CameraPosition cameraPosition = new CameraPosition.Builder()
+                                .target(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                                .zoom(14)
+                                .bearing(90)
+                                .tilt(30)
+                                .build();
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Turn on location services to use maps.",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         } catch (SecurityException e) {

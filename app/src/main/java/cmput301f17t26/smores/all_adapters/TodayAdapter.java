@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
@@ -54,7 +55,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_habit_element, parent, false);
+                .inflate(R.layout.fragment_today_element, parent, false);
         return new ViewHolder(view);
     }
 
@@ -63,6 +64,11 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         holder.mHabit = mValues.get(position);
         holder.mTitle.setText(mValues.get(position).getTitle());
         holder.mStat.setText(mValues.get(position).getReason()); // TODO change to .getStat()
+        if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(holder.mHabit)) {
+            holder.mStatus.setImageResource(R.drawable.todo);
+        } else {
+            holder.mStatus.setImageResource(R.drawable.done);
+        }
     }
 
     @Override
@@ -74,13 +80,15 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         public final View mView;
         public final TextView mTitle;
         public final TextView mStat;
+        public final ImageView mStatus;
         public Habit mHabit;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mTitle = (TextView) view.findViewById(R.id.habitTitle);
-            mStat = (TextView) view.findViewById(R.id.habitStat);
+            mTitle = (TextView) view.findViewById(R.id.id);
+            mStat = (TextView) view.findViewById(R.id.content);
+            mStatus = (ImageView) view.findViewById(R.id.status);
         }
 
         @Override
@@ -98,9 +106,7 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
         for (Habit habit : HabitController.getHabitController(mContext).getHabitList()) {
             if (habit.getDaysOfWeek().get(today.get(Calendar.DAY_OF_WEEK)-1)) {
                 if (habit.getStartDate().compareTo(todayDate) < 0) {
-                    if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit)) {
-                        mValues.add(habit);
-                    }
+                    mValues.add(habit);
                 }
             }
         }

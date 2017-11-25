@@ -112,12 +112,31 @@
             <!--android:layout_height="wrap_content"-->
             <!--android:layout_margin="@dimen/text_margin"-->
             <!--android:textAppearance="?attr/textAppearanceListItem"/>-->
-        <ImageView
-            android:id="@+id/HabitProgess"
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="7"
-            />
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/HabitProgess"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                />
+
+            <TextView
+                android:id="@+id/HabitProgessNum"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="bottom|center"
+                android:gravity="center"
+                android:text="100 %"
+                android:layout_weight="1"
+                />
+
+        </LinearLayout>
     </LinearLayout>
 
 

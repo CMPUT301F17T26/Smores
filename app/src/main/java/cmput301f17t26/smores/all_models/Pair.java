@@ -43,7 +43,7 @@ public class Pair {
     /**
      * Constructs a HabitEvent-command Pair object.
      *
-     * @param habitEvent data
+     * @param habitEvent data, undefined behavior if null
      * @param command ADD_HABIT_EVENT = 0, REMOVE_HABIT_EVENT = 1, UPDATE_HABIT_EVENT = 2
      */
     public Pair(HabitEvent habitEvent, int command) {
@@ -54,7 +54,7 @@ public class Pair {
     /**
      * Constructs a Habit-command Pair object.
      *
-     * @param habit data
+     * @param habit data, undefined behavior if null
      * @param command ADD_HABIT = 3, REMOVE_HABIT = 4, UPDATE_HABIT = 5
      */
     public Pair(Habit habit, int command) {

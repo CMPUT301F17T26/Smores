@@ -35,7 +35,7 @@ import cmput301f17t26.smores.all_exceptions.ImageTooBigException;
 import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 
 /**
- * Represents a Habit Event
+ * Represents a Habit Event, an instance of a habit being completed
  *
  * @author rohan
  * @version 1.0
@@ -59,8 +59,8 @@ public class HabitEvent {
     /**
      * Constructs a habit event object.
      *
-     * @param userID
-     * @param habitID
+     * @param userID undefined behavior if null
+     * @param habitID undefined behavior if null
      */
     public HabitEvent(UUID userID, UUID habitID)  {
         mID = UUID.randomUUID();
@@ -71,10 +71,10 @@ public class HabitEvent {
     }
 
     /**
-     * Sets the habit comment.
+     * Sets the optional habit comment.
      *
-     * @param comment
-     * @throws CommentTooLongException
+     * @param comment null represents no comment
+     * @throws CommentTooLongException if comment length exceeds 20 characters
      */
     public void setComment(String comment) throws CommentTooLongException {
         if (comment.length() > 20) {
@@ -85,9 +85,10 @@ public class HabitEvent {
     }
 
     /**
-     * Sets the habit event location.
+     * Sets the optional habit event location.
      *
-     * @param location
+     * @param location null represents that no location is associated with this habit event
+     * @deprecated
      */
     public void setLocation(Location location) {
         if (location == null) {
@@ -96,16 +97,22 @@ public class HabitEvent {
         mLocation = location;
     }
 
+    /**
+     * Sets the optional habit event location and associated human readable string representation
+     *
+     * @param location no location is represented by byll
+     * @param locationString location address
+     */
     public void setLocation(Location location, String locationString) {
         mLocation = location;
         mLocationString = locationString;
     }
 
     /**
-     * Sets the habit event image.
+     * Sets the optional habit event image.
      *
-     * @param image
-     * @throws ImageTooBigException
+     * @param image thumbnail
+     * @throws ImageTooBigException if image bytecount >= 65536
      */
     public void setImage(Bitmap image) throws ImageTooBigException {
         if (image == null) {
@@ -152,7 +159,7 @@ public class HabitEvent {
      * Returns habit event location
      *
      * @return Location mLocation
-     * @throws LocationNotSetException
+     * @throws LocationNotSetException if habit event location is null
      */
     public Location getLocation() throws LocationNotSetException {
         if (mLocation == null) {
@@ -166,7 +173,7 @@ public class HabitEvent {
      * Returns habit event location has a lat/long
      *
      * @return LatLng new LatLng(...)
-     * @throws LocationNotSetException
+     * @throws LocationNotSetException if habit event location is null
      */
     public LatLng getLatLng() throws LocationNotSetException {
         if (mLocation == null) {
@@ -180,7 +187,7 @@ public class HabitEvent {
      * Returns habit event bitmap
      *
      * @return Bitmap mImage
-     * @throws ImageNotSetException
+     * @throws ImageNotSetException if habit event image is null
      */
     public Bitmap getImage() throws ImageNotSetException {
         if (thumbnailBase64 == null) {
@@ -198,7 +205,7 @@ public class HabitEvent {
      * Returns habit event comment
      *
      * @return String mComment
-     * @throws CommentNotSetException
+     * @throws CommentNotSetException if habit event comment null
      */
     public String getComment() throws CommentNotSetException {
         if (mComment == null) {
@@ -235,27 +242,57 @@ public class HabitEvent {
         return mID;
     }
 
+    /**
+     * Returns the date the habit event was completed
+     *
+     * @return Date
+     */
     public Date getDate() {
         return mDateCompleted;
     }
 
+    /**
+     * Returns habit event location in a human readable format
+     *
+     * @return location address
+     */
     public String getLocationString() {
         return mLocationString;
     }
 
+    /**
+     * @deprecated
+     */
     public void setToPreviousDate() {
         mDateCompleted =  DateUtils.addDays(mDateCompleted, -1);
     }
 
+    /**
+     * Returns a compressed version of passed in image
+     *
+     * @param bitmap image to be compressed
+     * @return compressed bitmap
+     */
     public static Bitmap compressBitmap(Bitmap bitmap) {
         return Bitmap.createScaledBitmap(bitmap, 127, 127, true);
 
     }
 
+    /**
+     * Returns an uncompressed version of a passed in compressed image
+     *
+     * @param scaledBitmap compressed image
+     * @return uncompressed bitmap
+     */
     public static Bitmap decompressBitmap(Bitmap scaledBitmap) {
         return Bitmap.createScaledBitmap(scaledBitmap, 256, 256, true);
     }
 
+    /**
+     * Sets the date the habit event was completed
+     *
+     * @param date new date to be saved
+     */
     public void setDate(Date date) {
         mDateCompleted = date;
     }

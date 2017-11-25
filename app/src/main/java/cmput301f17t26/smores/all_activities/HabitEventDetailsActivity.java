@@ -35,6 +35,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -310,6 +311,17 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                 loadPreviousSpinner();
             }
         });
+
+        mHabitType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                loadPreviousSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 
 
@@ -549,28 +561,33 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             mFusedLocationClient.getLastLocation().addOnSuccessListener(HabitEventDetailsActivity.this, new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    mLocation = location;
-                    Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
-                    try {
-                        List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-                        StringBuilder Baddress = new StringBuilder();
-                        if (!(myList.get(0).getLocality() == null)) {
-                            Baddress.append(" " + myList.get(0).getLocality());
-                        }
-                        if (!(myList.get(0).getPostalCode() == null)) {
-                            Baddress.append(" " + myList.get(0).getPostalCode());
-                        }
-                        if (!(myList.get(0).getThoroughfare() == null)) {
-                            Baddress.append(" " + myList.get(0).getThoroughfare());
-                        }
-                        String address = Baddress.toString().trim();
-                        mLocationString.setText(address);
-                        mLocationText = address;
-                    } catch (IOException e) {
 
+                    if (location != null) {
+                        mLocation = location;
+                        Geocoder myLocation = new Geocoder(HabitEventDetailsActivity.this, Locale.getDefault());
+                        try {
+                            List<Address> myList = myLocation.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+                            StringBuilder Baddress = new StringBuilder();
+                            if (!(myList.get(0).getLocality() == null)) {
+                                Baddress.append(" " + myList.get(0).getLocality());
+                            }
+                            if (!(myList.get(0).getPostalCode() == null)) {
+                                Baddress.append(" " + myList.get(0).getPostalCode());
+                            }
+                            if (!(myList.get(0).getThoroughfare() == null)) {
+                                Baddress.append(" " + myList.get(0).getThoroughfare());
+                            }
+                            String address = Baddress.toString().trim();
+                            mLocationString.setText(address);
+                            mLocationText = address;
+                        } catch (IOException e) {
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(),
+                                "Turn on location services to add a location.",
+                                Toast.LENGTH_SHORT).show();
+                        mToggleLocation.setChecked(false);
                     }
-
-
                 }
             });
         } catch (SecurityException e) {
