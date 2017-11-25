@@ -162,7 +162,6 @@ public class HabitEventController {
                 Log.d("Found: ", DateUtils.getStringOfDate(date.toDate()));
             }
         }
-
         return missedHabitEvents;
     }
 

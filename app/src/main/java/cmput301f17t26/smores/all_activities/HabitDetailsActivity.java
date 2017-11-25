@@ -16,10 +16,12 @@ package cmput301f17t26.smores.all_activities;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -127,7 +129,24 @@ public class HabitDetailsActivity extends AppCompatActivity {
         deleteButton.setOnClickListener(new View.OnClickListener() {
             //@Override
             public void onClick(View view) {
-                deleteButtonHandler();
+                if (mHabitPosition == HABIT_POSITION_NONE) {
+                    Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(HabitDetailsActivity.this);
+                    builder.setMessage("Delete habit?")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    deleteButtonHandler();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
 
@@ -442,17 +461,11 @@ public class HabitDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteButtonHandler() {
-        if (mHabitPosition == HABIT_POSITION_NONE) {
-            Toast.makeText(HabitDetailsActivity.this, "You cannot delete a habit before it has been created!",
-                    Toast.LENGTH_SHORT).show();
-        }
-        else{
-            HabitEventController.getHabitEventController(this).deleteHabitEventsByHabit(this, mHabit.getID());
-            HabitController.getHabitController(this).deleteHabit(this, mHabit);
-            Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
-            setResult(HABIT_DELETED);
-            finish();
-        }
+        HabitEventController.getHabitEventController(this).deleteHabitEventsByHabit(this, mHabit.getID());
+        HabitController.getHabitController(this).deleteHabit(this, mHabit);
+        Toast.makeText(HabitDetailsActivity.this, "Habit deleted", Toast.LENGTH_SHORT).show();
+        setResult(HABIT_DELETED);
+        finish();
     }
     private void saveEdited() {
         Date date = mHabit.getStartDate();
