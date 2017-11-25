@@ -42,9 +42,14 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
 
     private List<Feed> mFeed;
     private Context mContext;
+    private RecyclerView mRecyclerView;
+    private ImageView mImageView;
 
-    public SocialAdapter(Context context) {
+    public SocialAdapter(Context context, RecyclerView recyclerView, ImageView imageView) {
         mContext = context;
+        mRecyclerView = recyclerView;
+        mImageView = imageView;
+
     }
 
     @Override
@@ -346,6 +351,14 @@ public class SocialAdapter extends RecyclerView.Adapter<SocialAdapter.ViewHolder
                         // Notify the List that the DataSet has changed...
                         notifyDataSetChanged();
                         progressDialog.dismiss();
+
+                        if (getItemCount() == 0) {
+                            mRecyclerView.setVisibility(View.GONE);
+                            mImageView.setVisibility(View.VISIBLE);
+                        } else {
+                            mImageView.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }

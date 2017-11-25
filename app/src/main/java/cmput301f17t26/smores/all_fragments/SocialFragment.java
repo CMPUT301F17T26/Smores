@@ -29,6 +29,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.SocialAdapter;
@@ -43,6 +44,7 @@ public class SocialFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private SocialAdapter mSocialAdapter;
+    private ImageView background;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     /**
@@ -80,7 +82,8 @@ public class SocialFragment extends Fragment {
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mSocialAdapter = new SocialAdapter(getActivity());
+        background = (ImageView) view.findViewById(R.id.SocialBG);
+        mSocialAdapter = new SocialAdapter(getActivity(), recyclerView, background);
         recyclerView.setAdapter(mSocialAdapter);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -101,8 +104,16 @@ public class SocialFragment extends Fragment {
     }
 
     void refreshItems() {
-        mSocialAdapter.loadList();;
+        mSocialAdapter.loadList();
         mSwipeRefreshLayout.setRefreshing(false);
+
+        if (mSocialAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
 }
