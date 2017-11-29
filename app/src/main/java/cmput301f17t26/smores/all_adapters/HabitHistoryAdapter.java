@@ -22,15 +22,19 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_exceptions.CommentNotSetException;
+import cmput301f17t26.smores.all_exceptions.ImageNotSetException;
+import cmput301f17t26.smores.all_exceptions.LocationNotSetException;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
 import cmput301f17t26.smores.all_models.HabitEvent;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.all_storage_controller.HabitEventController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
+import cmput301f17t26.smores.utils.DateUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,10 +76,20 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         holder.mItem = mFilterValues.get(position);
+
         try {
             holder.mComment.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
+            holder.mDate.setText(DateUtils.getStringOfDate(mFilterValues.get(position).getDate()));
+            if (mFilterValues.get(position).getLocation() != null) {
+                holder.mLocation.setImageResource(R.drawable.location);
+            }
+            holder.mImage.setImageBitmap(mFilterValues.get(position).getImage());
         } catch (CommentNotSetException e) {
             holder.mComment.setText("No comment"); // HabitEvent.getTitle() not implemented
+        } catch (LocationNotSetException e) {
+            holder.mLocation.setImageResource(R.color.white);
+        } catch (ImageNotSetException e) {
+            holder.mImage.setImageResource(R.mipmap.app_icon);
         }
         holder.mHabitType.setText(HabitController.getHabitController(mContext).getHabitTitleByHabitID(holder.mItem.getHabitID()));
 
@@ -101,14 +115,19 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
         public final View mView;
         public final TextView mHabitType;
         public final TextView mComment;
+        public final TextView mDate;
+        public final ImageView mImage;
+        public final ImageView mLocation;
         public HabitEvent mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mHabitType = (TextView) view.findViewById(R.id.Event_Element_hTitle);
-            mComment = (TextView) view.findViewById(R.id.Event_Element_hDate);
-
+            mComment = (TextView) view.findViewById(R.id.Event_Element_hComment);
+            mDate = (TextView) view.findViewById(R.id.Event_Element_hDate);
+            mLocation = (ImageView) view.findViewById(R.id.locationPin);
+            mImage = (ImageView) view.findViewById(R.id.HabitEventImage2);
         }
 
         @Override
