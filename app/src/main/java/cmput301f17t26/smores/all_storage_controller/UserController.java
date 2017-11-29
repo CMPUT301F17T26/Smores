@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_models.Feed;
@@ -140,7 +141,7 @@ public class UserController {
                             return o1.getDate().compareTo(o2.getDate());
                         }
                     });
-                    friendHabitEvents.add(friendI.get(friendI.size() - 1));
+                    friendHabitEvents.addAll(friendI);
                 }
 
             } catch (Exception e) {
@@ -171,26 +172,60 @@ public class UserController {
         return friendHabits;
     }
 
+    public ArrayList<HabitEvent> mostRecentFriendsHabitEvents() {
+
+        ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+
+        ArrayList<HabitEvent> friendsHabitEvents = getFriendsHabitEvents();
+        ArrayList<Habit> friendsHabits = getFriendsHabits();
+        HashMap<Habit, HabitEvent> habitHabitEventHashMap = pairUp(friendsHabits, friendsHabitEvents);
+
+        for (Habit habit: habitHabitEventHashMap.keySet()) {
+            if (habitHabitEventHashMap.get(habit) != null) {
+                habitEvents.add(habitHabitEventHashMap.get(habit));
+            }
+        }
+
+        return habitEvents;
+
+    }
+
     public ArrayList<Feed> getFeed() {
         ArrayList<HabitEvent> friendsHabitEvents = getFriendsHabitEvents();
         ArrayList<Habit> friendsHabits = getFriendsHabits();
-        ArrayList<Habit> unprocessedHabits = new ArrayList<Habit>();
-        unprocessedHabits.addAll(friendsHabits);
-        ArrayList<Feed> feed = new ArrayList<>();
-        for (Habit habit: friendsHabits) {
+        HashMap<Habit, HabitEvent> habitHabitEventHashMap = pairUp(friendsHabits, friendsHabitEvents);
 
-            for (HabitEvent habitEvent: friendsHabitEvents) {
-                if (habitEvent.getHabitID().equals(habit.getID())) {
-                    Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, habitEvent);
-                    unprocessedHabits.remove(habit);
-                    feed.add(f);
-                }
-            }
-        }
-        for (Habit habit: unprocessedHabits) {
-            Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, null);
+        ArrayList<Feed> feed = new ArrayList<>();
+
+        for (Habit habit: habitHabitEventHashMap.keySet()) {
+            Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, habitHabitEventHashMap.get(habit));
             feed.add(f);
         }
+
+
+//        ArrayList<Habit> unprocessedHabits = new ArrayList<Habit>();
+//
+//
+//
+//
+//
+//
+//        unprocessedHabits.addAll(friendsHabits);
+//
+//        for (Habit habit: friendsHabits) {
+//
+//            for (HabitEvent habitEvent: friendsHabitEvents) {
+//                if (habitEvent.getHabitID().equals(habit.getID())) {
+//                    Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, habitEvent);
+//                    unprocessedHabits.remove(habit);
+//                    feed.add(f);
+//                }
+//            }
+//        }
+//        for (Habit habit: unprocessedHabits) {
+//            Feed f = new Feed(getUsernameByID(habit.getUserID()), habit, null);
+//            feed.add(f);
+//        }
 
         Collections.sort(feed, new Comparator<Feed>() {
             @Override
@@ -203,8 +238,42 @@ public class UserController {
                 }
             }
         });
-
         return feed;
+    }
+
+
+    public HashMap<Habit,HabitEvent> pairUp(ArrayList<Habit> friendHabits, ArrayList<HabitEvent> friendHabitEvents) {
+        HashMap<Habit, ArrayList<HabitEvent>> habitEventHashMap = new HashMap<>();
+
+        for (Habit habit: friendHabits) {
+            ArrayList<HabitEvent> habitEvents = new ArrayList<>();
+            for (HabitEvent habitEvent: friendHabitEvents) {
+                if (habitEvent.getHabitID().equals(habit.getID())) {
+                    habitEvents.add(habitEvent);
+                }
+            }
+            Collections.sort(habitEvents, new Comparator<HabitEvent>() {
+                @Override
+                public int compare(HabitEvent o1, HabitEvent o2) {
+                    return o1.getDate().compareTo(o2.getDate());
+                }
+            });
+            Collections.reverse(habitEvents);
+            habitEventHashMap.put(habit, habitEvents);
+        }
+
+        HashMap<Habit, HabitEvent> habitHabitEventHashMap = new HashMap<>();
+        for (Habit habit: habitEventHashMap.keySet()) {
+            habit.calculateStats(habitEventHashMap.get(habit));
+            if (habitEventHashMap.get(habit).size() == 0) {
+                habitHabitEventHashMap.put(habit, null);
+            } else {
+                habitHabitEventHashMap.put(habit, habitEventHashMap.get(habit).get(0));
+            }
+
+        }
+
+        return habitHabitEventHashMap;
     }
 
     public String getUsernameByID(UUID uuid) {

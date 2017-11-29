@@ -279,7 +279,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void run() {
                 if (called_from == FROM_ONCREATE) {
                     UserController.getUserController(MapsActivity.this).updateFollowingList();
-                    friendHabitEvents = UserController.getUserController(MapsActivity.this).getFriendsHabitEvents();
+                    friendHabitEvents = UserController.getUserController(MapsActivity.this).mostRecentFriendsHabitEvents();
                 }
                 friendHabitTitles = new HashMap<>();
                 friendUsernames = new HashMap<>();
