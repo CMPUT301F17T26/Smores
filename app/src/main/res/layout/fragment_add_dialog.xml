@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:minWidth="480dp"
-            android:hint="Participant Identifier"
+            android:hint="Enter Friend's Username"
             android:id="@+id/Request_rID"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"/>
     </LinearLayout>
@@ -20,7 +20,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="right">
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
