@@ -37,8 +37,11 @@ import cmput301f17t26.smores.all_fragments.TodayFragment;
  */
 public class TabAdapter extends FragmentPagerAdapter {
 
+    private TodayFragment todayFragment;
+
     public TabAdapter(FragmentManager fm) {
         super(fm);
+        todayFragment = new TodayFragment();
     }
 
     @Override
@@ -46,7 +49,10 @@ public class TabAdapter extends FragmentPagerAdapter {
         // getItem is called to instantiate the fragment for the given page.
         switch (position) {
             case 0:
-                return new TodayFragment();
+                if (todayFragment == null) {
+                  todayFragment = new TodayFragment();
+                }
+                return todayFragment;
             case 1:
                 return new HabitFragment();
             case 2:

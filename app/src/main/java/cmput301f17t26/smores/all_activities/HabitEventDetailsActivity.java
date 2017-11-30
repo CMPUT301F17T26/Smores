@@ -165,6 +165,8 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
                 if (!NetworkUtils.isNetworkAvailable(this)) {
                     mToggleLocation.setEnabled(false);
                 }
+                mUpdateLocation.setEnabled(false);
+
 
             }
         }
@@ -358,9 +360,14 @@ public class HabitEventDetailsActivity extends AppCompatActivity implements Netw
             } catch (CommentNotSetException e) {}
             try {
                 mHabitEvent.getLocation();
+                if (mHabitEvent.getLocation() == null) {
+                    mUpdateLocation.setEnabled(false);
+                }
                 mToggleLocation.setChecked(true);
                 mLocationString.setText(mHabitEvent.getLocationString());
-            } catch (LocationNotSetException e) {}
+            } catch (LocationNotSetException e) {
+                mUpdateLocation.setEnabled(false);
+            }
             try {
                 mImageView.setImageBitmap(HabitEvent.decompressBitmap(mHabitEvent.getImage()));
                 mImage = mHabitEvent.getImage();

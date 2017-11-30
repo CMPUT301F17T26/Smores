@@ -15,9 +15,13 @@
 
 package cmput301f17t26.smores.all_activities;
 
+import android.app.Notification;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,6 +36,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TimePicker;
 
 import java.util.UUID;
 
@@ -41,11 +46,15 @@ import cmput301f17t26.smores.all_fragments.AddFriendFragment;
 import cmput301f17t26.smores.all_fragments.AddUserFragment;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
 import cmput301f17t26.smores.all_fragments.HabitHistoryFragment;
+import cmput301f17t26.smores.all_fragments.TodayFragment;
 import cmput301f17t26.smores.all_storage_controller.OfflineController;
 import cmput301f17t26.smores.all_storage_controller.UserController;
 import cmput301f17t26.smores.utils.NetworkStateReceiver;
+import cmput301f17t26.smores.utils.NotificationReceiver;
 
-public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener, HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener {
+public class MainActivity extends AppCompatActivity implements HabitFragment.HabitFragmentListener,
+        HabitHistoryFragment.HabitHistoryFragmentListener, NetworkStateReceiver.NetworkStateReceiverListener,
+        TimePickerDialog.OnTimeSetListener{
 
     public static final int NOTIFICATION_REQUEST_CODE = 100;
     /**
@@ -277,4 +286,16 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
         Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
     }
 
+    @Override
+    public void onTimeSet(TimePicker timePicker, int hourOfDay, int minute) {
+        TodayFragment todayFragment = (TodayFragment) mTabAdapter.getItem(0);
+        todayFragment.setTimeLabel(hourOfDay, minute);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putInt("hour", hourOfDay);
+        editor.putInt("minute", minute);
+        editor.commit();
+        NotificationReceiver.setUpNotifcations(this);
+    }
 }

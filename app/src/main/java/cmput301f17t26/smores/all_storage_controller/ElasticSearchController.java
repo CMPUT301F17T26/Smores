@@ -203,16 +203,22 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
 
             }
 
-            Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
-                    .index(ELASTIC_SEARCH_INDEX)
-                    .type("habit")
-                    .build();
-
             try {
-                DocumentResult execute = client.execute(delete);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("habit")
+                        .build();
+
+                try {
+                    DocumentResult execute = client.execute(delete);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+
             }
+
+
             return null;
         }
     }
@@ -315,16 +321,21 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
 
             }
 
-            Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
-                    .index(ELASTIC_SEARCH_INDEX)
-                    .type("habitevent")
-                    .build();
-
             try {
-                DocumentResult execute = client.execute(delete);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("habitevent")
+                        .build();
+
+                try {
+                    DocumentResult execute = client.execute(delete);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+
             }
+
             return null;
         }
     }
@@ -432,16 +443,21 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
 
             }
 
-            Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
-                    .index(ELASTIC_SEARCH_INDEX)
-                    .type("request")
-                    .build();
-
             try {
-                DocumentResult execute = client.execute(delete);
-            } catch (IOException e) {
-                e.printStackTrace();
+                Delete delete = new Delete.Builder((String)((Map) hitList.get(0).source).get(JestResult.ES_METADATA_ID))
+                        .index(ELASTIC_SEARCH_INDEX)
+                        .type("request")
+                        .build();
+
+                try {
+                    DocumentResult execute = client.execute(delete);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } catch(Exception e) {
+
             }
+
             return null;
         }
     }

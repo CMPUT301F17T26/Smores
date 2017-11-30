@@ -115,6 +115,13 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
 
     public Integer getSizeOfTodayHabits() {
         filterTodayHabits();
-        return mValues.size();
+        int ret = 0;
+
+        for (Habit habit: mValues) {
+            if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(habit)) {
+                ret++;
+            }
+        }
+        return ret;
     }
 }

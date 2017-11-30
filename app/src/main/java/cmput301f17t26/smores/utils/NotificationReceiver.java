@@ -21,6 +21,8 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -40,16 +42,13 @@ public class NotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Calendar c = Calendar.getInstance();
-        Log.d("Main r", DateUtils.getStringOfDate(c) + " " + Integer.toString(c.get(Calendar.HOUR_OF_DAY)) + " " + Integer.toString(c.get(Calendar.MINUTE)) + " " +  Integer.toString(c.get(Calendar.SECOND)));
         if (intent.getIntExtra("NOTIFICATION_EXTRA", 0) == 1) {
-            Log.d("Main r2", DateUtils.getStringOfDate(c) + " " + Integer.toString(c.get(Calendar.HOUR_OF_DAY)) + " " + Integer.toString(c.get(Calendar.MINUTE)) + " " +  Integer.toString(c.get(Calendar.SECOND)));
             NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+            Intent mainActivityIntent = new Intent(context, MainActivity.class);
+            mainActivityIntent.putExtra("START_NOTIFICATION", true);
+            mainActivityIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-            Intent repeating = new Intent(context, MainActivity.class);
-            repeating.putExtra("START_NOTIFICATION", true);
-            repeating.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, NOTIFICATION_REQUEST_CODE, repeating, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, NOTIFICATION_REQUEST_CODE, mainActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Integer numOfHabitsToDo = new TodayAdapter(context).getSizeOfTodayHabits();
 
             if (numOfHabitsToDo > 0) {
@@ -60,28 +59,37 @@ public class NotificationReceiver extends BroadcastReceiver {
                         .setContentText(numOfHabitsToDo.toString() + " habit(s) to do")
                         .setAutoCancel(true);
                 notificationManager.notify(NOTIFICATION_REQUEST_CODE, builder.build());
-                Log.d("Main r", "Some habits");
             }
         }
 
     }
     public static void setUpNotifcations(Context context) {
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
+        
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
-        calendar.set(Calendar.MINUTE, 30);
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra("NOTIFICATION_EXTRA", 1);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+        if (pref.getInt("hour", -1) == -1) {
+            alarmManager.cancel(pendingIntent);
+            return;
+        }
+
+        calendar.set(Calendar.HOUR_OF_DAY, pref.getInt("hour", 8));
+        calendar.set(Calendar.MINUTE, pref.getInt("minute", 30));
 
         if (calendar.getTimeInMillis() < System.currentTimeMillis()) {
             calendar.add(Calendar.DATE, 1);
         }
 
-        Intent intent = new Intent(context, NotificationReceiver.class);
-        intent.putExtra("NOTIFICATION_EXTRA", 1);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, NOTIFICATION_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
+
+
+
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        Log.d("datechange", "Setup notification for next day at 8:30am");
     }
 
 }
