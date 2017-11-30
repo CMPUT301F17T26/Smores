@@ -275,15 +275,15 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
     @Override
     public void networkAvailable() {
         if (OfflineController.getOfflineController(this).executeOnServer(MainActivity.this)) {
-            Snackbar.make(mViewPager, "You are online! Synchronized Habit and Habit Events with server!", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(mViewPager, "You are online! Synchronized Habit and Habit Events with server!", Snackbar.LENGTH_LONG).show();
         } else {
-            Snackbar.make(mViewPager, "You are online!", Snackbar.LENGTH_INDEFINITE).show();
+            Snackbar.make(mViewPager, "You are online!", Snackbar.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void networkUnavailable() {
-        Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_INDEFINITE).show();
+        Snackbar.make(mViewPager, "You are offline! All Habit & Habit Events will be synchronized when you get online!", Snackbar.LENGTH_LONG).show();
     }
 
     @Override

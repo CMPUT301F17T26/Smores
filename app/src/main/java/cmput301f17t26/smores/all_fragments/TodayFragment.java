@@ -132,7 +132,7 @@ public class TodayFragment extends Fragment {
                     mNotificationButton.setVisibility(View.GONE);
                     editor.putInt("hour", -1);
                 }
-
+                editor.commit();
                 NotificationReceiver.setUpNotifcations(getActivity());
             }
         });
