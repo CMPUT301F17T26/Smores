@@ -16,6 +16,7 @@
 package cmput301f17t26.smores.all_activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
@@ -85,12 +86,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onPause() {
         super.onPause();
-        if (mMap != null) {
-            mMap.clear();
-        }
-        if (userHabitEvents != null) {
-            userHabitEvents.clear();
-        }
     }
 
     @Override
@@ -286,6 +281,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void loadData(final int called_from) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        progressDialog.setMessage("Now loading maps...");
+        progressDialog.setIndeterminate(true);
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
         worker = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -304,6 +306,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     public void run() {
                         loadMyMarkers();
                         loadFriendMarkers();
+                        progressDialog.dismiss();
                     }
                 });
             }
