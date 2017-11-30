@@ -20,7 +20,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +28,6 @@ import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_fragments.HabitFragment;
-import cmput301f17t26.smores.all_fragments.HabitFragment.HabitFragmentListener;
 import cmput301f17t26.smores.all_models.Habit;
 import cmput301f17t26.smores.all_storage_controller.HabitController;
 import cmput301f17t26.smores.dummy.DummyContent.DummyItem;
@@ -347,7 +345,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
             mWednesday = (TextView) view.findViewById(R.id.Wednesday);
             mThursday = (TextView) view.findViewById(R.id.Thursday);
             mFriday = (TextView) view.findViewById(R.id.Friday);
-            mSaturday = (TextView) view.findViewById(R.id.Saterday);
+            mSaturday = (TextView) view.findViewById(R.id.Saturday);
             mStatNum = (TextView) view.findViewById(R.id.HabitProgessNum);
         }
     }

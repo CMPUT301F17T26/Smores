@@ -95,12 +95,13 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:gravity="center_horizontal"
         android:layout_height="wrap_content">
         <CheckBox
             android:id="@+id/Habit_sun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sun"
+            android:text="Su"
             android:textSize="12dp"
             />
 
@@ -108,7 +109,7 @@
             android:id="@+id/Habit_mon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mon"
+            android:text="Mo"
             android:textSize="12dp"
             />
 
@@ -116,7 +117,7 @@
             android:id="@+id/Habit_tue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tue"
+            android:text="Tu"
             android:textSize="12dp"
             />
 
@@ -124,7 +125,7 @@
             android:id="@+id/Habit_wed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Wed"
+            android:text="We"
             android:textSize="12dp"
             />
 
@@ -132,7 +133,7 @@
             android:id="@+id/Habit_thu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thu"
+            android:text="Th"
             android:textSize="12dp"
             />
 
@@ -140,7 +141,7 @@
             android:id="@+id/Habit_fri"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Fri"
+            android:text="Fr"
             android:textSize="12dp"
             />
 
@@ -148,7 +149,7 @@
             android:id="@+id/Habit_sat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sat"
+            android:text="Sa"
             android:textSize="12dp"
             />
 
