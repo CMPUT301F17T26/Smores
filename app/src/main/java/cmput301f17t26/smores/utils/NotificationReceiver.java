@@ -28,6 +28,7 @@ import android.util.Log;
 
 import java.util.Calendar;
 
+import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
 
@@ -54,7 +55,7 @@ public class NotificationReceiver extends BroadcastReceiver {
             if (numOfHabitsToDo > 0) {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context)
                         .setContentIntent(pendingIntent)
-                        .setSmallIcon(android.support.design.R.drawable.notification_icon_background)
+                        .setSmallIcon(R.drawable.notificationicon)
                         .setContentTitle("You have habits to do today!")
                         .setContentText(numOfHabitsToDo.toString() + " habit(s) to do")
                         .setAutoCancel(true);
