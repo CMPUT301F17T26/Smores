@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import com.robotium.solo.Solo;
 
 import java.util.Calendar;
+import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
@@ -42,29 +43,30 @@ public class TodayHabitTest extends ActivityInstrumentationTestCase2<MainActivit
         solo.enterText((EditText) solo.getView(R.id.Habit_hName), uuid.toString().substring(0,15));
         solo.enterText((EditText) solo.getView(R.id.Habit_hReason), "Test Reasonv3!");
 
+
         Calendar today = Calendar.getInstance();
         int day_of_week = today.get(Calendar.DAY_OF_WEEK) - 1;
         switch(day_of_week) {
             case 0:
-                solo.clickOnText("Sun");
+                solo.clickOnView(solo.getView(R.id.Habit_sun));
                 break;
             case 1:
-                solo.clickOnText("Mon");
+                solo.clickOnView(solo.getView(R.id.Habit_mon));
                 break;
             case 2:
-                solo.clickOnText("Tue");
+                solo.clickOnView(solo.getView(R.id.Habit_tue));
                 break;
             case 3:
-                solo.clickOnText("Wed");
+                solo.clickOnView(solo.getView(R.id.Habit_wed));
                 break;
             case 4:
-                solo.clickOnText("Thu");
+                solo.clickOnView(solo.getView(R.id.Habit_thu));
                 break;
             case 5:
-                solo.clickOnText("Fri");
+                solo.clickOnView(solo.getView(R.id.Habit_fri));
                 break;
             case 6:
-                solo.clickOnText("Sat");
+                solo.clickOnView(solo.getView(R.id.Habit_sat));
                 break;
         }
         ImageButton save = (ImageButton) solo.getView(R.id.Habit_saveBtn);
@@ -79,7 +81,11 @@ public class TodayHabitTest extends ActivityInstrumentationTestCase2<MainActivit
     }
 
     public void tearDown() throws Exception {
-        solo.finishOpenedActivities();
+        try {
+            solo.finishOpenedActivities();
+        } catch (ConcurrentModificationException e) {
+
+        }
     }
 
 

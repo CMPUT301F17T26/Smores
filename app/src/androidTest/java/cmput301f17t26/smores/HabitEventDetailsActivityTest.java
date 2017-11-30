@@ -6,12 +6,20 @@
 
 package cmput301f17t26.smores;
 
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
 import com.robotium.solo.Solo;
+
+import junit.framework.Assert;
+
+import java.util.ConcurrentModificationException;
 
 import cmput301f17t26.smores.all_activities.HabitEventDetailsActivity;
 import cmput301f17t26.smores.all_activities.MainActivity;
@@ -44,13 +52,26 @@ public class HabitEventDetailsActivityTest extends ActivityInstrumentationTestCa
         solo.clickOnText("Test Comment!");
         ImageButton delete = (ImageButton) solo.getView(R.id.Event_hDelete);
         solo.clickOnView(delete);
+
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        UiObject deleteHabitEvent = mDevice.findObject(new UiSelector().text("YES"));
+        try {
+            deleteHabitEvent.click();
+        } catch (UiObjectNotFoundException e) {
+            Assert.fail();
+        }
+
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         assertFalse(solo.waitForText("Test Comment!"));
     }
 
 
     public void tearDown() throws Exception {
-        solo.finishOpenedActivities();
+        try {
+            solo.finishOpenedActivities();
+        } catch (ConcurrentModificationException e) {
+
+        }
     }
 
 }

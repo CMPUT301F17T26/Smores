@@ -18,6 +18,8 @@ import cmput301f17t26.smores.all_models.HabitEvent;
 
 import com.robotium.solo.Solo;
 
+import java.util.ConcurrentModificationException;
+
 /**
  * Created by farhadmakiabady on 2017-11-11.
  */
@@ -57,6 +59,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("SOCIAL");
         View fab = getActivity().findViewById(R.id.mapsFab);
+        solo.sleep(2000);
         solo.clickOnView(fab);
         solo.assertCurrentActivity("Wrong Acitity", MapsActivity.class);
     }
@@ -65,6 +68,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("SOCIAL");
         View fab = getActivity().findViewById(R.id.mapsFab);
+        solo.sleep(25000); //wait for social feed to load
         solo.clickOnView(fab);
         solo.assertCurrentActivity("Wrong Acitity", MapsActivity.class);
     }
@@ -73,6 +77,7 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         solo.clickOnText("REQUESTS");
         View fab = getActivity().findViewById(R.id.addFab);
+        solo.sleep(25000); //wait for request feed to load
         solo.clickOnView(fab);
         solo.clickOnButton("Cancel");
         solo.assertCurrentActivity("Wrong Acitity", MainActivity.class);
@@ -82,6 +87,11 @@ public class MainActivityTest extends ActivityInstrumentationTestCase2<MainActiv
      * @throws Exception
      */
     public void tearDown() throws Exception{
-        solo.finishOpenedActivities();
+        try {
+            solo.finishOpenedActivities();
+        } catch (ConcurrentModificationException e) {
+
+        }
+
     }
 }

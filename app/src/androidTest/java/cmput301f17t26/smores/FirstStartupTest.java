@@ -22,6 +22,7 @@ import com.robotium.solo.Solo;
 
 import junit.framework.Assert;
 
+import java.util.ConcurrentModificationException;
 import java.util.UUID;
 
 import cmput301f17t26.smores.all_activities.HabitDetailsActivity;
@@ -46,16 +47,17 @@ public class FirstStartupTest extends ActivityInstrumentationTestCase2<MainActiv
 
     public void testAddUser() {
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-        if (solo.searchText("Check and Add")) {
+        if (solo.searchText("Confirm")) {
             solo.enterText((EditText) solo.getView(R.id.Request_username), UUID.randomUUID().toString());
-            solo.clickOnButton("Check and Add");
+            solo.sleep(1000);
+            solo.clickOnButton("Confirm");
             solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
+            solo.sleep(5000);
         } else {
             solo.clickOnText("REQUESTS");
             if (!solo.searchText("Your username: ")) {
                 Assert.fail();
             }
-
         }
     }
 
@@ -71,16 +73,12 @@ public class FirstStartupTest extends ActivityInstrumentationTestCase2<MainActiv
         if (allowPermissions.exists()) {
             try {
                 allowPermissions.click();
+                solo.waitForText("ON");
             } catch (UiObjectNotFoundException e) {
                 //fails
             }
         } else{
-            solo.goBack();
-            solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
-            solo.clickOnText("REQUESTS");
-            if (!solo.searchText("Your username: ")) {
-                Assert.fail();
-            }
+            solo.waitForText("ON");
         }
     }
 
@@ -110,6 +108,10 @@ public class FirstStartupTest extends ActivityInstrumentationTestCase2<MainActiv
 //    }
 
     public void tearDown() throws Exception {
-        solo.finishOpenedActivities();
+        try {
+            solo.finishOpenedActivities();
+        } catch (ConcurrentModificationException e) {
+
+        }
     }
 }

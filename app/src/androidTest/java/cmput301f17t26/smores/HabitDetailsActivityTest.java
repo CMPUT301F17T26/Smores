@@ -7,6 +7,10 @@
 package cmput301f17t26.smores;
 
 import android.app.Activity;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.test.ActivityInstrumentationTestCase2;
 import android.view.View;
 import android.widget.CheckBox;
@@ -71,8 +75,16 @@ public class HabitDetailsActivityTest extends ActivityInstrumentationTestCase2<M
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         assertTrue(solo.waitForText(uuid.toString().substring(0,15)));
         solo.clickOnText(uuid.toString().substring(0,15));
+        solo.assertCurrentActivity("Wrong Activity", HabitDetailsActivity.class);
         ImageButton delete = (ImageButton) solo.getView(R.id.Habit_deleteBtn);
         solo.clickOnView(delete);
+        UiDevice mDevice = UiDevice.getInstance(getInstrumentation());
+        UiObject deleteHabit = mDevice.findObject(new UiSelector().text("YES"));
+        try {
+            deleteHabit.click();
+        } catch (UiObjectNotFoundException e) {
+            Assert.fail();
+        }
         solo.assertCurrentActivity("Wrong Activity", MainActivity.class);
         assertFalse(solo.waitForText(uuid.toString().substring(0,15)));
     }

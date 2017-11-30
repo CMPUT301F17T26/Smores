@@ -52,17 +52,6 @@ public class UserTest extends ActivityInstrumentationTestCase2 {
         assertEquals(user1.getRequest(0), user2.getUserID());
     }
 
-    public void testAddRequestSelf() {
-        User user1 = new User("Steve");
-        try {
-            user1.addRequest(user1.getUserID());
-            Assert.fail("Should have thrown InvalidUUIDException");
-        }
-        catch (InvalidUUIDException e){
-            //success
-        }
-    }
-
     public void testAddFollowing() {
         User user1 = new User("bob");
         User user2 = new User("Steve");
@@ -75,16 +64,6 @@ public class UserTest extends ActivityInstrumentationTestCase2 {
         assertEquals(user1.getFollowing(0), user2.getUserID());
     }
 
-    public void testAddFollowingSelf() {
-        User user1 = new User("Steve");
-        try {
-            user1.addFollowing(user1.getUserID());
-            Assert.fail("Should have thrown InavlidUUIDException");
-        }
-        catch (InvalidUUIDException e){
-            //success
-        }
-    }
 
     public void testRemoveRequest() {
         User user1 = new User("bob");

@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,8 +65,13 @@ public class AddUserFragment extends DialogFragment {
                                 public void run() {
                                     Toast.makeText(mContext, "Added!", Toast.LENGTH_SHORT).show();
                                     NotificationReceiver.setUpNotifcations(mContext);
+                                    if (getActivity() != null) {
+                                        if (getActivity().getSupportFragmentManager() != null) {
+                                            dismiss();
+                                        }
+                                    }
 
-                                    dismiss();
+
                                 }
                             });
                         } else {
