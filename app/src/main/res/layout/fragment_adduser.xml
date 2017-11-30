@@ -21,13 +21,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="right">
         <Button
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:id="@+id/Request_checkbtn"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:text="Check and Add"/>
+            android:text="Confirm"/>
     </LinearLayout>
 
 </LinearLayout>
