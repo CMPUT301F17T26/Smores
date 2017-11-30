@@ -1,5 +1,6 @@
 package cmput301f17t26.smores;
 
+import android.support.test.InstrumentationRegistry;
 import android.test.ActivityInstrumentationTestCase2;
 
 import junit.framework.Assert;
@@ -135,7 +136,7 @@ public class HabitTest extends ActivityInstrumentationTestCase2 {
         }};
         try {
             Habit habit = new Habit(userID, title, reason, date, days);
-            habit.setDaysOfWeek(testdays);
+            habit.setDaysOfWeek(testdays, InstrumentationRegistry.getContext());
             assertEquals(habit.getDaysOfWeek(), testdays);
         } catch (TitleTooLongException e) {
             e.printStackTrace();
