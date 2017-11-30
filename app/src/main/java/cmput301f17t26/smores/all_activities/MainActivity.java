@@ -189,6 +189,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                intent.putExtra("launch", MapsActivity.HABIT_HISTORY);
                                 MainActivity.this.startActivity(intent);
                             }
                         });
@@ -204,6 +205,7 @@ public class MainActivity extends AppCompatActivity implements HabitFragment.Hab
                             @Override
                             public void onClick(View view) {
                                 Intent intent = new Intent(MainActivity.this, MapsActivity.class);
+                                intent.putExtra("launch", MapsActivity.SOCIAL);
                                 MainActivity.this.startActivity(intent);
                             }
                         });

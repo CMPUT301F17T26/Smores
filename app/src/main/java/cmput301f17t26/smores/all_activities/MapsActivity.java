@@ -74,6 +74,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private HashMap<UUID, String> friendUsernames;
     private static final int FROM_ONCREATE = 0;
     private static final int FROM_UPDATE = 1;
+    public static final int HABIT_HISTORY = 1;
+    public static final int SOCIAL = 2;
 
     @Override
     public void onResume() {
@@ -110,10 +112,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         userHabitEvents = new ArrayList<>();
         userHabitEvents.addAll(HabitEventController.getHabitEventController(this).getFilteredHabitEvents());
         mFriendsCheckbox = (CheckBox) findViewById(R.id.friendsCheckbox);
-        mFriendsCheckbox.setChecked(false);
-
         mMyself = (CheckBox) findViewById(R.id.meCheckbox);
-        mMyself.setChecked(true);
+
+        int launchReason = getIntent().getIntExtra("launch", -1);
+
+        if (launchReason == -1) {
+            mMyself.setChecked(true);
+            mFriendsCheckbox.setChecked(true);
+        } else if (launchReason == HABIT_HISTORY) {
+            mMyself.setChecked(true);
+            mFriendsCheckbox.setChecked(false);
+        } else if (launchReason == SOCIAL) {
+            mMyself.setChecked(false);
+            mFriendsCheckbox.setChecked(true);
+        }
 
         mRadiusField = (EditText) findViewById(R.id.radiusField);
         mSearch = (Button) findViewById(R.id.searchButton);
