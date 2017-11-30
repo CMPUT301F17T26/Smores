@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import java.util.UUID;
@@ -57,6 +58,7 @@ public class HabitHistoryFragment extends Fragment {
     private HabitHistoryFragmentListener mListener;
     private EditText mEditText;
     private RadioButton mFilterHabit, mFilterComment;
+    private ImageView background;
 
     private HabitHistoryAdapter mHabitHistoryAdapter;
     private RecyclerView recyclerView;
@@ -93,15 +95,21 @@ public class HabitHistoryFragment extends Fragment {
         Context context = view.getContext();
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
 
-
+        background = (ImageView) view.findViewById(R.id.EventBG);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mHabitHistoryAdapter = new HabitHistoryAdapter(mListener);
         recyclerView.setAdapter(mHabitHistoryAdapter);
-
-
         mEditText = (EditText) view.findViewById(R.id.search);
         mFilterHabit= (RadioButton)  view.findViewById(R.id.FilterHabitButton);
         mFilterComment = (RadioButton)  view.findViewById(R.id.FilterCommentButton);
+
+        if (mHabitHistoryAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
 
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -152,6 +160,14 @@ public class HabitHistoryFragment extends Fragment {
             recyclerView.setAdapter(mHabitHistoryAdapter);
             mEditText.setText("");
             mEditText.clearFocus();
+
+            if (mHabitHistoryAdapter.getItemCount() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                background.setVisibility(View.VISIBLE);
+            } else {
+                background.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         }
     }
 

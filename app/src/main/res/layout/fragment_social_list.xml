@@ -12,21 +12,40 @@
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/list"
-            android:name="cmput301f17t26.smores.SocialFragment"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layoutManager="LinearLayoutManager"
-            tools:context="cmput301f17t26.smores.all_fragments.SocialFragment"
-            tools:listitem="@layout/fragment_social_element"/>
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/SocialBG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:src="@drawable/foreveralone"/>
+
+            <android.support.v7.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/list"
+                android:visibility="gone"
+                android:name="cmput301f17t26.smores.SocialFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                app:layoutManager="LinearLayoutManager"
+                tools:context="cmput301f17t26.smores.all_fragments.SocialFragment"
+                tools:listitem="@layout/fragment_social_element"/>
+
+        </LinearLayout>
+
+
 
     </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
 
 </LinearLayout>

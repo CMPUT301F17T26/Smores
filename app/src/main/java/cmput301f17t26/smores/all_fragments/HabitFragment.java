@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import cmput301f17t26.smores.all_activities.MainActivity;
 import cmput301f17t26.smores.all_adapters.HabitAdapter;
@@ -48,6 +49,7 @@ public class HabitFragment extends Fragment {
     private HabitFragmentListener mListener;
     private HabitAdapter mHabitAdapter;
     private RecyclerView recyclerView;
+    private ImageView background;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -81,11 +83,18 @@ public class HabitFragment extends Fragment {
 
         Context context = view.getContext();
         mHabitAdapter = new HabitAdapter(mListener);
-
+        background = (ImageView) view.findViewById(R.id.habitBG);
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
         recyclerView.setAdapter(mHabitAdapter);
+
+        if (mHabitAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
 
 
         return view;
@@ -130,6 +139,13 @@ public class HabitFragment extends Fragment {
         if (mHabitAdapter != null) {
             mHabitAdapter = new HabitAdapter(mListener);
             recyclerView.setAdapter(mHabitAdapter);
+            if (mHabitAdapter.getItemCount() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                background.setVisibility(View.VISIBLE);
+            } else {
+                background.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

@@ -2,58 +2,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/darkGrey"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/darkGrey"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatCheckBox
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Notifications"
             android:id="@+id/enable_notifications"
-            android:layout_gravity="center_vertical"/>
-
-        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/notification_label"
-            android:text=" at "
             android:layout_gravity="center_vertical"
-            android:visibility="gone"/>
+            android:text="Notifications" />
 
         <TextView
+            android:id="@+id/notification_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text=" at "
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/notification_time_label"
-            android:layout_gravity="center_vertical"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical" />
 
         <ImageButton
+            android:id="@+id/notification_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/notification_button"
             android:src="@android:drawable/ic_lock_idle_alarm"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
-<android.support.v7.widget.RecyclerView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/list"
-    android:name="cmput301f17t26.smores.all_activities.TodayFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context="cmput301f17t26.smores.all_fragments.TodayFragment"
-    tools:listitem="@layout/fragment_today_element"/>
+    <ImageView
+        android:id="@+id/todayBG"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/empty"
+        android:visibility="gone" />
+
+    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/list"
+        android:name="cmput301f17t26.smores.all_activities.TodayFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:visibility="gone"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="cmput301f17t26.smores.all_fragments.TodayFragment"
+        tools:listitem="@layout/fragment_today_element" />
 </LinearLayout>

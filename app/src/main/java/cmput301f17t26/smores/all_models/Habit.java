@@ -236,9 +236,9 @@ public class Habit {
         return mUserID;
     }
 
-    public void calculateStats(Context context) {
+    public void calculateStats(ArrayList<HabitEvent> habitEvents) {
         int totalExpected = mCheckpointDaysCompleted + mCheckpointDaysMissed + findExpectedHabitEvents();
-        int totalCompleted = mCheckpointDaysCompleted + findHabitEvents(context);
+        int totalCompleted = mCheckpointDaysCompleted + findHabitEvents(habitEvents);
         int totalMissed = totalExpected - totalCompleted + mCheckpointDaysMissed;
         mDaysCompleted = totalCompleted;
         mDaysMissed = totalMissed;
@@ -247,6 +247,11 @@ public class Habit {
         if (Double.isNaN(mCurrentPercentage)) {
             mCurrentPercentage = 0;
         }
+    }
+
+    public void calculateStats(Context context) {
+        ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(context).getHabitEventsByHabit(this);
+        calculateStats(habitEvents);
     }
 
     public void checkpointStats(Context context, boolean today) {
@@ -262,7 +267,7 @@ public class Habit {
 
         ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(context).getHabitEventsByHabit(this);
         if (today) {
-            if (habitEvents.get(0).getDate().compareTo(mLastCheckpoint) > 0) {
+            if (0 != habitEvents.size() && habitEvents.get(0).getDate().compareTo(mLastCheckpoint) > 0) {
                 if (true == mDaysOfWeek.get(mLastCheckpoint.getDay())) {
                     mCheckpointDaysCompleted--;
                 }
@@ -301,12 +306,11 @@ public class Habit {
     /**
      * Calculates the number of habit events that occurred on the habit's expected days
      *
-     * @param context required to access the habit event controller
+     * @param habitEvents a list of the habitEvents that have been completed
      * @return number of habit events that were completed on expected days
      */
 
-    private int findHabitEvents(Context context) {
-        ArrayList<HabitEvent> habitEvents = HabitEventController.getHabitEventController(context).getHabitEvents();
+    private int findHabitEvents(ArrayList<HabitEvent> habitEvents) {
         Calendar c = Calendar.getInstance();
         int successes = 0;
 

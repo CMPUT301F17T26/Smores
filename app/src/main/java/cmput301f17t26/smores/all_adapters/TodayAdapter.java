@@ -63,7 +63,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mHabit = mValues.get(position);
         holder.mTitle.setText(mValues.get(position).getTitle());
-        holder.mStat.setText(mValues.get(position).getReason()); // TODO change to .getStat()
         if (HabitEventController.getHabitEventController(mContext).doesHabitEventExist(holder.mHabit)) {
             holder.mStatus.setImageResource(R.drawable.todo);
         } else {
@@ -79,7 +78,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mTitle;
-        public final TextView mStat;
         public final ImageView mStatus;
         public Habit mHabit;
 
@@ -87,7 +85,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.ViewHolder> 
             super(view);
             mView = view;
             mTitle = (TextView) view.findViewById(R.id.id);
-            mStat = (TextView) view.findViewById(R.id.content);
             mStatus = (ImageView) view.findViewById(R.id.status);
         }
 

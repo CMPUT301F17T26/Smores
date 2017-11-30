@@ -33,19 +33,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:id="@+id/list"
-            android:name="cmput301f17t26.smores.all_activities.RequestFragment"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            app:layoutManager="LinearLayoutManager"
-            tools:context="cmput301f17t26.smores.all_fragments.RequestFragment"
-            tools:listitem="@layout/fragment_request_element"/>
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/RequestBG"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:src="@drawable/empty"/>
+
+            <android.support.v7.widget.RecyclerView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/list"
+                android:visibility="gone"
+                android:name="cmput301f17t26.smores.all_activities.RequestFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                app:layoutManager="LinearLayoutManager"
+                tools:context="cmput301f17t26.smores.all_fragments.RequestFragment"
+                tools:listitem="@layout/fragment_request_element"/>
+
+
+        </LinearLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 
 

@@ -15,8 +15,6 @@
 
 package cmput301f17t26.smores.all_fragments;
 
-import android.app.Dialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,17 +23,14 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Calendar;
 
 import cmput301f17t26.smores.R;
 import cmput301f17t26.smores.all_adapters.TodayAdapter;
@@ -61,6 +56,7 @@ public class TodayFragment extends Fragment {
     private ImageButton mNotificationButton;
     private CheckBox mNotificationEnable;
     private TextView mNotificationLabel;
+    private ImageView background;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -94,11 +90,13 @@ public class TodayFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_today_list, container, false);
 
         Context context = view.getContext();
-        recyclerView = (RecyclerView) view.findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         mTodayAdapter = new TodayAdapter(getActivity());
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        background = (ImageView) view.findViewById(R.id.todayBG);
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(mTodayAdapter);
         mTodayAdapter.filterTodayHabits();
+
         mNotificationTimeLabel = (TextView) view.findViewById(R.id.notification_time_label);
         mNotificationButton = (ImageButton) view.findViewById(R.id.notification_button);
         mNotificationEnable = (CheckBox) view.findViewById(R.id.enable_notifications);
@@ -111,7 +109,7 @@ public class TodayFragment extends Fragment {
             mNotificationEnable.setChecked(true);
             mNotificationLabel.setVisibility(View.VISIBLE);
             mNotificationButton.setVisibility(View.VISIBLE);
-            String notificationTime = Integer.toString(pref.getInt("hour", 8)) + ":" + Integer.toString(pref.getInt("minute", 30));
+            String notificationTime = Integer.toString(pref.getInt("hour", 8)) + ":" + String.format("%02d",pref.getInt("minute", 30));
             mNotificationTimeLabel.setText(notificationTime);
 
         }
@@ -144,6 +142,14 @@ public class TodayFragment extends Fragment {
                 newFragment.show(getActivity().getSupportFragmentManager(), "timePicker");
             }
         });
+
+        if (mTodayAdapter.getItemCount() == 0) {
+            recyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -187,12 +193,19 @@ public class TodayFragment extends Fragment {
             mTodayAdapter = new TodayAdapter(getActivity());
             recyclerView.setAdapter(mTodayAdapter);
             mTodayAdapter.filterTodayHabits();
+            if (mTodayAdapter.getItemCount() == 0) {
+                recyclerView.setVisibility(View.GONE);
+                background.setVisibility(View.VISIBLE);
+            } else {
+                background.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
+            }
         }
         mTodayAdapter.filterTodayHabits();
     }
 
     public void setTimeLabel(int hourOfDay, int minute) {
-        String text = Integer.toString(hourOfDay) + ":" + Integer.toString(minute);
+        String text = Integer.toString(hourOfDay) + ":" + String.format("%02d", minute);
         mNotificationTimeLabel.setText(text);
     }
 

@@ -28,6 +28,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.w3c.dom.Text;
@@ -53,6 +54,7 @@ public class RequestFragment extends Fragment {
     private int mColumnCount = 1;
     private TextView username;
     private RecyclerView mRecyclerView;
+    private ImageView background;
     private RequestAdapter mRequestAdapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
 
@@ -89,10 +91,13 @@ public class RequestFragment extends Fragment {
 
         Context context = view.getContext();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.list);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        mRequestAdapter = new RequestAdapter(context);
-        mRecyclerView.setAdapter(mRequestAdapter);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        background = (ImageView) view.findViewById(R.id.RequestBG);
+        mRequestAdapter = new RequestAdapter(context, mRecyclerView, background);
+        mRecyclerView.setAdapter(mRequestAdapter);
+
+
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -119,5 +124,13 @@ public class RequestFragment extends Fragment {
     private void refreshItems() {
         mRequestAdapter.loadList();
         mSwipeRefreshLayout.setRefreshing(false);
+
+        if (mRequestAdapter.getItemCount() == 0) {
+            mRecyclerView.setVisibility(View.GONE);
+            background.setVisibility(View.VISIBLE);
+        } else {
+            background.setVisibility(View.GONE);
+            mRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 }

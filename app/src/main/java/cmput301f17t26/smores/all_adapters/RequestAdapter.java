@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import cmput301f17t26.smores.R;
@@ -37,8 +38,12 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
 
     private List<Request> mRequests;
     private Context mContext;
+    private RecyclerView mRecyclerView;
+    private ImageView mImageView;
 
-    public RequestAdapter(Context context) {
+    public RequestAdapter(Context context, RecyclerView recyclerView, ImageView imageView) {
+        mRecyclerView = recyclerView;
+        mImageView = imageView;
         mContext = context;
     }
 
@@ -123,6 +128,14 @@ public class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.ViewHold
                         // Notify the List that the DataSet has changed...
                         notifyDataSetChanged();
                         progressDialog.dismiss();
+
+                        if (getItemCount() == 0) {
+                            mRecyclerView.setVisibility(View.GONE);
+                            mImageView.setVisibility(View.VISIBLE);
+                        } else {
+                            mImageView.setVisibility(View.GONE);
+                            mRecyclerView.setVisibility(View.VISIBLE);
+                        }
                     }
                 });
             }

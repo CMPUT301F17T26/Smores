@@ -7,6 +7,13 @@
     android:layout_height="match_parent"
     android:background="@color/darkGrey">
 
+    <ImageView
+        android:id="@+id/habitBG"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:src="@drawable/empty"/>
+
     <android.support.v7.widget.RecyclerView
     android:id="@+id/list"
     android:name="cmput301f17t26.smores.HabitFragment"

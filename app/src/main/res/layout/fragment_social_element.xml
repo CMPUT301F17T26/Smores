@@ -21,9 +21,8 @@
            <TextView
                android:id="@+id/Username"
                android:layout_width="wrap_content"
-               android:layout_weight="1"
-               android:layout_height="0dp"
-               android:layout_margin="@dimen/text_margin"
+               android:layout_height="wrap_content"
+               android:layout_margin="12dp"
                tools:text="Test Name"
                android:textSize="18sp"
                android:textStyle="bold"
@@ -32,10 +31,9 @@
            <TextView
                android:id="@+id/HabitType"
                android:layout_width="wrap_content"
-               android:layout_weight="1"
-               android:layout_height="0dp"
+               android:layout_height="wrap_content"
                tools:text="Text Habit Type"
-               android:layout_margin="@dimen/text_margin"
+               android:layout_margin="12dp"
                android:textAppearance="?attr/textAppearanceListItem"/>
 
        </LinearLayout>
