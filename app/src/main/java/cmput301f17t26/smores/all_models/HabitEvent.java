@@ -274,7 +274,7 @@ public class HabitEvent {
      * @return compressed bitmap
      */
     public static Bitmap compressBitmap(Bitmap bitmap) {
-        return Bitmap.createScaledBitmap(bitmap, 127, 127, true);
+        return scaleBitmap(bitmap, 127, 127);
 
     }
 
@@ -285,7 +285,7 @@ public class HabitEvent {
      * @return uncompressed bitmap
      */
     public static Bitmap decompressBitmap(Bitmap scaledBitmap) {
-        return Bitmap.createScaledBitmap(scaledBitmap, 256, 256, true);
+        return scaleBitmap(scaledBitmap, 256, 256);
     }
 
     /**
@@ -295,5 +295,25 @@ public class HabitEvent {
      */
     public void setDate(Date date) {
         mDateCompleted = date;
+    }
+
+    private static Bitmap scaleBitmap(Bitmap bitmap, int maxHeight, int maxWidth) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        if (width > height) {
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int) (height / ratio);
+        } else if (height > width) {
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int) (width / ratio);
+        } else {
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, width, height, true);
     }
 }
