@@ -50,7 +50,7 @@ public class ElasticSearchController { //ElasticSearchController.GetHabitTask(St
 
     private static JestDroidClient client;
     private static Gson gson;
-    private static final String ELASTIC_SEARCH_INDEX = "cmput301f17t26_smores";
+    private static final String ELASTIC_SEARCH_INDEX = "cmput301f17t26";
 
     public static class AddUserTask extends  AsyncTask<User, Void, Void> {
 
