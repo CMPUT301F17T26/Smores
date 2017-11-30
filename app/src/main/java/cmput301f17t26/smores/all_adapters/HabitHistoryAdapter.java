@@ -78,19 +78,26 @@ public class HabitHistoryAdapter extends RecyclerView.Adapter<HabitHistoryAdapte
         holder.mItem = mFilterValues.get(position);
 
         try {
-            holder.mComment.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
             holder.mDate.setText(DateUtils.getStringOfDate(mFilterValues.get(position).getDate()));
             if (mFilterValues.get(position).getLocation() != null) {
                 holder.mLocation.setImageResource(R.drawable.location);
             }
-            holder.mImage.setImageBitmap(mFilterValues.get(position).getImage());
-        } catch (CommentNotSetException e) {
-            holder.mComment.setText("No comment"); // HabitEvent.getTitle() not implemented
         } catch (LocationNotSetException e) {
             holder.mLocation.setImageResource(R.color.white);
+        }
+
+        try {
+            holder.mComment.setText(mFilterValues.get(position).getComment()); // HabitEvent.getTitle() not implemented
+        } catch (CommentNotSetException e) {
+            holder.mComment.setText("No comment"); // HabitEvent.getTitle() not implemented
+        }
+
+        try {
+            holder.mImage.setImageBitmap(mFilterValues.get(position).getImage());
         } catch (ImageNotSetException e) {
             holder.mImage.setImageResource(R.mipmap.app_icon);
         }
+
         holder.mHabitType.setText(HabitController.getHabitController(mContext).getHabitTitleByHabitID(holder.mItem.getHabitID()));
 
         final UUID uuid = mFilterValues.get(position).getID();
