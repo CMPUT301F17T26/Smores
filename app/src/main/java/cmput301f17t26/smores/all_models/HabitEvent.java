@@ -50,7 +50,7 @@ public class HabitEvent {
     private String mComment;
     private transient Bitmap mImage;
     private String thumbnailBase64;
-    private Location mLocation;
+    private LatLng mLocation;
     private String mLocationString;
 
     private UUID mUserID;
@@ -94,7 +94,7 @@ public class HabitEvent {
         if (location == null) {
             mLocationString = null;
         }
-        mLocation = location;
+        mLocation = new LatLng(location.getLatitude(), location.getLongitude());
     }
 
     /**
@@ -104,7 +104,9 @@ public class HabitEvent {
      * @param locationString location address
      */
     public void setLocation(Location location, String locationString) {
-        mLocation = location;
+
+
+        mLocation = new LatLng(location.getLatitude(), location.getLongitude());
         mLocationString = locationString;
     }
 
@@ -165,7 +167,10 @@ public class HabitEvent {
         if (mLocation == null) {
             throw new LocationNotSetException();
         } else {
-            return mLocation;
+            Location location = new Location("");
+            location.setLatitude(mLocation.latitude);
+            location.setLongitude(mLocation.longitude);
+            return location;
         }
     }
 
@@ -179,7 +184,7 @@ public class HabitEvent {
         if (mLocation == null) {
             throw new LocationNotSetException();
         } else {
-            return new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+            return mLocation;
         }
     }
 
